@@ -1,0 +1,64 @@
+DELAY ANALYSIS GUIDE
+====================
+
+INSTRUCTIONS:
+1. Listen to cumulative files (cumulative_XX_words.mp3) to find where delays start
+2. Listen to phrase files to isolate specific problem areas
+3. Compare timing between similar phrases
+
+CUMULATIVE FILES (listen for where delays begin):
+  cumulative_01_words.mp3: 1 words, 0.84s, 1.19 wps
+  cumulative_02_words.mp3: 2 words, 1.80s, 1.11 wps
+  cumulative_03_words.mp3: 3 words, 2.33s, 1.29 wps
+  cumulative_04_words.mp3: 4 words, 2.76s, 1.45 wps
+  cumulative_05_words.mp3: 5 words, 3.41s, 1.47 wps
+  cumulative_06_words.mp3: 6 words, 3.91s, 1.53 wps
+  cumulative_07_words.mp3: 7 words, 4.15s, 1.69 wps
+  cumulative_08_words.mp3: 8 words, 4.75s, 1.68 wps
+  cumulative_09_words.mp3: 9 words, 5.28s, 1.70 wps
+  cumulative_10_words.mp3: 10 words, 5.40s, 1.85 wps
+  cumulative_11_words.mp3: 11 words, 5.52s, 1.99 wps
+  cumulative_12_words.mp3: 12 words, 5.86s, 2.05 wps
+  cumulative_13_words.mp3: 13 words, 6.53s, 1.99 wps
+  cumulative_14_words.mp3: 14 words, 6.72s, 2.08 wps
+  cumulative_15_words.mp3: 15 words, 7.85s, 1.91 wps
+  cumulative_16_words.mp3: 16 words, 8.52s, 1.88 wps
+  cumulative_17_words.mp3: 17 words, 8.64s, 1.97 wps
+  cumulative_18_words.mp3: 18 words, 9.17s, 1.96 wps
+  cumulative_19_words.mp3: 19 words, 9.89s, 1.92 wps
+  cumulative_20_words.mp3: 20 words, 10.39s, 1.92 wps
+  cumulative_21_words.mp3: 21 words, 10.51s, 2.00 wps
+  cumulative_22_words.mp3: 22 words, 11.21s, 1.96 wps
+  cumulative_23_words.mp3: 23 words, 11.33s, 2.03 wps
+  cumulative_24_words.mp3: 24 words, 11.83s, 2.03 wps
+  cumulative_25_words.mp3: 25 words, 12.24s, 2.04 wps
+  cumulative_26_words.mp3: 26 words, 12.12s, 2.15 wps
+  cumulative_27_words.mp3: 27 words, 12.89s, 2.09 wps
+  cumulative_28_words.mp3: 28 words, 13.39s, 2.09 wps
+  cumulative_29_words.mp3: 29 words, 13.73s, 2.11 wps
+  cumulative_30_words.mp3: 30 words, 14.09s, 2.13 wps
+  cumulative_31_words.mp3: 31 words, 15.12s, 2.05 wps
+  cumulative_32_words.mp3: 32 words, 15.77s, 2.03 wps
+  cumulative_33_words.mp3: 33 words, 16.13s, 2.05 wps
+  cumulative_34_words.mp3: 34 words, 17.28s, 1.97 wps
+  cumulative_35_words.mp3: 35 words, 17.45s, 2.01 wps
+  cumulative_36_words.mp3: 36 words, 17.81s, 2.02 wps
+  cumulative_37_words.mp3: 37 words, 17.88s, 2.07 wps
+  cumulative_38_words.mp3: 38 words, 18.12s, 2.10 wps
+
+PHRASE FILES (isolate specific problems):
+  phrase_01_swedish_officials.mp3: 'Swedish officials' - 1.87s, 1.07 wps
+  phrase_02_she_is_being.mp3: 'she is being' - 1.51s, 1.98 wps
+  phrase_03_subjected_to.mp3: 'subjected to' - 1.73s, 1.16 wps
+  phrase_04_harsh_treatment.mp3: 'harsh treatment' - 1.80s, 1.11 wps
+  phrase_05_swedish_officials_she_is_being.mp3: 'Swedish officials she is being' - 2.69s, 1.86 wps
+  phrase_06_she_is_being_subjected_to.mp3: 'she is being subjected to' - 2.47s, 2.02 wps
+  phrase_07_subjected_to_harsh_treatment.mp3: 'subjected to harsh treatment' - 2.64s, 1.52 wps
+  phrase_08_being_subjected_to_harsh_treatment.mp3: 'being subjected to harsh treatment' - 3.00s, 1.67 wps
+  phrase_09_swedish_officials_she_is_being_subjected_to_harsh_treatment.mp3: 'Swedish officials she is being subjected to harsh treatment' - 4.73s, 1.90 wps
+
+QUESTIONS TO ANSWER:
+- Which cumulative file first shows the delay?
+- Does 'phrase_03_subjected_to.mp3' have a delay?
+- Does 'phrase_06_she_is_being_subjected_to.mp3' have more delay?
+- Compare phrase_02 vs phrase_03 vs phrase_04 - which is slowest?

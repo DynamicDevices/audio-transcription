@@ -1,0 +1,6 @@
+/data_drive/dd/audio-transcription/target/debug/deps/clap_lex-63864b7d3bdfeaee.d: /home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/lib.rs /home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/ext.rs
+
+/data_drive/dd/audio-transcription/target/debug/deps/libclap_lex-63864b7d3bdfeaee.rmeta: /home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/lib.rs /home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/ext.rs
+
+/home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/lib.rs:
+/home/ajlennon/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/clap_lex-0.7.6/src/ext.rs:
