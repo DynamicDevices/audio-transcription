@@ -64,7 +64,7 @@ class GitHubAINewsDigest:
     
     def setup_github_ai(self):
         """
-        Setup AI integration with multiple providers
+        Setup AI integration with multiple providers - MUST WORK for professional service
         """
         # Try OpenAI first (most common)
         openai_key = os.getenv('OPENAI_API_KEY')
@@ -82,12 +82,21 @@ class GitHubAINewsDigest:
             self.ai_enabled = True
             print("🤖 AI Analysis: ANTHROPIC ENABLED")
         else:
-            self.ai_enabled = False
-            self.ai_provider = None
+            # CRITICAL: For professional news service, AI MUST work
+            error_msg = "🚨 CRITICAL ERROR: AI Analysis is REQUIRED for professional news service"
             if not OPENAI_AVAILABLE and not ANTHROPIC_AVAILABLE:
-                print("⚠️ AI Analysis: DISABLED (no AI libraries installed)")
+                error_msg += "\n❌ No AI libraries installed (openai, anthropic)"
+            elif not openai_key and not anthropic_key:
+                error_msg += "\n❌ No API keys found (OPENAI_API_KEY, ANTHROPIC_API_KEY)"
             else:
-                print("⚠️ AI Analysis: DISABLED (no API keys found)")
+                error_msg += "\n❌ API keys present but libraries missing"
+            
+            print(error_msg)
+            print("💡 This service CANNOT run without AI analysis")
+            print("🔧 Please configure valid API keys and retry")
+            
+            # FAIL FAST - don't produce garbage content
+            raise Exception("AI Analysis is required for professional news service. Cannot continue without valid API keys.")
     
     def fetch_headlines_from_source(self, source_name: str, url: str) -> List[NewsStory]:
         """
@@ -159,10 +168,10 @@ class GitHubAINewsDigest:
     
     async def ai_analyze_stories(self, all_stories: List[NewsStory]) -> Dict[str, List[NewsStory]]:
         """
-        Use GitHub AI to intelligently categorize and analyze stories
+        Use GitHub AI to intelligently categorize and analyze stories - REQUIRED for professional service
         """
         if not self.ai_enabled or not all_stories:
-            return self.fallback_categorization(all_stories)
+            raise Exception("🚨 CRITICAL: AI Analysis is REQUIRED. Cannot produce professional news digest without AI analysis.")
         
         print("\n🤖 AI ANALYSIS: Intelligent story categorization")
         print("=" * 50)
@@ -266,8 +275,8 @@ class GitHubAINewsDigest:
             
         except Exception as e:
             print(f"   ⚠️ AI analysis failed: {e}")
-            print("   🔄 Falling back to keyword-based categorization")
-            return self.fallback_categorization(all_stories)
+            print("   🚨 CRITICAL: Cannot continue without AI analysis")
+            raise Exception(f"AI Analysis failed and fallback is not acceptable for professional service: {e}")
     
     def fallback_categorization(self, all_stories: List[NewsStory]) -> Dict[str, List[NewsStory]]:
         """
@@ -380,9 +389,62 @@ class GitHubAINewsDigest:
     
     def fallback_synthesis(self, theme: str, stories: List[NewsStory]) -> str:
         """
-        Fallback synthesis method
+        Enhanced fallback synthesis method that creates meaningful content from story titles
         """
-        return f"In {theme} news today, there are significant developments across multiple areas."
+        if not stories:
+            return f"In {theme} news today, there are significant developments across multiple areas."
+        
+        # Extract key information from story titles
+        story_summaries = []
+        seen_topics = set()
+        
+        for story in stories[:3]:  # Top 3 stories
+            title_words = story.title.lower().split()
+            # Extract meaningful keywords (avoid common words)
+            keywords = [word for word in title_words 
+                       if len(word) > 3 and word not in ['news', 'says', 'after', 'with', 'from', 'about', 'could', 'will', 'would', 'should']]
+            
+            if keywords:
+                # Check if this topic is already covered
+                topic_key = ' '.join(keywords[:2])  # Use first 2 keywords as topic identifier
+                if topic_key not in seen_topics:
+                    seen_topics.add(topic_key)
+                    
+                    # Create a meaningful summary from the title
+                    if theme == 'politics':
+                        if any(word in title_words for word in ['government', 'minister', 'mp', 'parliament']):
+                            story_summaries.append(f"government developments involving {' '.join(keywords[:3])}")
+                        else:
+                            story_summaries.append(f"political developments regarding {' '.join(keywords[:3])}")
+                    elif theme == 'international':
+                        if any(word in title_words for word in ['ukraine', 'russia', 'china', 'usa']):
+                            country = next((word for word in title_words if word in ['ukraine', 'russia', 'china', 'usa']), 'international')
+                            story_summaries.append(f"{country} developments")
+                        else:
+                            story_summaries.append(f"international developments involving {' '.join(keywords[:2])}")
+                    elif theme == 'technology':
+                        if any(word in title_words for word in ['ai', 'tech', 'digital', 'cyber']):
+                            story_summaries.append(f"technology sector developments in {' '.join(keywords[:2])}")
+                        else:
+                            story_summaries.append(f"technological developments regarding {' '.join(keywords[:2])}")
+                    elif theme == 'economy':
+                        if any(word in title_words for word in ['inflation', 'market', 'bank', 'business']):
+                            story_summaries.append(f"economic developments affecting {' '.join(keywords[:2])}")
+                        else:
+                            story_summaries.append(f"economic developments in {' '.join(keywords[:2])}")
+                    else:
+                        story_summaries.append(f"developments in {' '.join(keywords[:3])}")
+        
+        if story_summaries:
+            if len(story_summaries) == 1:
+                return f"In {theme} news today, there are {story_summaries[0]}."
+            elif len(story_summaries) == 2:
+                return f"In {theme} news today, there are {story_summaries[0]} and {story_summaries[1]}."
+            else:
+                summary_text = ', '.join(story_summaries[:-1]) + f', and {story_summaries[-1]}'
+                return f"In {theme} news today, there are {summary_text}."
+        else:
+            return f"In {theme} news today, there are significant developments across multiple areas."
     
     async def create_ai_enhanced_digest(self, all_stories: List[NewsStory]) -> str:
         """
