@@ -102,11 +102,6 @@ def update_html_template(data: Dict) -> str:
     new_date = f'<time datetime="{data["date_iso"]}" class="digest-date">{data["date_formatted"]}</time>'
     html = re.sub(date_pattern, new_date, html)
 
-    # Update duration
-    duration_pattern = r'(<span class="meta-label">Duration:</span>\s*<span class="meta-value">).*?(</span>)'
-    new_duration = f'\\g<1>{data["duration_formatted"]}\\g<2>'
-    html = re.sub(duration_pattern, new_duration, html)
-
     # Update audio source
     audio_pattern = r'<source src="audio/news_digest_ai_[\d_]+\.mp3" type="audio/mpeg">'
     new_audio = f'<source src="{data["audio_file"]}" type="audio/mpeg">'
