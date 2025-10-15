@@ -283,7 +283,7 @@ jobs:
     - name: 📥 Checkout repository  
       uses: actions/checkout@v4
       with:
-        ref: ci-updates  # Deploy from ci-updates branch
+        ref: main  # Deploy from main branch
     
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v5
