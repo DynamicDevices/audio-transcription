@@ -17,6 +17,9 @@
     function init() {
         console.log('🎧 Initializing accessibility features...');
         
+        // Check URL parameters first
+        handleUrlParameters();
+        
         // Core accessibility features
         setupKeyboardNavigation();
         setupAudioEnhancements();
@@ -30,6 +33,55 @@
         setupOfflineSupport();
         
         console.log('✅ Accessibility features initialized');
+    }
+    
+    /**
+     * Handle URL parameters for autoplay and other features
+     */
+    function handleUrlParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoplay = urlParams.get('autoplay');
+        
+        if (autoplay === 'true') {
+            // Wait for audio to be ready, then attempt autoplay
+            setTimeout(function() {
+                const audioPlayer = document.querySelector('audio');
+                if (audioPlayer) {
+                    audioPlayer.play().then(function() {
+                        announceToScreenReader('Audio started automatically from shared link');
+                        console.log('✅ Autoplay started successfully');
+                    }).catch(function(error) {
+                        console.log('⚠️ Autoplay prevented by browser:', error);
+                        announceToScreenReader('Click play to start audio - autoplay was blocked by your browser for security');
+                        
+                        // Add visual indicator that autoplay was attempted
+                        const audioContainer = document.querySelector('.audio-player-container');
+                        if (audioContainer) {
+                            const notice = document.createElement('div');
+                            notice.className = 'autoplay-notice';
+                            notice.innerHTML = '▶️ <strong>Ready to play:</strong> Click play to start your news digest';
+                            notice.style.cssText = `
+                                background: #e3f2fd;
+                                border: 1px solid #2196f3;
+                                padding: 8px 12px;
+                                border-radius: 4px;
+                                margin: 8px 0;
+                                font-size: 14px;
+                                color: #1565c0;
+                            `;
+                            audioContainer.insertBefore(notice, audioContainer.firstChild);
+                            
+                            // Remove notice after user interaction
+                            audioPlayer.addEventListener('play', function() {
+                                if (notice.parentNode) {
+                                    notice.remove();
+                                }
+                            }, { once: true });
+                        }
+                    });
+                }
+            }, 800); // Small delay to ensure audio is loaded
+        }
     }
     
     /**
@@ -265,14 +317,16 @@
         // Make the share function globally available
         window.copyShareLink = function() {
             const currentUrl = window.location.href;
-            const audioFile = document.querySelector('audio source');
-            const shareUrl = audioFile ? new URL(audioFile.src, currentUrl).href : currentUrl;
+            const baseUrl = window.location.origin + window.location.pathname;
+            
+            // Create share URL with autoplay parameter
+            const shareUrl = `${baseUrl}?autoplay=true`;
             
             // Try modern clipboard API first
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(shareUrl).then(function() {
-                    announceToScreenReader('Link copied to clipboard. Ready to paste in WhatsApp or other apps.');
-                    showShareFeedback('✅ Copied to clipboard!');
+                    announceToScreenReader('Share link copied to clipboard. Audio will auto-start when opened.');
+                    showShareFeedback('✅ Auto-play link copied!');
                 }).catch(function() {
                     fallbackCopyToClipboard(shareUrl);
                 });
@@ -294,10 +348,10 @@
         
         try {
             document.execCommand('copy');
-            announceToScreenReader('Link copied to clipboard');
-            showShareFeedback('✅ Copied to clipboard!');
+            announceToScreenReader('Share link copied to clipboard. Audio will auto-start when opened.');
+            showShareFeedback('✅ Auto-play link copied!');
         } catch (err) {
-            announceToScreenReader('Could not copy link. Please copy the page URL manually.');
+            announceToScreenReader('Could not copy link. Please copy the page URL manually and add ?autoplay=true');
             showShareFeedback('❌ Copy failed. Please copy URL manually.');
         }
         
