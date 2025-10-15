@@ -1,0 +1,100 @@
+# Rust
+/target/
+Cargo.lock
+*.pdb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Audio files (keep only essential ones)
+*.mp3
+*.wav
+*.m4a
+*.aac
+!guardian_edge_PREMIUM_QUALITY.mp3
+!news_digest_*.mp3
+
+# Text processing artifacts
+*.txt
+!README.md
+!COPYRIGHT_AND_ETHICS.md
+!PROJECT_STRUCTURE.md
+!requirements.txt
+!edge_premium_text.txt
+
+# Archives (development history)
+archive_*/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# OS generated files
+.DS_Store?
+ehthumbs.db
+Icon?
+
+# Node.js (if any future JS components)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files
+.system
