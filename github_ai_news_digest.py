@@ -366,18 +366,46 @@ class GitHubAINewsDigest:
     
     async def generate_audio_digest(self, digest_text: str, output_filename: str):
         """
-        Generate professional audio from AI-synthesized digest using Edge TTS only
+        Generate professional audio from AI-synthesized digest using Edge TTS with retry logic
         """
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
-        # Use Edge TTS only - no fallback to ensure quality
-        communicate = edge_tts.Communicate(digest_text, self.voice_name)
-        with open(output_filename, "wb") as file:
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    file.write(chunk["data"])
+        # Retry logic for Edge TTS authentication issues
+        max_retries = 3
+        retry_delay = 5  # seconds
         
-        print(f"   ✅ Edge TTS audio generated successfully")
+        for attempt in range(max_retries):
+            try:
+                if attempt > 0:
+                    print(f"   🔄 Retry attempt {attempt + 1}/{max_retries}")
+                    
+                communicate = edge_tts.Communicate(digest_text, self.voice_name)
+                with open(output_filename, "wb") as file:
+                    async for chunk in communicate.stream():
+                        if chunk["type"] == "audio":
+                            file.write(chunk["data"])
+                
+                print(f"   ✅ Edge TTS audio generated successfully")
+                break  # Success, exit retry loop
+                
+            except Exception as e:
+                error_msg = str(e)
+                print(f"   ⚠️ Edge TTS attempt {attempt + 1} failed: {error_msg}")
+                
+                # Check if it's an authentication error that might be temporary
+                if "401" in error_msg or "authentication" in error_msg.lower() or "handshake" in error_msg.lower():
+                    if attempt < max_retries - 1:  # Not the last attempt
+                        print(f"   ⏳ Authentication issue detected, waiting {retry_delay} seconds before retry...")
+                        await asyncio.sleep(retry_delay)
+                        retry_delay *= 2  # Exponential backoff
+                        continue
+                    else:
+                        print(f"   ❌ All retry attempts exhausted for authentication error")
+                        raise Exception(f"Edge TTS authentication failed after {max_retries} attempts: {error_msg}")
+                else:
+                    # Non-authentication error, don't retry
+                    print(f"   ❌ Non-retryable Edge TTS error: {error_msg}")
+                    raise Exception(f"Edge TTS failed with non-retryable error: {error_msg}")
         
         # Analyze the generated audio with error handling
         try:
