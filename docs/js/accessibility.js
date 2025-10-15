@@ -303,9 +303,6 @@
         const controls = document.createElement('div');
         controls.className = 'enhanced-audio-controls';
         controls.innerHTML = `
-            <div class="audio-time-display" aria-live="polite">
-                <span class="current-time">0:00</span> / <span class="total-time">0:00</span>
-            </div>
             <div class="audio-speed-controls">
                 <label for="speed-${index}">Playback Speed:</label>
                 <select id="speed-${index}" class="speed-selector" aria-describedby="speed-help-${index}">
@@ -329,10 +326,8 @@
             announceToScreenReader(`Playback speed changed to ${this.value}x`);
         });
         
-        // Store references for global functions
-        audio._timeDisplay = controls.querySelector('.audio-time-display');
-        audio._currentTimeSpan = controls.querySelector('.current-time');
-        audio._totalTimeSpan = controls.querySelector('.total-time');
+        // Store references for global functions (time display removed for cleaner UI)
+        audio._speedSelector = speedSelector;
     }
     
     function updatePlaybackStatus(audio, status) {
@@ -342,19 +337,14 @@
             'ended': '⏹️ Completed'
         };
         
-        if (audio._timeDisplay) {
-            audio._timeDisplay.setAttribute('aria-label', statusMap[status] || status);
-        }
+        // Time display removed for cleaner UI - status updates via screen reader only
+        announceToScreenReader(statusMap[status] || status);
     }
     
     function updateTimeDisplay(audio) {
-        if (!audio._currentTimeSpan || !audio._totalTimeSpan) return;
-        
-        const current = formatTime(audio.currentTime);
-        const total = formatTime(audio.duration);
-        
-        audio._currentTimeSpan.textContent = current;
-        audio._totalTimeSpan.textContent = total;
+        // Time display functionality removed for cleaner UI
+        // Users can see time in browser's native audio controls
+        return;
     }
     
     function formatTime(seconds) {
