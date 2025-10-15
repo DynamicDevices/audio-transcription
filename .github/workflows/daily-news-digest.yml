@@ -5,6 +5,13 @@ on:
     # Run daily at 5:00 AM UTC (6:00 AM BST / 5:00 AM GMT)
     # This ensures 6 AM UK time during British Summer Time
     - cron: '0 5 * * *'
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '*.py'
+      - 'requirements.txt'
+      - '.github/workflows/**'
   workflow_dispatch: # Allow manual triggering
     inputs:
       debug_mode:
@@ -72,26 +79,38 @@ jobs:
         
         echo "today_date=$TODAY" >> $GITHUB_OUTPUT
     
-    - name: 🤖 Generate AI-Enhanced News Digest
-      # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
-      if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
-      run: |
-        echo "🚀 Starting AI-enhanced news digest generation..."
-        echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
-        python github_ai_news_digest.py
-        echo "✅ Digest generation completed"
+        - name: 🤖 Generate AI-Enhanced News Digest
+          # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
+          if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+            ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+            DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
+          run: |
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "🚀 Push-triggered build: Deploying UX improvements..."
+              echo "💰 Cost optimization: Will only generate AI content if missing"
+            elif [ "${{ github.event_name }}" = "schedule" ]; then
+              echo "⏰ Scheduled build: Daily news digest generation..."
+              echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
+            else
+              echo "🔧 Manual workflow: Custom parameters applied"
+              echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
+            fi
+            python github_ai_news_digest.py
+            echo "✅ Digest generation completed"
     
-    - name: ⚡ Skip AI Generation (Cost Optimization)
-      if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && inputs.deploy_only == 'true'
-      run: |
-        echo "💰 COST OPTIMIZATION: Skipping AI generation"
-        echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
-        echo "🔄 Will redeploy existing content with UX improvements"
+        - name: ⚡ Skip AI Generation (Cost Optimization)
+          if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && (inputs.deploy_only == 'true' || github.event_name == 'push')
+          run: |
+            echo "💰 COST OPTIMIZATION: Skipping AI generation"
+            echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "🚀 Push event: Deploying UX/code improvements without regenerating content"
+            else
+              echo "🔄 Will redeploy existing content with UX improvements"
+            fi
     
     - name: 📊 Analyze generated content
       run: |
@@ -184,13 +203,13 @@ jobs:
         retention-days: 90
     
     - name: 🏷️ Create release for audio file
-      if: success()
+      if: success() && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.force_ai_regeneration == 'true'))
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: daily-${{ github.run_number }}
-        name: 🎧 Daily AI News Digest - ${{ github.run_number }}
+        tag_name: daily-${{ steps.check_content.outputs.today_date }}
+        name: 🎧 Daily AI News Digest - ${{ steps.check_content.outputs.today_date }}
         body: |
           🤖 **AI-Enhanced News Digest**
           📅 Generated: ${{ github.event.head_commit.timestamp }}
@@ -203,9 +222,9 @@ jobs:
           - ✅ Copyright-compliant synthesis
           - ✅ Accessible newspaper website
           
-                 ### 📥 Access Options
-                 - **🌐 Website**: [Daily News Digest](https://audionews.uk)
-                 - **Audio**: `news_digest_ai_*.mp3` - Ready for WhatsApp sharing
+          ### 📥 Access Options
+          - **🌐 Website**: [Daily News Digest](https://audionews.uk)
+          - **Audio**: `news_digest_ai_*.mp3` - Ready for WhatsApp sharing
           - **Text**: `news_digest_ai_*.txt` - Full transcript with sources
           
           Perfect for visually impaired users! 🎧♿
@@ -283,11 +302,26 @@ jobs:
     steps:
     - name: 🎉 Success notification
       run: |
-        echo "🎉 Daily AI news digest generated successfully!"
-        echo "📅 Date: $(date)"
-        echo "🎧 Audio ready for visually impaired users"
-        echo "🤖 AI analysis completed"
-        echo "🌐 Accessible website deployed"
-        echo "♿ Accessibility service operational"
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "🚀 Push-triggered deployment completed successfully!"
+          echo "📅 Date: $(date)"
+          echo "🌐 Website deployed with UX improvements"
+          echo "💰 Cost optimized: No unnecessary AI regeneration"
+          echo "♿ Accessibility service operational"
+        elif [ "${{ github.event_name }}" = "schedule" ]; then
+          echo "⏰ Scheduled daily digest completed successfully!"
+          echo "📅 Date: $(date)"
+          echo "🎧 Audio ready for visually impaired users"
+          echo "🤖 AI analysis completed"
+          echo "🌐 Accessible website deployed"
+          echo "♿ Accessibility service operational"
+        else
+          echo "🔧 Manual workflow completed successfully!"
+          echo "📅 Date: $(date)"
+          echo "🎧 Audio ready for visually impaired users"
+          echo "🤖 AI analysis completed"
+          echo "🌐 Accessible website deployed"
+          echo "♿ Accessibility service operational"
+        fi
         echo ""
-               echo "🔗 Website: https://audionews.uk"
+        echo "🔗 Website: https://audionews.uk"
