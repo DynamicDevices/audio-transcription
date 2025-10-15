@@ -1,1 +1,0 @@
-/data_drive/dd/audio-transcription/target/release/libaudio_transcription.rlib: /data_drive/dd/audio-transcription/src/article_extractor.rs /data_drive/dd/audio-transcription/src/audio_processor.rs /data_drive/dd/audio-transcription/src/lib.rs /data_drive/dd/audio-transcription/src/tts_service.rs
