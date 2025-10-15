@@ -179,13 +179,18 @@ class GitHubAINewsDigest:
             Headlines:
             {chr(10).join(story_titles)}
             
-            Please:
-            1. Group headlines by theme (politics, economy, health, international, climate, technology, crime, other)
-            2. Identify which stories are covered by multiple sources (these are most significant)
-            3. Rate significance on 1-10 scale based on coverage breadth and importance
-            4. Return JSON format: {{"theme": [{{"index": 1, "significance": 8, "reasoning": "..."}}]}}
+            Please respond with ONLY valid JSON in this exact format:
+            {{
+                "politics": [{{"index": 1, "significance": 8, "reasoning": "Government policy coverage"}}],
+                "international": [{{"index": 2, "significance": 7, "reasoning": "Global affairs"}}],
+                "technology": [{{"index": 3, "significance": 6, "reasoning": "Tech developments"}}]
+            }}
             
-            Focus on stories with cross-source coverage as most newsworthy.
+            Rules:
+            1. Return ONLY the JSON object, no other text
+            2. Use only these themes: politics, economy, health, international, climate, technology, crime
+            3. Rate significance 1-10 based on coverage breadth
+            4. Focus on stories with cross-source coverage
             """
             
             if self.ai_provider == 'openai':
@@ -368,36 +373,18 @@ class GitHubAINewsDigest:
     
     async def generate_audio_digest(self, digest_text: str, output_filename: str):
         """
-        Generate professional audio from AI-synthesized digest with fallback options
+        Generate professional audio from AI-synthesized digest using Edge TTS only
         """
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
-        # Try Edge TTS first, fallback to gTTS if it fails
-        try:
-            communicate = edge_tts.Communicate(digest_text, self.voice_name)
-            with open(output_filename, "wb") as file:
-                async for chunk in communicate.stream():
-                    if chunk["type"] == "audio":
-                        file.write(chunk["data"])
-            
-            print(f"   ✅ Edge TTS audio generated successfully")
-            
-        except Exception as e:
-            print(f"   ⚠️ Edge TTS failed: {e}")
-            print(f"   🔄 Falling back to gTTS...")
-            
-            # Fallback to gTTS
-            try:
-                from gtts import gTTS
-                tts = gTTS(text=digest_text, lang='en', tld='ie')  # Irish accent
-                tts.save(output_filename)
-                print(f"   ✅ gTTS fallback audio generated")
-            except Exception as gtts_error:
-                print(f"   ❌ gTTS also failed: {gtts_error}")
-                # Create a simple text file as last resort
-                with open(output_filename.replace('.mp3', '_FAILED.txt'), 'w') as f:
-                    f.write(f"Audio generation failed. Text content:\n\n{digest_text}")
-                raise Exception(f"Both Edge TTS and gTTS failed: {e}, {gtts_error}")
+        # Use Edge TTS only - no fallback to ensure quality
+        communicate = edge_tts.Communicate(digest_text, self.voice_name)
+        with open(output_filename, "wb") as file:
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    file.write(chunk["data"])
+        
+        print(f"   ✅ Edge TTS audio generated successfully")
         
         # Analyze the generated audio with error handling
         try:
