@@ -1,0 +1,477 @@
+#!/usr/bin/env python3
+"""
+GitHub AI-Enhanced Ethical News Digest Generator
+Uses GitHub Copilot API for intelligent content analysis and synthesis
+"""
+
+import asyncio
+import edge_tts
+import os
+import requests
+from bs4 import BeautifulSoup
+import re
+from datetime import datetime, date
+import json
+from typing import List, Dict, Optional
+import time
+from dataclasses import dataclass
+
+# Optional AI imports - will be imported only if needed
+try:
+    import openai
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+
+try:
+    import anthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
+
+@dataclass
+class NewsStory:
+    title: str
+    source: str
+    link: Optional[str]
+    timestamp: str
+    theme: Optional[str] = None
+    significance_score: Optional[float] = None
+
+class GitHubAINewsDigest:
+    """
+    AI-Enhanced news synthesis using GitHub Copilot API
+    Provides intelligent analysis while maintaining copyright compliance
+    """
+    
+    def __init__(self):
+        self.sources = {
+            'BBC News': 'https://www.bbc.co.uk/news',
+            'Guardian': 'https://www.theguardian.com/uk',
+            'Independent': 'https://www.independent.co.uk',
+            'Sky News': 'https://news.sky.com',
+            'Telegraph': 'https://www.telegraph.co.uk',
+        }
+        
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        
+        self.voice_name = "en-IE-EmilyNeural"
+        
+        # Initialize GitHub Copilot API
+        self.setup_github_ai()
+    
+    def setup_github_ai(self):
+        """
+        Setup AI integration with multiple providers
+        """
+        # Try OpenAI first (most common)
+        openai_key = os.getenv('OPENAI_API_KEY')
+        anthropic_key = os.getenv('ANTHROPIC_API_KEY')
+        
+        if openai_key and OPENAI_AVAILABLE:
+            from openai import OpenAI
+            self.openai_client = OpenAI(api_key=openai_key)
+            self.ai_provider = 'openai'
+            self.ai_enabled = True
+            print("🤖 AI Analysis: OPENAI ENABLED")
+        elif anthropic_key and ANTHROPIC_AVAILABLE:
+            self.anthropic_client = anthropic.Anthropic(api_key=anthropic_key)
+            self.ai_provider = 'anthropic'
+            self.ai_enabled = True
+            print("🤖 AI Analysis: ANTHROPIC ENABLED")
+        else:
+            self.ai_enabled = False
+            self.ai_provider = None
+            if not OPENAI_AVAILABLE and not ANTHROPIC_AVAILABLE:
+                print("⚠️ AI Analysis: DISABLED (no AI libraries installed)")
+            else:
+                print("⚠️ AI Analysis: DISABLED (no API keys found)")
+    
+    def fetch_headlines_from_source(self, source_name: str, url: str) -> List[NewsStory]:
+        """
+        Extract headlines and create NewsStory objects
+        """
+        try:
+            print(f"📡 Scanning {source_name}...")
+            response = requests.get(url, headers=self.headers, timeout=10)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            stories = []
+            
+            # Enhanced selectors for better extraction
+            selectors = [
+                'h1, h2, h3',
+                '[data-testid*="headline"]',
+                '.fc-item__title',
+                '.headline',
+                '.title',
+                'article h1, article h2',
+                '.story-headline'
+            ]
+            
+            seen_headlines = set()
+            
+            for selector in selectors:
+                elements = soup.select(selector)
+                for element in elements[:15]:
+                    text = element.get_text(strip=True)
+                    if (text and 
+                        len(text) > 15 and 
+                        len(text) < 200 and 
+                        text not in seen_headlines and
+                        not text.lower().startswith(('cookie', 'accept', 'subscribe', 'sign up', 'follow us'))):
+                        
+                        # Extract link
+                        link = None
+                        link_elem = element.find('a') or element.find_parent('a')
+                        if link_elem and link_elem.get('href'):
+                            href = link_elem.get('href')
+                            if href.startswith('/'):
+                                link = url + href
+                            elif href.startswith('http'):
+                                link = href
+                        
+                        story = NewsStory(
+                            title=text,
+                            source=source_name,
+                            link=link,
+                            timestamp=datetime.now().isoformat()
+                        )
+                        
+                        stories.append(story)
+                        seen_headlines.add(text)
+                        
+                        if len(stories) >= 12:
+                            break
+                
+                if stories:
+                    break
+            
+            print(f"   ✅ Found {len(stories)} stories from {source_name}")
+            return stories
+            
+        except Exception as e:
+            print(f"   ❌ Error fetching from {source_name}: {e}")
+            return []
+    
+    async def ai_analyze_stories(self, all_stories: List[NewsStory]) -> Dict[str, List[NewsStory]]:
+        """
+        Use GitHub AI to intelligently categorize and analyze stories
+        """
+        if not self.ai_enabled or not all_stories:
+            return self.fallback_categorization(all_stories)
+        
+        print("\n🤖 AI ANALYSIS: Intelligent story categorization")
+        print("=" * 50)
+        
+        try:
+            # Prepare stories for AI analysis
+            story_titles = [f"{i+1}. {story.title} (Source: {story.source})" 
+                          for i, story in enumerate(all_stories)]
+            
+            ai_prompt = f"""
+            Analyze these UK news headlines and categorize them into themes. 
+            Identify the most significant stories being covered by multiple sources.
+            
+            Headlines:
+            {chr(10).join(story_titles)}
+            
+            Please:
+            1. Group headlines by theme (politics, economy, health, international, climate, technology, crime, other)
+            2. Identify which stories are covered by multiple sources (these are most significant)
+            3. Rate significance on 1-10 scale based on coverage breadth and importance
+            4. Return JSON format: {{"theme": [{{"index": 1, "significance": 8, "reasoning": "..."}}]}}
+            
+            Focus on stories with cross-source coverage as most newsworthy.
+            """
+            
+            if self.ai_provider == 'openai':
+                response = self.openai_client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are an expert news analyst categorizing UK headlines for accessibility services. Focus on accuracy and significance."},
+                        {"role": "user", "content": ai_prompt}
+                    ],
+                    temperature=0.3,
+                    max_tokens=1500
+                )
+                ai_analysis = json.loads(response.choices[0].message.content)
+            
+            elif self.ai_provider == 'anthropic':
+                response = self.anthropic_client.messages.create(
+                    model="claude-3-sonnet-20240229",
+                    max_tokens=1500,
+                    temperature=0.3,
+                    messages=[
+                        {"role": "user", "content": f"You are an expert news analyst. {ai_prompt}"}
+                    ]
+                )
+                ai_analysis = json.loads(response.content[0].text)
+            
+            # Apply AI analysis to stories
+            themes = {}
+            for theme, story_analyses in ai_analysis.items():
+                theme_stories = []
+                for analysis in story_analyses:
+                    story_idx = analysis['index'] - 1  # Convert to 0-based
+                    if 0 <= story_idx < len(all_stories):
+                        story = all_stories[story_idx]
+                        story.theme = theme
+                        story.significance_score = analysis['significance']
+                        theme_stories.append(story)
+                
+                if theme_stories:
+                    # Sort by significance score
+                    theme_stories.sort(key=lambda x: x.significance_score or 0, reverse=True)
+                    themes[theme] = theme_stories
+                    print(f"   🎯 {theme.capitalize()}: {len(theme_stories)} stories (AI analyzed)")
+            
+            return themes
+            
+        except Exception as e:
+            print(f"   ⚠️ AI analysis failed: {e}")
+            print("   🔄 Falling back to keyword-based categorization")
+            return self.fallback_categorization(all_stories)
+    
+    def fallback_categorization(self, all_stories: List[NewsStory]) -> Dict[str, List[NewsStory]]:
+        """
+        Fallback to keyword-based categorization if AI fails
+        """
+        theme_keywords = {
+            'politics': ['government', 'minister', 'parliament', 'election', 'policy', 'mp', 'labour', 'conservative'],
+            'economy': ['economy', 'inflation', 'bank', 'interest', 'market', 'business', 'financial', 'gdp'],
+            'health': ['health', 'nhs', 'medical', 'hospital', 'covid', 'vaccine', 'doctor'],
+            'international': ['ukraine', 'russia', 'china', 'usa', 'europe', 'war', 'conflict'],
+            'climate': ['climate', 'environment', 'green', 'carbon', 'renewable', 'energy'],
+            'technology': ['technology', 'tech', 'ai', 'digital', 'cyber', 'internet'],
+            'crime': ['police', 'court', 'crime', 'arrest', 'investigation', 'trial']
+        }
+        
+        themes = {}
+        for theme, keywords in theme_keywords.items():
+            theme_stories = []
+            for story in all_stories:
+                if any(keyword in story.title.lower() for keyword in keywords):
+                    story.theme = theme
+                    theme_stories.append(story)
+            
+            if len(theme_stories) >= 2:
+                themes[theme] = theme_stories
+        
+        return themes
+    
+    async def ai_synthesize_content(self, theme: str, stories: List[NewsStory]) -> str:
+        """
+        Use GitHub AI to create intelligent, coherent content synthesis
+        """
+        if not self.ai_enabled or not stories:
+            return self.fallback_synthesis(theme, stories)
+        
+        try:
+            story_info = []
+            for story in stories[:5]:  # Top 5 stories
+                info = f"- {story.title} (Source: {story.source}"
+                if story.significance_score:
+                    info += f", Significance: {story.significance_score}/10"
+                info += ")"
+                story_info.append(info)
+            
+            sources = list(set(story.source for story in stories))
+            
+            ai_prompt = f"""
+            Create a concise, informative news summary for visually impaired listeners about {theme} news.
+            
+            Source Stories:
+            {chr(10).join(story_info)}
+            
+            Requirements:
+            - Create original content (do NOT copy headlines)
+            - Synthesize common themes across sources
+            - Mention that {len(sources)} sources are covering this
+            - Keep under 100 words
+            - Write for audio consumption (clear, flowing sentences)
+            - Include source attribution: {', '.join(sources)}
+            - Focus on what makes this significant enough for multiple outlets to cover
+            
+            Start with: "In {theme} news today, {len(sources)} major sources are reporting..."
+            """
+            
+            if self.ai_provider == 'openai':
+                response = self.openai_client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize."},
+                        {"role": "user", "content": ai_prompt}
+                    ],
+                    temperature=0.4,
+                    max_tokens=300
+                )
+                return response.choices[0].message.content.strip()
+            
+            elif self.ai_provider == 'anthropic':
+                response = self.anthropic_client.messages.create(
+                    model="claude-3-sonnet-20240229",
+                    max_tokens=300,
+                    temperature=0.4,
+                    messages=[
+                        {"role": "user", "content": f"You are creating accessible news content. {ai_prompt}"}
+                    ]
+                )
+                return response.content[0].text.strip()
+            
+        except Exception as e:
+            print(f"   ⚠️ AI synthesis failed for {theme}: {e}")
+            return self.fallback_synthesis(theme, stories)
+    
+    def fallback_synthesis(self, theme: str, stories: List[NewsStory]) -> str:
+        """
+        Fallback synthesis method
+        """
+        sources = list(set(story.source for story in stories))
+        return f"In {theme} news today, {len(sources)} sources including {', '.join(sources[:3])} are reporting on significant developments. For detailed coverage, sources include {', '.join(sources)}."
+    
+    async def create_ai_enhanced_digest(self, all_stories: List[NewsStory]) -> str:
+        """
+        Create comprehensive digest using AI analysis
+        """
+        today = date.today().strftime("%B %d, %Y")
+        
+        # AI analyze all stories
+        themes = await self.ai_analyze_stories(all_stories)
+        
+        if not themes:
+            return "No significant news themes identified today."
+        
+        # Create introduction
+        digest = f"Good morning. Here's your AI-enhanced UK news digest for {today}. "
+        digest += "This summary uses artificial intelligence to analyze and synthesize "
+        digest += f"information from {len(set(story.source for story in all_stories))} major UK news sources. "
+        
+        # Add AI-synthesized content for each theme
+        for theme, stories in themes.items():
+            if stories:
+                theme_content = await self.ai_synthesize_content(theme, stories)
+                if theme_content:
+                    digest += f"\n\n{theme_content}"
+        
+        # Add methodology and attribution
+        total_sources = len(set(story.source for story in all_stories))
+        digest += f"\n\nThis digest synthesizes information from {total_sources} sources "
+        digest += "using AI analysis to identify the most significant stories. "
+        digest += "All content is original synthesis designed for accessibility. "
+        digest += "For complete coverage, visit the original sources directly."
+        
+        return digest
+    
+    async def generate_audio_digest(self, digest_text: str, output_filename: str):
+        """
+        Generate professional audio from AI-synthesized digest
+        """
+        print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
+        
+        communicate = edge_tts.Communicate(digest_text, self.voice_name)
+        with open(output_filename, "wb") as file:
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    file.write(chunk["data"])
+        
+        # Analyze audio
+        from pydub import AudioSegment
+        audio = AudioSegment.from_mp3(output_filename)
+        duration_s = len(audio) / 1000.0
+        word_count = len(digest_text.split())
+        words_per_second = word_count / duration_s if duration_s > 0 else 0
+        file_size_kb = os.path.getsize(output_filename) / 1024
+        
+        print(f"   ✅ AI Audio created: {duration_s:.1f}s, {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
+        
+        return {
+            'filename': output_filename,
+            'duration': duration_s,
+            'words': word_count,
+            'wps': words_per_second,
+            'size_kb': file_size_kb
+        }
+    
+    async def generate_daily_ai_digest(self):
+        """
+        Main function for AI-enhanced daily digest generation
+        """
+        print("🤖 GITHUB AI-ENHANCED NEWS DIGEST")
+        print("🎯 Intelligent analysis for visually impaired users")
+        print("⚖️ Copyright-compliant AI synthesis")
+        print("=" * 60)
+        
+        # Aggregate all stories
+        all_stories = []
+        for source_name, url in self.sources.items():
+            stories = self.fetch_headlines_from_source(source_name, url)
+            all_stories.extend(stories)
+            time.sleep(1)  # Be respectful
+        
+        if not all_stories:
+            print("❌ No stories found")
+            return
+        
+        print(f"\n📊 Total stories collected: {len(all_stories)}")
+        
+        # Create AI-enhanced digest
+        digest_text = await self.create_ai_enhanced_digest(all_stories)
+        
+        # Save files
+        today_str = date.today().strftime("%Y_%m_%d")
+        text_filename = f"news_digest_ai_{today_str}.txt"
+        audio_filename = f"news_digest_ai_{today_str}.mp3"
+        
+        # Save text with metadata
+        with open(text_filename, 'w', encoding='utf-8') as f:
+            f.write("GITHUB AI-ENHANCED NEWS DIGEST\n")
+            f.write("=" * 40 + "\n")
+            f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"AI Analysis: {'ENABLED' if self.ai_enabled else 'DISABLED'}\n")
+            f.write("Type: AI-synthesized content for accessibility\n")
+            f.write("=" * 40 + "\n\n")
+            f.write(digest_text)
+        
+        print(f"\n📄 AI digest text saved: {text_filename}")
+        
+        # Generate audio
+        audio_stats = await self.generate_audio_digest(digest_text, audio_filename)
+        
+        # Summary
+        print(f"\n🤖 AI-ENHANCED DIGEST COMPLETE")
+        print("=" * 35)
+        print(f"📅 Date: {date.today().strftime('%B %d, %Y')}")
+        print(f"🤖 AI Analysis: {'ENABLED' if self.ai_enabled else 'FALLBACK MODE'}")
+        print(f"📰 Stories: {len(all_stories)} from {len(self.sources)} sources")
+        print(f"⏱️ Duration: {audio_stats['duration']:.1f}s")
+        print(f"🎤 Speed: {audio_stats['wps']:.2f} WPS")
+        print(f"🎧 Audio: {audio_filename}")
+        print(f"📄 Text: {text_filename}")
+        
+        return {
+            'audio_file': audio_filename,
+            'text_file': text_filename,
+            'stats': audio_stats,
+            'ai_enabled': self.ai_enabled,
+            'stories_analyzed': len(all_stories)
+        }
+
+async def main():
+    """
+    Generate AI-enhanced daily digest using GitHub infrastructure
+    """
+    digest_generator = GitHubAINewsDigest()
+    result = await digest_generator.generate_daily_ai_digest()
+    
+    if result:
+        print(f"\n🎉 SUCCESS: AI-enhanced digest ready!")
+        print(f"   🤖 AI Analysis: {'ENABLED' if result['ai_enabled'] else 'FALLBACK'}")
+        print(f"   🎧 Audio: {result['audio_file']}")
+        print(f"   📄 Text: {result['text_file']}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
