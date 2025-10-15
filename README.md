@@ -9,7 +9,7 @@ Create natural, human-quality audio news digests specifically designed for visua
 
 📱 **Website**: [https://audionews.uk](https://audionews.uk)
 
-- 🕕 **Updated daily** at 6:00 AM UTC
+- 🕕 **Updated daily** at 6:00 AM UK time (BST/GMT)
 - 🎵 **Auto-play sharing** via `?autoplay=true` URLs  
 - 📱 **WhatsApp optimized** for easy family sharing
 - ♿ **Accessibility first** - screen reader friendly
@@ -91,7 +91,7 @@ await generate_edge_audio(digest_content, "en-IE-EmilyNeural")
 ```
 
 ### **GitHub Actions Automation**
-- **Daily execution** at 6:00 AM UTC
+- **Daily execution** at 6:00 AM UK time
 - **AI API integration** (OpenAI/Anthropic)
 - **Website deployment** to GitHub Pages
 - **Audio file management** and archival
@@ -137,7 +137,7 @@ python update_website.py
 ### **Accessibility Impact**
 - **Screen reader optimized** for blind/partially sighted users
 - **WhatsApp sharing** enables family support networks  
-- **Daily consistency** builds reliable news routine
+- **Daily consistency** builds reliable news routine at 6 AM UK time
 - **Zero cost** accessibility service
 
 ## 🏆 **Engineering Achievements**
@@ -160,7 +160,7 @@ This service is specifically designed for people who cannot access traditional v
 - **📱 Easy sharing** - family can send via WhatsApp  
 - **♿ Screen reader friendly** - works with JAWS, NVDA, VoiceOver
 - **⌨️ Keyboard accessible** - no mouse required
-- **🔄 Consistent schedule** - reliable daily updates
+- **🔄 Consistent schedule** - reliable daily updates at 6 AM UK time
 
 ## 📞 **Support & Contact**
 
