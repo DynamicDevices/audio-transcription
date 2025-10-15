@@ -332,20 +332,45 @@ section {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
+  border-radius: var(--border-radius);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-digest::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
 }
 
 .main-digest .digest-title,
 .main-digest .meta-label {
   color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .digest-header {
   margin-bottom: var(--space-6);
 }
 
+.main-digest .digest-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
 .digest-title {
   font-size: var(--font-size-2xl);
+  font-weight: 700;
   margin-bottom: var(--space-4);
+  line-height: 1.2;
 }
 
 .digest-date {
@@ -380,7 +405,31 @@ section {
 }
 
 .main-digest .meta-value {
-  color: rgba(255, 255, 255, 0.9);
+  color: white;
+  font-weight: 600;
+}
+
+/* Enhanced metadata for main digest */
+.main-digest .digest-meta {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--border-radius);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.main-digest .digest-meta .meta-item {
+  color: white;
+}
+
+.main-digest .digest-meta .meta-label {
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.main-digest .digest-meta .meta-value {
+  font-weight: 600;
 }
 
 /* ==========================================================================
@@ -527,8 +576,25 @@ section {
 }
 
 /* ==========================================================================
-   RECENT DIGESTS
+   RECENT DIGESTS (Subdued styling)
    ========================================================================== */
+
+.recent-digests-section {
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  opacity: 0.85;
+}
+
+.recent-digests-section .section-title {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-light);
+}
+
+.recent-digests-section .section-description {
+  color: var(--color-text-light);
+  font-size: var(--font-size-base);
+}
 
 .digests-list {
   display: grid;
@@ -538,20 +604,38 @@ section {
 
 .digest-item {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-3);
   padding: var(--space-4);
   background-color: var(--color-bg-alt);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
 }
 
+/* Streamlined header layout */
+.digest-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .digest-item-title {
   font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-primary);
   margin: 0;
   flex: 1;
+}
+
+/* New streamlined duration badge */
+.digest-item-duration {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  font-weight: 500;
+  background-color: var(--color-bg-alt);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius);
+  white-space: nowrap;
 }
 
 .digest-item-meta {
@@ -575,6 +659,21 @@ section {
   font-weight: 500;
   transition: background-color 0.2s ease;
   border: 1px solid #1a365d; /* Add border for definition */
+}
+
+/* Simplified mini audio players */
+.mini-audio-player {
+  width: 100%;
+  height: 40px;
+  background-color: var(--color-bg-alt);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+}
+
+/* Hide unnecessary audio controls for cleaner interface */
+.mini-audio-player::-webkit-media-controls-volume-slider,
+.mini-audio-player::-webkit-media-controls-mute-button {
+  display: none;
 }
 
 .mini-button:hover,
@@ -699,6 +798,84 @@ section {
 /* ==========================================================================
    RESPONSIVE DESIGN
    ========================================================================== */
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  /* Improve touch targets */
+  .action-button {
+    min-height: 48px;
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-base);
+  }
+  
+  .mini-button {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Stack action buttons on mobile */
+  .digest-actions {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  /* Optimize main digest for mobile */
+  .main-digest {
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+  }
+  
+  .main-digest .digest-title {
+    font-size: var(--font-size-xl);
+    line-height: 1.3;
+  }
+  
+  /* Compact recent digests on mobile */
+  .digest-item {
+    padding: var(--space-3);
+  }
+  
+  .digest-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .digest-item-title {
+    font-size: var(--font-size-base);
+  }
+  
+  /* Stack audio and download button */
+  .digest-item-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .mini-audio-player {
+    width: 100%;
+  }
+  
+  /* Reduce spacing on mobile */
+  .recent-digests-section {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+  }
+  
+  .section-header {
+    margin-bottom: var(--space-4);
+  }
+  
+  /* Optimize metadata display */
+  .digest-meta {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .meta-item {
+    justify-content: space-between;
+  }
+}
 
 /* Tablet and up */
 @media (min-width: 768px) {
