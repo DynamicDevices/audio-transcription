@@ -287,6 +287,15 @@ jobs:
         ref: main  # Deploy from main branch
         lfs: true  # Enable Git LFS checkout
     
+    - name: 📦 Pull LFS files
+      run: |
+        echo "🔍 Checking LFS files before pull..."
+        ls -la docs/audio/*.mp3 || echo "No audio files found"
+        echo "🔄 Pulling LFS files..."
+        git lfs pull
+        echo "✅ LFS files after pull:"
+        ls -la docs/audio/*.mp3 || echo "No audio files found"
+    
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v5
     
