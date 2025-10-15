@@ -202,7 +202,7 @@ class GitHubAINewsDigest:
             
             elif self.ai_provider == 'anthropic':
                 response = self.anthropic_client.messages.create(
-                    model="claude-3-sonnet-20240229",
+                    model="claude-3-5-sonnet-20241022",
                     max_tokens=1500,
                     temperature=0.3,
                     messages=[
@@ -313,7 +313,7 @@ class GitHubAINewsDigest:
             
             elif self.ai_provider == 'anthropic':
                 response = self.anthropic_client.messages.create(
-                    model="claude-3-sonnet-20240229",
+                    model="claude-3-5-sonnet-20241022",
                     max_tokens=300,
                     temperature=0.4,
                     messages=[
@@ -368,25 +368,57 @@ class GitHubAINewsDigest:
     
     async def generate_audio_digest(self, digest_text: str, output_filename: str):
         """
-        Generate professional audio from AI-synthesized digest
+        Generate professional audio from AI-synthesized digest with fallback options
         """
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
-        communicate = edge_tts.Communicate(digest_text, self.voice_name)
-        with open(output_filename, "wb") as file:
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    file.write(chunk["data"])
+        # Try Edge TTS first, fallback to gTTS if it fails
+        try:
+            communicate = edge_tts.Communicate(digest_text, self.voice_name)
+            with open(output_filename, "wb") as file:
+                async for chunk in communicate.stream():
+                    if chunk["type"] == "audio":
+                        file.write(chunk["data"])
+            
+            print(f"   ✅ Edge TTS audio generated successfully")
+            
+        except Exception as e:
+            print(f"   ⚠️ Edge TTS failed: {e}")
+            print(f"   🔄 Falling back to gTTS...")
+            
+            # Fallback to gTTS
+            try:
+                from gtts import gTTS
+                tts = gTTS(text=digest_text, lang='en', tld='ie')  # Irish accent
+                tts.save(output_filename)
+                print(f"   ✅ gTTS fallback audio generated")
+            except Exception as gtts_error:
+                print(f"   ❌ gTTS also failed: {gtts_error}")
+                # Create a simple text file as last resort
+                with open(output_filename.replace('.mp3', '_FAILED.txt'), 'w') as f:
+                    f.write(f"Audio generation failed. Text content:\n\n{digest_text}")
+                raise Exception(f"Both Edge TTS and gTTS failed: {e}, {gtts_error}")
         
-        # Analyze audio
-        from pydub import AudioSegment
-        audio = AudioSegment.from_mp3(output_filename)
-        duration_s = len(audio) / 1000.0
-        word_count = len(digest_text.split())
-        words_per_second = word_count / duration_s if duration_s > 0 else 0
-        file_size_kb = os.path.getsize(output_filename) / 1024
-        
-        print(f"   ✅ AI Audio created: {duration_s:.1f}s, {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
+        # Analyze the generated audio with error handling
+        try:
+            from pydub import AudioSegment
+            audio = AudioSegment.from_mp3(output_filename)
+            duration_s = len(audio) / 1000.0
+            word_count = len(digest_text.split())
+            words_per_second = word_count / duration_s if duration_s > 0 else 0
+            file_size_kb = os.path.getsize(output_filename) / 1024
+            
+            print(f"   ✅ AI Audio created: {duration_s:.1f}s, {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
+            
+        except Exception as analysis_error:
+            print(f"   ⚠️ Audio analysis failed: {analysis_error}")
+            # Return basic stats without analysis
+            file_size_kb = os.path.getsize(output_filename) / 1024 if os.path.exists(output_filename) else 0
+            word_count = len(digest_text.split())
+            duration_s = word_count / 2.0  # Estimate 2 words per second
+            words_per_second = 2.0
+            
+            print(f"   ✅ AI Audio created: {duration_s:.1f}s (estimated), {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
         
         return {
             'filename': output_filename,
