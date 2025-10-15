@@ -210,6 +210,9 @@
             margin-bottom: 1.5rem;
             font-weight: 400;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: none;
+            width: 100%;
         }
         .container {
             max-width: 1200px;
@@ -285,7 +288,7 @@
                     <div class="digest-meta">
                         <span class="meta-item">
                             <span class="meta-label">Duration:</span>
-                            <span class="meta-value">1 seconds</span>
+                            <span class="meta-value">2min 49sec</span>
                         </span>
                         <span class="meta-item">
                             <span class="meta-label">Voice:</span>
@@ -341,7 +344,8 @@
         </section>
 
         <!-- Recent digests section -->
-        <section id="recent-digests" class="recent-digests-section" aria-labelledby="recent-heading">
+        <!-- Recent Digests - Hidden until previous content exists -->
+        <section id="recent-digests" class="recent-digests-section" aria-labelledby="recent-heading" style="display: none;">
             <header class="section-header">
                 <h2 id="recent-heading" class="section-title">
                     <span class="section-icon" aria-hidden="true">📅</span>
@@ -351,47 +355,7 @@
             </header>
             
             <div class="recent-digests-grid">
-                <article class="recent-digest-item">
-                    <header class="digest-item-header">
-                        <h3 class="digest-item-title">October 14, 2025</h3>
-                        <span class="digest-item-duration">2min 34sec</span>
-                    </header>
-                    <div class="digest-item-actions">
-                        <audio class="mini-audio-player" controls preload="none">
-                            <source src="audio/news_digest_ai_2025_10_15.mp3" type="audio/mpeg">
-                            Your browser doesn't support audio playback.
-                        </audio>
-                        <a href="audio/news_digest_ai_2025_10_15.mp3" download class="mini-button">Download</a>
-                    </div>
-                </article>
-                
-                <article class="recent-digest-item">
-                    <header class="digest-item-header">
-                        <h3 class="digest-item-title">October 13, 2025</h3>
-                        <span class="digest-item-duration">3min 12sec</span>
-                    </header>
-                    <div class="digest-item-actions">
-                        <audio class="mini-audio-player" controls preload="none">
-                            <source src="audio/news_digest_ai_2025_10_15.mp3" type="audio/mpeg">
-                            Your browser doesn't support audio playback.
-                        </audio>
-                        <a href="audio/news_digest_ai_2025_10_15.mp3" download class="mini-button">Download</a>
-                    </div>
-                </article>
-                
-                <article class="recent-digest-item">
-                    <header class="digest-item-header">
-                        <h3 class="digest-item-title">October 12, 2025</h3>
-                        <span class="digest-item-duration">2min 58sec</span>
-                    </header>
-                    <div class="digest-item-actions">
-                        <audio class="mini-audio-player" controls preload="none">
-                            <source src="audio/news_digest_ai_2025_10_15.mp3" type="audio/mpeg">
-                            Your browser doesn't support audio playback.
-                        </audio>
-                        <a href="audio/news_digest_ai_2025_10_15.mp3" download class="mini-button">Download</a>
-                    </div>
-                </article>
+                <!-- Previous digests will be populated by update_website.py when they exist -->
             </div>
         </section>
 

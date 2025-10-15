@@ -10,10 +10,13 @@ def load_latest_digest_data() -> Dict:
     """Load the latest digest data from generated files"""
     today_str = date.today().strftime("%Y_%m_%d")
     
-    # Try to load the AI-generated text file
+    # Try to load the AI-generated text file (check both root and docs directory)
     text_file_path = Path(f"news_digest_ai_{today_str}.txt")
     if not text_file_path.exists():
-        print(f"   ⚠️ Latest AI text file not found: {text_file_path}")
+        text_file_path = Path(f"docs/news_digest_ai_{today_str}.txt")
+    
+    if not text_file_path.exists():
+        print(f"   ⚠️ Latest AI text file not found in root or docs directory")
         return {}
 
     with open(text_file_path, 'r', encoding='utf-8') as f:
@@ -33,22 +36,28 @@ def load_latest_digest_data() -> Dict:
     main_digest_content = main_digest_match.group(1).strip() if main_digest_match else "Today's news digest."
 
     # Load audio stats
-    audio_file_path = Path(f"news_digest_ai_{today_str}.mp3")
+    audio_file_path = Path(f"docs/audio/news_digest_ai_{today_str}.mp3")
     duration_s = 0
     if audio_file_path.exists():
         try:
             from pydub import AudioSegment
             audio = AudioSegment.from_mp3(audio_file_path)
             duration_s = len(audio) / 1000.0
-        except Exception:
+        except Exception as e:
+            print(f"   ⚠️ Could not get audio duration with pydub: {e}")
             # Fallback estimation
             word_count = len(main_digest_content.split())
             duration_s = word_count / 2.0  # Estimate 2 words per second
+    else:
+        print(f"   ⚠️ Audio file not found: {audio_file_path}")
 
-    # Format duration nicely
+    # Format duration in website format (Xmin Ysec)
     minutes = int(duration_s // 60)
     seconds = int(duration_s % 60)
-    duration_formatted = f"{minutes} minutes {seconds} seconds" if minutes > 0 else f"{seconds} seconds"
+    if minutes > 0:
+        duration_formatted = f"{minutes}min {seconds}sec"
+    else:
+        duration_formatted = f"{seconds}sec"
 
     word_count = len(main_digest_content.split())
 

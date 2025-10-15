@@ -5,6 +5,29 @@
 ## 🎯 Mission
 Create natural, human-quality audio news digests specifically designed for visually impaired users. This project synthesizes information from multiple UK news sources to create original, accessible audio content that respects copyright while providing valuable accessibility services.
 
+## 🚀 Recent Improvements (v2.1.0)
+
+### 🎯 User Experience Enhancements
+- **Fixed autoplay fallback** - Clean visual highlighting instead of broken buttons
+- **Centered layout** - Header tagline and footer properly centered
+- **Corrected duration display** - Shows actual audio length (2min 49sec)
+- **Hidden empty sections** - Recent Digests only shown when content exists
+- **Streamlined interface** - Removed redundant metadata and visual clutter
+- **Mobile optimization** - Better touch targets and responsive design
+
+### 🔧 Technical Improvements  
+- **Accurate duration calculation** - Fixed `update_website.py` to use correct file paths
+- **CSS conflict resolution** - Resolved paragraph width constraints affecting centering
+- **Performance optimizations** - Critical CSS inlined, deferred JavaScript loading
+- **Cost optimization** - AI analysis only runs once per day, reuses existing content
+- **Enhanced error handling** - Better fallback logic and debugging capabilities
+
+### ♿ Accessibility Enhancements
+- **WCAG 2.1 AA compliance** - Fixed color contrast issues throughout
+- **Improved screen reader support** - Better ARIA labels and semantic structure
+- **Keyboard navigation** - Enhanced focus management and skip links
+- **Audio player improvements** - Better compatibility across browsers and devices
+
 ## 🎧 **Live Service**
 
 📱 **Website**: [https://audionews.uk](https://audionews.uk)
@@ -12,9 +35,12 @@ Create natural, human-quality audio news digests specifically designed for visua
 - 🕕 **Updated daily** at 6:00 AM UK time (BST/GMT)
 - 🎵 **Auto-play sharing** via `?autoplay=true` URLs  
 - 📱 **WhatsApp optimized** for easy family sharing
-- ♿ **Accessibility first** - screen reader friendly
-- 🎤 **Irish Emily Neural voice** - premium quality
-- 🤖 **AI-enhanced synthesis** - copyright compliant
+- ♿ **Accessibility first** - screen reader friendly, WCAG 2.1 AA compliant
+- 🎤 **Irish Emily Neural voice** - premium quality Edge TTS
+- 🤖 **AI-enhanced synthesis** - copyright compliant (Claude 4.5 Sonnet)
+- 📱 **Progressive Web App** - installable on mobile devices
+- ⚡ **Performance optimized** - critical CSS inlined, deferred JS loading
+- 🎯 **Clean UX** - streamlined interface, no visual clutter
 
 ## ⚖️ CRITICAL: Copyright Compliance & Ethics
 **This project NEVER reproduces copyrighted material.** Instead, it operates under strict ethical guidelines:
