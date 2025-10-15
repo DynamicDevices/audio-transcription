@@ -67,15 +67,17 @@ jobs:
       id: check_content
       run: |
         TODAY=$(date +%Y_%m_%d)
-        AUDIO_FILE="news_digest_ai_${TODAY}.mp3"
-        TEXT_FILE="news_digest_ai_${TODAY}.txt"
+        AUDIO_FILE="docs/audio/news_digest_ai_${TODAY}.mp3"
+        TEXT_FILE="docs/news_digest_ai_${TODAY}.txt"
         
         if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
           echo "content_exists=true" >> $GITHUB_OUTPUT
           echo "✅ Today's content already exists: $AUDIO_FILE, $TEXT_FILE"
         else
           echo "content_exists=false" >> $GITHUB_OUTPUT
-          echo "❌ Today's content missing - will generate new content"
+          echo "📝 Content missing - will generate:"
+          [[ ! -f "$AUDIO_FILE" ]] && echo "   ❌ Missing: $AUDIO_FILE"
+          [[ ! -f "$TEXT_FILE" ]] && echo "   ❌ Missing: $TEXT_FILE"
         fi
         
         echo "today_date=$TODAY" >> $GITHUB_OUTPUT
