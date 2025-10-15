@@ -6,19 +6,19 @@
 
 /* CSS Custom Properties for consistency and theming */
 :root {
-  /* Colors - High contrast for accessibility */
+  /* Colors - High contrast for accessibility (WCAG 2.1 AA compliant) */
   --color-primary: #1a365d;
   --color-primary-light: #2c5282;
-  --color-secondary: #2d3748;
-  --color-accent: #3182ce;
+  --color-secondary: #1a202c;
+  --color-accent: #2b6cb0; /* Darker blue for better contrast */
   --color-text: #1a202c;
-  --color-text-light: #4a5568;
+  --color-text-light: #2d3748; /* Darker for better contrast */
   --color-bg: #ffffff;
   --color-bg-alt: #f7fafc;
   --color-border: #e2e8f0;
-  --color-success: #38a169;
-  --color-warning: #d69e2e;
-  --color-error: #e53e3e;
+  --color-success: #2f855a; /* Darker green for better contrast */
+  --color-warning: #b7791f; /* Darker yellow for better contrast */
+  --color-error: #c53030; /* Darker red for better contrast */
   
   /* Typography - Optimized for screen readers and readability */
   --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
