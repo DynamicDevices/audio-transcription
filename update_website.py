@@ -79,8 +79,8 @@ def update_html_template(data: Dict) -> str:
         return html
 
     # Update title
-    title_pattern = r'<title>Daily News Digest - .*? - Accessible Audio News</title>'
-    new_title = f'<title>Daily News Digest - {data["date_formatted"]} - Accessible Audio News</title>'
+    title_pattern = r'<title>AudioNews\.uk - Daily Voice News Digest - .*? - .*?</title>'
+    new_title = f'<title>AudioNews.uk - Daily Voice News Digest - {data["date_formatted"]}</title>'
     html = re.sub(title_pattern, new_title, html)
 
     # Update meta description

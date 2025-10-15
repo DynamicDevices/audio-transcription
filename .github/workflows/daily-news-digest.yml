@@ -165,9 +165,9 @@ jobs:
           - ✅ Copyright-compliant synthesis
           - ✅ Accessible newspaper website
           
-          ### 📥 Access Options
-          - **🌐 Website**: [Daily News Digest](https://dynamicdevices.github.io/audio-transcription/)
-          - **Audio**: `news_digest_ai_*.mp3` - Ready for WhatsApp sharing
+                 ### 📥 Access Options
+                 - **🌐 Website**: [Daily News Digest](https://audionews.uk)
+                 - **Audio**: `news_digest_ai_*.mp3` - Ready for WhatsApp sharing
           - **Text**: `news_digest_ai_*.txt` - Full transcript with sources
           
           Perfect for visually impaired users! 🎧♿
@@ -252,4 +252,4 @@ jobs:
         echo "🌐 Accessible website deployed"
         echo "♿ Accessibility service operational"
         echo ""
-        echo "🔗 Website: https://dynamicdevices.github.io/audio-transcription/"
+               echo "🔗 Website: https://audionews.uk"

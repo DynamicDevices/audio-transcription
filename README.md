@@ -7,7 +7,7 @@ Create natural, human-quality audio news digests specifically designed for visua
 
 ## 🎧 **Live Service**
 
-📱 **Website**: [https://dynamicdevices.github.io/daily-voice-news/](https://dynamicdevices.github.io/daily-voice-news/)
+📱 **Website**: [https://audionews.uk](https://audionews.uk)
 
 - 🕕 **Updated daily** at 6:00 AM UTC
 - 🎵 **Auto-play sharing** via `?autoplay=true` URLs  
@@ -164,7 +164,7 @@ This service is specifically designed for people who cannot access traditional v
 
 ## 📞 **Support & Contact**
 
-- **🌐 Live Service**: [https://dynamicdevices.github.io/daily-voice-news/](https://dynamicdevices.github.io/daily-voice-news/)
+- **🌐 Live Service**: [https://audionews.uk](https://audionews.uk)
 - **📧 Issues**: [GitHub Issues](https://github.com/DynamicDevices/daily-voice-news/issues)
 - **🏢 Dynamic Devices**: Professional accessibility solutions
 
