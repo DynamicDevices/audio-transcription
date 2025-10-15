@@ -417,6 +417,35 @@ class GitHubAINewsDigest:
         print("⚖️ Copyright-compliant AI synthesis")
         print("=" * 60)
         
+        # Check if today's files already exist
+        today_str = date.today().strftime("%Y_%m_%d")
+        text_filename = f"news_digest_ai_{today_str}.txt"
+        audio_filename = f"news_digest_ai_{today_str}.mp3"
+        
+        if os.path.exists(text_filename) and os.path.exists(audio_filename):
+            print(f"\n💰 COST OPTIMIZATION: Today's content already exists")
+            print(f"   ✅ Text: {text_filename}")
+            print(f"   ✅ Audio: {audio_filename}")
+            print(f"   🚀 Skipping regeneration for efficiency")
+            
+            # Get existing file stats for summary
+            audio_size_kb = os.path.getsize(audio_filename) / 1024
+            
+            print(f"\n🤖 EXISTING DIGEST SUMMARY")
+            print("=" * 35)
+            print(f"📅 Date: {date.today().strftime('%B %d, %Y')}")
+            print(f"🎧 Audio: {audio_filename}")
+            print(f"📄 Text: {text_filename}")
+            print(f"💾 Size: {audio_size_kb:.1f} KB")
+            print(f"🚀 Status: Using existing files (no regeneration needed)")
+            
+            return {
+                'audio_file': audio_filename,
+                'text_file': text_filename,
+                'regenerated': False,
+                'size_kb': audio_size_kb
+            }
+        
         # Aggregate all stories
         all_stories = []
         for source_name, url in self.sources.items():
@@ -433,10 +462,7 @@ class GitHubAINewsDigest:
         # Create AI-enhanced digest
         digest_text = await self.create_ai_enhanced_digest(all_stories)
         
-        # Save files
-        today_str = date.today().strftime("%Y_%m_%d")
-        text_filename = f"news_digest_ai_{today_str}.txt"
-        audio_filename = f"news_digest_ai_{today_str}.mp3"
+        # Save files (only if they don't exist)
         
         # Save text with metadata
         with open(text_filename, 'w', encoding='utf-8') as f:
@@ -469,7 +495,8 @@ class GitHubAINewsDigest:
             'text_file': text_filename,
             'stats': audio_stats,
             'ai_enabled': self.ai_enabled,
-            'stories_analyzed': len(all_stories)
+            'stories_analyzed': len(all_stories),
+            'regenerated': True
         }
 
 async def main():
