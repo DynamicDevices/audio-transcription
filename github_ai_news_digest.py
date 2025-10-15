@@ -174,7 +174,7 @@ class GitHubAINewsDigest:
             
             ai_prompt = f"""
             Analyze these UK news headlines and categorize them into themes. 
-            Identify the most significant stories being covered by multiple sources.
+            CRITICALLY IMPORTANT: Identify duplicate or similar stories about the same event and select only the BEST/MOST COMPREHENSIVE version of each story.
             
             Headlines:
             {chr(10).join(story_titles)}
@@ -186,18 +186,25 @@ class GitHubAINewsDigest:
                 "technology": [{{"index": 3, "significance": 6, "reasoning": "Tech developments"}}]
             }}
             
-            Rules:
-            1. Return ONLY the JSON object, no other text
-            2. Use only these themes: politics, economy, health, international, climate, technology, crime
-            3. Rate significance 1-10 based on coverage breadth
-            4. Focus on stories with cross-source coverage
+            DEDUPLICATION RULES (CRITICAL):
+            1. If multiple headlines cover the SAME story/event (e.g., multiple China stories, same political announcement), select ONLY the most comprehensive one
+            2. Look for similar keywords, names, locations, events - these indicate duplicate coverage
+            3. For example: If you see "China economy" and "China trade" and "China GDP" - these might be the same story, pick the best one
+            4. Prioritize headlines with more specific details over generic ones
+            5. Each theme should have UNIQUE, DISTINCT stories - no duplicates allowed
+            
+            OTHER RULES:
+            6. Return ONLY the JSON object, no other text
+            7. Use only these themes: politics, economy, health, international, climate, technology, crime
+            8. Rate significance 1-10 based on coverage breadth and uniqueness
+            9. Focus on stories with cross-source coverage but avoid duplicates
             """
             
             if self.ai_provider == 'openai':
                 response = self.openai_client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "You are an expert news analyst categorizing UK headlines for accessibility services. Focus on accuracy and significance."},
+                        {"role": "system", "content": "You are an expert news analyst categorizing UK headlines for accessibility services. CRITICAL: Eliminate duplicate stories about the same events. Focus on accuracy, significance, and uniqueness. Never include multiple stories about the same event or topic."},
                         {"role": "user", "content": ai_prompt}
                     ],
                     temperature=0.3,
@@ -211,28 +218,49 @@ class GitHubAINewsDigest:
                     max_tokens=1500,
                     temperature=0.3,
                     messages=[
-                        {"role": "user", "content": f"You are an expert news analyst. {ai_prompt}"}
+                        {"role": "user", "content": f"You are an expert news analyst. CRITICAL: Eliminate duplicate stories about the same events. Focus on uniqueness and avoid redundancy. {ai_prompt}"}
                     ]
                 )
                 ai_analysis = json.loads(response.content[0].text)
             
-            # Apply AI analysis to stories
+            # Apply AI analysis to stories and add programmatic deduplication
             themes = {}
             for theme, story_analyses in ai_analysis.items():
                 theme_stories = []
+                seen_keywords = set()  # Track keywords to prevent similar stories
+                
                 for analysis in story_analyses:
                     story_idx = analysis['index'] - 1  # Convert to 0-based
                     if 0 <= story_idx < len(all_stories):
                         story = all_stories[story_idx]
-                        story.theme = theme
-                        story.significance_score = analysis['significance']
-                        theme_stories.append(story)
+                        
+                        # Extract key terms for deduplication check
+                        story_keywords = set(word.lower() for word in story.title.split() 
+                                           if len(word) > 3 and word.isalpha())
+                        
+                        # Check for significant overlap with existing stories
+                        overlap_threshold = 0.4  # 40% keyword overlap indicates duplicate
+                        is_duplicate = False
+                        
+                        for existing_keywords in seen_keywords:
+                            if existing_keywords and story_keywords:
+                                overlap = len(story_keywords & existing_keywords) / len(story_keywords | existing_keywords)
+                                if overlap > overlap_threshold:
+                                    is_duplicate = True
+                                    print(f"   🔄 Skipping potential duplicate: '{story.title[:50]}...' (overlap: {overlap:.2f})")
+                                    break
+                        
+                        if not is_duplicate:
+                            story.theme = theme
+                            story.significance_score = analysis['significance']
+                            theme_stories.append(story)
+                            seen_keywords.add(frozenset(story_keywords))
                 
                 if theme_stories:
                     # Sort by significance score
                     theme_stories.sort(key=lambda x: x.significance_score or 0, reverse=True)
                     themes[theme] = theme_stories
-                    print(f"   🎯 {theme.capitalize()}: {len(theme_stories)} stories (AI analyzed)")
+                    print(f"   🎯 {theme.capitalize()}: {len(theme_stories)} stories (AI analyzed, duplicates removed)")
             
             return themes
             
@@ -243,7 +271,7 @@ class GitHubAINewsDigest:
     
     def fallback_categorization(self, all_stories: List[NewsStory]) -> Dict[str, List[NewsStory]]:
         """
-        Fallback to keyword-based categorization if AI fails
+        Fallback to keyword-based categorization if AI fails, with deduplication
         """
         theme_keywords = {
             'politics': ['government', 'minister', 'parliament', 'election', 'policy', 'mp', 'labour', 'conservative'],
@@ -258,10 +286,29 @@ class GitHubAINewsDigest:
         themes = {}
         for theme, keywords in theme_keywords.items():
             theme_stories = []
+            seen_keywords = set()  # Track keywords to prevent similar stories
+            
             for story in all_stories:
                 if any(keyword in story.title.lower() for keyword in keywords):
-                    story.theme = theme
-                    theme_stories.append(story)
+                    # Extract key terms for deduplication check
+                    story_keywords = set(word.lower() for word in story.title.split() 
+                                       if len(word) > 3 and word.isalpha())
+                    
+                    # Check for significant overlap with existing stories
+                    overlap_threshold = 0.5  # 50% overlap for fallback mode (more strict)
+                    is_duplicate = False
+                    
+                    for existing_keywords in seen_keywords:
+                        if existing_keywords and story_keywords:
+                            overlap = len(story_keywords & existing_keywords) / len(story_keywords | existing_keywords)
+                            if overlap > overlap_threshold:
+                                is_duplicate = True
+                                break
+                    
+                    if not is_duplicate:
+                        story.theme = theme
+                        theme_stories.append(story)
+                        seen_keywords.add(frozenset(story_keywords))
             
             if len(theme_stories) >= 2:
                 themes[theme] = theme_stories
@@ -299,6 +346,8 @@ class GitHubAINewsDigest:
             - Do NOT mention specific news sources or outlets
             - Do NOT mention how many sources are covering this
             - Focus on what's happening, not who's reporting it
+            - AVOID repetitive content - synthesize into ONE coherent narrative
+            - If multiple stories are about the same event, combine them into one summary
             - Start with: "In {theme} news today..."
             """
             
@@ -306,7 +355,7 @@ class GitHubAINewsDigest:
                 response = self.openai_client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize."},
+                        {"role": "system", "content": "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize. Avoid repetitive content - combine similar stories into one coherent narrative."},
                         {"role": "user", "content": ai_prompt}
                     ],
                     temperature=0.4,
@@ -320,7 +369,7 @@ class GitHubAINewsDigest:
                     max_tokens=300,
                     temperature=0.4,
                     messages=[
-                        {"role": "user", "content": f"You are creating accessible news content. {ai_prompt}"}
+                        {"role": "user", "content": f"You are creating accessible news content. Avoid repetitive content - synthesize similar stories into one narrative. {ai_prompt}"}
                     ]
                 )
                 return response.content[0].text.strip()
