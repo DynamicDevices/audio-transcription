@@ -33,7 +33,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: 🐍 Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         cache: 'pip'
@@ -147,18 +147,18 @@ jobs:
     
     - name: 🏷️ Create release for audio file
       if: success()
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: daily-${{ github.run_number }}
-        release_name: 🎧 Daily AI News Digest - ${{ github.run_number }}
+        name: 🎧 Daily AI News Digest - ${{ github.run_number }}
         body: |
           🤖 **AI-Enhanced News Digest**
-          📅 Generated: ${{ github.run_time }}
+          📅 Generated: ${{ github.event.head_commit.timestamp }}
           
           ### 🎯 Features
-          - ✅ AI-powered content analysis
+          - ✅ Claude 4.5 Sonnet AI analysis
           - ✅ Multi-source UK news synthesis  
           - ✅ Irish Emily Neural voice (premium quality)
           - ✅ WhatsApp-ready MP3 format
@@ -173,6 +173,9 @@ jobs:
           Perfect for visually impaired users! 🎧♿
         draft: false
         prerelease: false
+        files: |
+          news_digest_ai_*.mp3
+          news_digest_ai_*.txt
     
     - name: ❌ Create issue on failure
       if: failure()
@@ -207,6 +210,11 @@ jobs:
     runs-on: ubuntu-latest
     if: success()
     
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -218,9 +226,7 @@ jobs:
         ref: main  # Get the latest commit with updates
     
     - name: 🔧 Setup Pages
-      uses: actions/configure-pages@v4
-      with:
-        enablement: true
+      uses: actions/configure-pages@v5
     
     - name: 📦 Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
