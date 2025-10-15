@@ -287,21 +287,19 @@ class GitHubAINewsDigest:
             sources = list(set(story.source for story in stories))
             
             ai_prompt = f"""
-            Create a concise, informative news summary for visually impaired listeners about {theme} news.
+            Create a concise, informative news summary about {theme} news for visually impaired listeners.
             
-            Source Stories:
-            {chr(10).join(story_info)}
+            Key topics to cover based on current headlines:
+            {chr(10).join([f"- {story.title}" for story in stories[:3]])}
             
             Requirements:
             - Create original content (do NOT copy headlines)
-            - Synthesize common themes across sources
-            - Mention that {len(sources)} sources are covering this
-            - Keep under 100 words
-            - Write for audio consumption (clear, flowing sentences)
-            - Include source attribution: {', '.join(sources)}
-            - Focus on what makes this significant enough for multiple outlets to cover
-            
-            Start with: "In {theme} news today, {len(sources)} major sources are reporting..."
+            - Write for audio consumption (clear, flowing sentences)  
+            - Keep under 80 words
+            - Do NOT mention specific news sources or outlets
+            - Do NOT mention how many sources are covering this
+            - Focus on what's happening, not who's reporting it
+            - Start with: "In {theme} news today..."
             """
             
             if self.ai_provider == 'openai':
@@ -335,8 +333,7 @@ class GitHubAINewsDigest:
         """
         Fallback synthesis method
         """
-        sources = list(set(story.source for story in stories))
-        return f"In {theme} news today, {len(sources)} sources including {', '.join(sources[:3])} are reporting on significant developments. For detailed coverage, sources include {', '.join(sources)}."
+        return f"In {theme} news today, there are significant developments across multiple areas."
     
     async def create_ai_enhanced_digest(self, all_stories: List[NewsStory]) -> str:
         """
@@ -350,10 +347,8 @@ class GitHubAINewsDigest:
         if not themes:
             return "No significant news themes identified today."
         
-        # Create introduction
-        digest = f"Good morning. Here's your AI-enhanced UK news digest for {today}. "
-        digest += "This summary uses artificial intelligence to analyze and synthesize "
-        digest += f"information from {len(set(story.source for story in all_stories))} major UK news sources. "
+        # Create simple introduction
+        digest = f"Good morning. Here's your UK news digest for {today}, brought to you by Dynamic Devices. "
         
         # Add AI-synthesized content for each theme
         for theme, stories in themes.items():
@@ -362,12 +357,10 @@ class GitHubAINewsDigest:
                 if theme_content:
                     digest += f"\n\n{theme_content}"
         
-        # Add methodology and attribution
-        total_sources = len(set(story.source for story in all_stories))
-        digest += f"\n\nThis digest synthesizes information from {total_sources} sources "
-        digest += "using AI analysis to identify the most significant stories. "
-        digest += "All content is original synthesis designed for accessibility. "
-        digest += "For complete coverage, visit the original sources directly."
+        # Simple closing
+        digest += "\n\nThis digest provides a synthesis of today's most significant news stories. "
+        digest += "All content is original analysis designed for accessibility. "
+        digest += "For complete coverage, visit news websites directly."
         
         return digest
     
