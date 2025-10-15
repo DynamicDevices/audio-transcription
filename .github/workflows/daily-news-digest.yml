@@ -50,6 +50,7 @@ jobs:
       with:
         ref: main  # Develop and deploy from main branch
         token: ${{ secrets.GITHUB_TOKEN }}
+        lfs: true  # Enable Git LFS checkout
     
     - name: 🐍 Set up Python
       uses: actions/setup-python@v5
@@ -280,10 +281,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
-    - name: 📥 Checkout repository  
+    - name: 📥 Checkout repository
       uses: actions/checkout@v4
       with:
         ref: main  # Deploy from main branch
+        lfs: true  # Enable Git LFS checkout
     
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v5
