@@ -229,10 +229,11 @@ a:focus {
 .site-title {
   font-size: var(--font-size-4xl);
   margin-bottom: var(--space-2);
-  color: white;
+  color: #ffffff; /* Pure white for maximum contrast */
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for better readability */
 }
 
 .site-icon {
@@ -241,9 +242,10 @@ a:focus {
 
 .site-tagline {
   font-size: var(--font-size-lg);
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff; /* Pure white instead of rgba for better contrast */
   margin-bottom: var(--space-6);
-  font-weight: 300;
+  font-weight: 400; /* Slightly heavier for better readability */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow for better contrast */
 }
 
 /* Navigation */
@@ -421,15 +423,16 @@ section {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background-color: white;
-  color: var(--color-primary);
+  background-color: #ffffff; /* Pure white background */
+  color: #1a202c; /* Darker text for better contrast */
   text-decoration: none;
-  border: 2px solid white;
+  border: 2px solid #1a202c; /* Darker border for definition */
   border-radius: var(--border-radius);
   font-weight: 600;
   font-size: var(--font-size-sm);
   transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .action-button:hover,
@@ -565,12 +568,13 @@ section {
 .mini-button {
   padding: var(--space-1) var(--space-3);
   font-size: var(--font-size-xs);
-  background-color: var(--color-accent);
-  color: white;
+  background-color: #1a365d; /* Darker blue for better contrast */
+  color: #ffffff; /* Pure white text */
   text-decoration: none;
   border-radius: var(--border-radius);
   font-weight: 500;
   transition: background-color 0.2s ease;
+  border: 1px solid #1a365d; /* Add border for definition */
 }
 
 .mini-button:hover,

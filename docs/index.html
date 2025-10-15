@@ -155,8 +155,92 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#1a365d">
     
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="css/newspaper.css">
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://audionews.uk">
+    <link rel="preload" href="audio/news_digest_ai_2025_10_15.mp3" as="audio" type="audio/mpeg">
+    
+    <!-- Critical CSS inlined for performance -->
+    <style>
+        /* Critical above-the-fold styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background-color: #ffffff;
+        }
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #1a202c;
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+        .skip-link:focus {
+            top: 6px;
+            background: #2d3748;
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+        .site-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+        .site-title {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .site-tagline {
+            font-size: 1.125rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.875rem;
+            color: #1a365d;
+        }
+        .section-description {
+            font-size: 1.125rem;
+            color: #2d3748;
+            max-width: 60ch;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .audio-player {
+            width: 100%;
+            margin: 1rem 0;
+        }
+    </style>
+    
+    <!-- Load full CSS asynchronously -->
+    <link rel="preload" href="css/newspaper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/newspaper.css"></noscript>
     
     <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -377,14 +461,17 @@
         </div>
     </footer>
 
-    <!-- JavaScript for enhanced functionality -->
-    <script src="js/accessibility.js"></script>
+    <!-- JavaScript for enhanced functionality - deferred for performance -->
+    <script src="js/accessibility.js" defer></script>
     
     <!-- Service worker for offline functionality -->
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        // Load service worker after page load for better performance
+        window.addEventListener('load', function() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js');
+            }
+        });
     </script>
 </body>
 </html>
