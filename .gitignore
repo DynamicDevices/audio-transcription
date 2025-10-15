@@ -63,6 +63,7 @@ env/
 !PROJECT_STRUCTURE.md
 !requirements.txt
 !edge_premium_text.txt
+!news_digest_ai_*.txt
 
 # Archives (development history)
 archive_*/
