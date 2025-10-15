@@ -43,44 +43,148 @@
         const autoplay = urlParams.get('autoplay');
         
         if (autoplay === 'true') {
-            // Wait for audio to be ready, then attempt autoplay
-            setTimeout(function() {
+            console.log('🎵 Autoplay requested via URL parameter');
+            
+            // Multiple strategies for better cross-browser support
+            function attemptAutoplay() {
                 const audioPlayer = document.querySelector('audio');
-                if (audioPlayer) {
-                    audioPlayer.play().then(function() {
-                        announceToScreenReader('Audio started automatically from shared link');
-                        console.log('✅ Autoplay started successfully');
-                    }).catch(function(error) {
-                        console.log('⚠️ Autoplay prevented by browser:', error);
-                        announceToScreenReader('Click play to start audio - autoplay was blocked by your browser for security');
-                        
-                        // Add visual indicator that autoplay was attempted
-                        const audioContainer = document.querySelector('.audio-player-container');
-                        if (audioContainer) {
-                            const notice = document.createElement('div');
-                            notice.className = 'autoplay-notice';
-                            notice.innerHTML = '▶️ <strong>Ready to play:</strong> Click play to start your news digest';
-                            notice.style.cssText = `
-                                background: #e3f2fd;
-                                border: 1px solid #2196f3;
-                                padding: 8px 12px;
-                                border-radius: 4px;
-                                margin: 8px 0;
-                                font-size: 14px;
-                                color: #1565c0;
-                            `;
-                            audioContainer.insertBefore(notice, audioContainer.firstChild);
-                            
-                            // Remove notice after user interaction
-                            audioPlayer.addEventListener('play', function() {
-                                if (notice.parentNode) {
-                                    notice.remove();
-                                }
-                            }, { once: true });
-                        }
-                    });
+                if (!audioPlayer) {
+                    console.log('❌ Audio player not found');
+                    return;
                 }
-            }, 800); // Small delay to ensure audio is loaded
+                
+                console.log('🔍 Audio player found, checking readiness...');
+                console.log('📊 Audio readyState:', audioPlayer.readyState);
+                console.log('🌐 User agent:', navigator.userAgent);
+                
+                // Strategy 1: Direct play attempt
+                const playPromise = audioPlayer.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(function() {
+                        console.log('✅ Autoplay successful!');
+                        announceToScreenReader('Audio started automatically from shared link');
+                        
+                        // Add success indicator
+                        showAutoplayStatus('success', '🎵 Audio started automatically!');
+                        
+                    }).catch(function(error) {
+                        console.log('⚠️ Autoplay blocked:', error.name, error.message);
+                        handleAutoplayBlocked(audioPlayer, error);
+                    });
+                } else {
+                    console.log('⚠️ Play method did not return a promise (older browser)');
+                    handleAutoplayBlocked(audioPlayer, new Error('Legacy browser'));
+                }
+            }
+            
+            function handleAutoplayBlocked(audioPlayer, error) {
+                console.log('🚫 Implementing fallback for blocked autoplay');
+                
+                // Determine the reason for blocking
+                let reason = 'Browser security policy';
+                if (error.name === 'NotAllowedError') {
+                    reason = 'User interaction required';
+                } else if (error.name === 'NotSupportedError') {
+                    reason = 'Audio format not supported';
+                }
+                
+                announceToScreenReader(`Autoplay blocked: ${reason}. Click play to start audio.`);
+                
+                // Show prominent play button
+                showAutoplayStatus('blocked', `▶️ <strong>Click to play:</strong> ${reason} blocked autoplay`);
+                
+                // Add click-to-play functionality
+                const playButton = document.createElement('button');
+                playButton.innerHTML = '🎵 <strong>Start Audio</strong>';
+                playButton.style.cssText = `
+                    background: #2196f3;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    margin: 10px 0;
+                    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+                `;
+                
+                playButton.onclick = function() {
+                    audioPlayer.play().then(function() {
+                        announceToScreenReader('Audio started after user interaction');
+                        playButton.remove();
+                        showAutoplayStatus('success', '🎵 Audio playing!');
+                    }).catch(function(err) {
+                        console.error('Failed to play even after user interaction:', err);
+                        announceToScreenReader('Audio playback failed. Please try using the main audio controls.');
+                    });
+                };
+                
+                const container = document.querySelector('.autoplay-notice') || 
+                                 document.querySelector('.audio-player-container');
+                if (container) {
+                    container.appendChild(playButton);
+                }
+            }
+            
+            function showAutoplayStatus(type, message) {
+                // Remove any existing notices
+                const existingNotice = document.querySelector('.autoplay-notice');
+                if (existingNotice) {
+                    existingNotice.remove();
+                }
+                
+                const notice = document.createElement('div');
+                notice.className = 'autoplay-notice';
+                notice.innerHTML = message;
+                
+                const colors = {
+                    success: { bg: '#e8f5e8', border: '#4caf50', color: '#2e7d32' },
+                    blocked: { bg: '#fff3e0', border: '#ff9800', color: '#e65100' }
+                };
+                
+                const style = colors[type] || colors.blocked;
+                notice.style.cssText = `
+                    background: ${style.bg};
+                    border: 1px solid ${style.border};
+                    color: ${style.color};
+                    padding: 12px 16px;
+                    border-radius: 6px;
+                    margin: 12px 0;
+                    font-size: 14px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                `;
+                
+                const audioContainer = document.querySelector('.audio-player-container');
+                if (audioContainer) {
+                    audioContainer.insertBefore(notice, audioContainer.firstChild);
+                }
+                
+                // Auto-remove success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        if (notice.parentNode) {
+                            notice.remove();
+                        }
+                    }, 5000);
+                }
+            }
+            
+            // Wait for DOM and audio to be ready with multiple fallbacks
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(attemptAutoplay, 500);
+                });
+            } else {
+                // DOM already loaded
+                if (document.querySelector('audio')) {
+                    setTimeout(attemptAutoplay, 100);
+                } else {
+                    // Audio not yet in DOM, wait a bit longer
+                    setTimeout(attemptAutoplay, 1000);
+                }
+            }
         }
     }
     
