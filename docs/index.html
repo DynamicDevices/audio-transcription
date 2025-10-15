@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily News Digest - October 15, 2025 - Accessible Audio News</title>
+    <meta name="description" content="Daily AI-generated audio news digest for October 15, 2025 from BBC News, Guardian, Independent. Professional Irish voice, screen reader optimized.">
+    
+    <!-- Accessibility optimizations -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1a365d">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/newspaper.css" as="style">
+    <link rel="preload" href="js/accessibility.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/newspaper.css">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📰</text></svg>">
+</head>
+<body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header with clear navigation -->
+    <header class="site-header" role="banner">
+        <div class="header-container">
+            <h1 class="site-title">
+                <span class="site-icon" aria-hidden="true">📰</span>
+                Daily News Digest
+            </h1>
+            <p class="site-tagline">AI-Enhanced Audio News for Visually Impaired Users</p>
+            
+            <!-- Quick navigation for screen readers -->
+            <nav class="quick-nav" role="navigation" aria-label="Quick navigation">
+                <h2 class="visually-hidden">Quick Navigation</h2>
+                <ul class="nav-list">
+                    <li><a href="#todays-digest" class="nav-link">Today's Audio Digest</a></li>
+                    <li><a href="#news-sections" class="nav-link">News by Section</a></li>
+                    <li><a href="#recent-digests" class="nav-link">Recent Digests</a></li>
+                    <li><a href="#how-to-use" class="nav-link">How to Use</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <main id="main-content" class="main-content" role="main">
+        
+        <!-- Today's featured digest -->
+        <section id="todays-digest" class="featured-digest" aria-labelledby="todays-heading">
+            <header class="section-header">
+                <h2 id="todays-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">🎧</span>
+                    Today's Audio Digest
+                </h2>
+                <p class="section-description">Professional Irish voice • 5-15 minutes • Updated daily at 6:00 AM</p>
+            </header>
+            
+            <article class="digest-card main-digest">
+                <header class="digest-header">
+                    <h3 class="digest-title">
+                        <time datetime="2025-10-15" class="digest-date">October 15, 2025</time>
+                        - AI-Enhanced UK News Summary
+                    </h3>
+                    <div class="digest-meta">
+                        <span class="meta-item">
+                            <span class="meta-label">Duration:</span>
+                            <span class="meta-value">BBC News, Guardian, Independent, Sky News</span>
+                        </span>
+                        <span class="meta-item">
+                            <span class="meta-label">Sources:</span>
+                            <span class="meta-value">BBC News, Guardian, Independent, Sky News</span>
+                        </span>
+                        <span class="meta-item">
+                            <span class="meta-label">AI Analysis:</span>
+                            <span class="meta-value">Enhanced</span>
+                        </span>
+                    </div>
+                </header>
+                
+                <!-- Accessible audio player -->
+                <div class="audio-player-container">
+                    <audio 
+                        class="audio-player" 
+                        controls 
+                        preload="metadata"
+                        aria-describedby="audio-description"
+                    >
+                        <source src="audio/news_digest_ai_2025_10_15.mp3" type="audio/mpeg">
+                        <p>Your browser doesn't support audio playback. <a href="audio/news_digest_ai_2025_10_15.mp3" download>Download the audio file</a> instead.</p>
+                    </audio>
+                    <p id="audio-description" class="audio-description">
+                        Today's news digest in professional Irish female voice. Use your browser's audio controls or download for offline listening.
+                    </p>
+                </div>
+                
+                <!-- Quick action buttons -->
+                <div class="digest-actions">
+                    <a href="audio/news_digest_ai_2025_10_15.mp3" 
+                       download 
+                       class="action-button download-button"
+                       aria-describedby="download-help">
+                        <span class="button-icon" aria-hidden="true">⬇️</span>
+                        Download MP3
+                    </a>
+                    <button class="action-button share-button" 
+                            onclick="copyShareLink()" 
+                            aria-describedby="share-help">
+                        <span class="button-icon" aria-hidden="true">📱</span>
+                        Copy WhatsApp Link
+                    </button>
+                    <a href="news_digest_ai_2025_10_15.txt" 
+                       class="action-button transcript-button"
+                       aria-describedby="transcript-help">
+                        <span class="button-icon" aria-hidden="true">📄</span>
+                        Read Transcript
+                    </a>
+                </div>
+                
+                <!-- Help text for actions -->
+                <div class="action-help">
+                    <p id="download-help" class="help-text">Download MP3 file to your device for WhatsApp sharing or offline listening</p>
+                    <p id="share-help" class="help-text">Copy direct link to share via WhatsApp or other messaging apps</p>
+                    <p id="transcript-help" class="help-text">Read the full text version with source attribution</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- News sections breakdown -->
+        <section id="news-sections" class="news-sections" aria-labelledby="sections-heading">
+            <header class="section-header">
+                <h2 id="sections-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">📊</span>
+                    Today's News by Section
+                </h2>
+                <p class="section-description">Browse specific topics covered in today's digest</p>
+            </header>
+            
+            <div class="sections-grid">
+                <article class="section-card">
+                    <header class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon" aria-hidden="true">🏛️</span>
+                            Politics
+                        </h3>
+                        <p class="card-summary">Government developments and parliamentary news</p>
+                    </header>
+                    <div class="card-content">
+                        <p class="story-count"><strong>1 stories</strong> from multiple sources</p>
+                        <ul class="story-highlights">
+                            <li>Coverage across major UK outlets</li>
+                            <li>AI-analyzed for significance</li>
+                            <li>Synthesized for accessibility</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="section-card">
+                    <header class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon" aria-hidden="true">🌍</span>
+                            International
+                        </h3>
+                        <p class="card-summary">Global events and foreign relations</p>
+                    </header>
+                    <div class="card-content">
+                        <p class="story-count"><strong>1 stories</strong> from multiple sources</p>
+                        <ul class="story-highlights">
+                            <li>Coverage across major UK outlets</li>
+                            <li>AI-analyzed for significance</li>
+                            <li>Synthesized for accessibility</li>
+                        </ul>
+                    </div>
+                </article>
+                <article class="section-card">
+                    <header class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon" aria-hidden="true">💻</span>
+                            Technology
+                        </h3>
+                        <p class="card-summary">Tech industry and digital developments</p>
+                    </header>
+                    <div class="card-content">
+                        <p class="story-count"><strong>3 stories</strong> from multiple sources</p>
+                        <ul class="story-highlights">
+                            <li>Coverage across major UK outlets</li>
+                            <li>AI-analyzed for significance</li>
+                            <li>Synthesized for accessibility</li>
+                        </ul>
+                    </div>
+                </article></div>
+                </article>
+                
+                <!-- International section -->
+                <article class="section-card">
+                    <header class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon" aria-hidden="true">🌍</span>
+                            International
+                        </h3>
+                        <p class="card-summary">Global events and foreign relations</p>
+                    </header>
+                    <div class="card-content">
+                        <p class="story-count"><strong>4 stories</strong> from BBC News, Guardian, Sky News</p>
+                        <ul class="story-highlights">
+                            <li>European Union developments</li>
+                            <li>Trade agreement updates</li>
+                            <li>International conflict coverage</li>
+                        </ul>
+                    </div>
+                </article>
+                
+                <!-- Technology section -->
+                <article class="section-card">
+                    <header class="card-header">
+                        <h3 class="card-title">
+                            <span class="card-icon" aria-hidden="true">💻</span>
+                            Technology
+                        </h3>
+                        <p class="card-summary">Tech industry and digital developments</p>
+                    </header>
+                    <div class="card-content">
+                        <p class="story-count"><strong>2 stories</strong> from BBC News, Guardian</p>
+                        <ul class="story-highlights">
+                            <li>AI regulation discussions</li>
+                            <li>Cybersecurity developments</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Recent digests archive -->
+        <section id="recent-digests" class="recent-digests" aria-labelledby="recent-heading">
+            <header class="section-header">
+                <h2 id="recent-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">📅</span>
+                    Recent Digests
+                </h2>
+                <p class="section-description">Access previous days' audio news summaries</p>
+            </header>
+            
+            <div class="digests-list">
+                <article class="digest-item">
+                    <h3 class="digest-item-title">
+                        <time datetime="2025-10-14">October 14, 2025</time>
+                    </h3>
+                    <p class="digest-item-meta">3min 12sec • 4 sources • AI Enhanced</p>
+                    <div class="digest-item-actions">
+                        <a href="audio/news_digest_ai_2025_10_15.mp3" class="mini-button">Play</a>
+                        <a href="audio/news_digest_ai_2025_10_15.mp3" download class="mini-button">Download</a>
+                    </div>
+                </article>
+                
+                <article class="digest-item">
+                    <h3 class="digest-item-title">
+                        <time datetime="2025-10-13">October 13, 2025</time>
+                    </h3>
+                    <p class="digest-item-meta">2min 58sec • 5 sources • AI Enhanced</p>
+                    <div class="digest-item-actions">
+                        <a href="audio/news_digest_ai_2025_10_15.mp3" class="mini-button">Play</a>
+                        <a href="audio/news_digest_ai_2025_10_15.mp3" download class="mini-button">Download</a>
+                    </div>
+                </article>
+            </div>
+            
+            <p class="archive-note">
+                <a href="archive.html" class="archive-link">View complete archive</a> of all previous digests
+            </p>
+        </section>
+
+        <!-- How to use section -->
+        <section id="how-to-use" class="how-to-use" aria-labelledby="howto-heading">
+            <header class="section-header">
+                <h2 id="howto-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">💡</span>
+                    How to Use This Service
+                </h2>
+            </header>
+            
+            <div class="instructions">
+                <div class="instruction-group">
+                    <h3 class="instruction-title">🎧 Listening Options</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Stream directly:</strong> Use the audio player above with your browser or screen reader</li>
+                        <li><strong>Download for offline:</strong> Click "Download MP3" to save to your device</li>
+                        <li><strong>WhatsApp sharing:</strong> Use "Copy WhatsApp Link" to share with others</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">♿ Accessibility Features</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Screen reader optimized:</strong> Full ARIA labels and semantic HTML</li>
+                        <li><strong>Keyboard navigation:</strong> Tab through all controls easily</li>
+                        <li><strong>Clear structure:</strong> Logical heading hierarchy for easy navigation</li>
+                        <li><strong>Mobile friendly:</strong> Works perfectly on phones and tablets</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">📱 Mobile Usage</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Bookmark this page:</strong> Add to home screen for daily access</li>
+                        <li><strong>Voice control:</strong> Works with "Hey Siri" and "OK Google" voice commands</li>
+                        <li><strong>Background playback:</strong> Audio continues while using other apps</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer with important information -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3 class="footer-title">About This Service</h3>
+                <p class="footer-text">
+                    Daily AI-enhanced news digests created specifically for visually impaired users. 
+                    All content is synthesized from multiple UK news sources using ethical AI practices 
+                    that respect copyright while providing valuable accessibility services.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Technical Information</h3>
+                <ul class="footer-list">
+                    <li>Voice: Irish Emily Neural (Microsoft Edge TTS)</li>
+                    <li>Generated: Daily at 6:00 AM UTC</li>
+                    <li>Sources: BBC, Guardian, Independent, Sky News</li>
+                    <li>Format: MP3, optimized for WhatsApp sharing</li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Copyright & Ethics</h3>
+                <p class="footer-text">
+                    This service creates original synthesized content from publicly available headlines. 
+                    No copyrighted material is reproduced. All sources are attributed. 
+                    <a href="docs/COPYRIGHT_AND_ETHICS.html" class="footer-link">Read our full ethical framework</a>.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p class="copyright">
+                © 2025 Daily News Digest • 
+                <a href="https://github.com/DynamicDevices/audio-transcription" class="footer-link">Open Source on GitHub</a> • 
+                Made with ♿ accessibility in mind
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for enhanced functionality -->
+    <script src="js/accessibility.js"></script>
+    
+    <!-- Service worker for offline functionality -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-name: 🤖 AI-Powered Daily News Digest
+name: 🤖 AI-Powered Daily News Digest & Website
 
 on:
   schedule:
@@ -11,6 +11,11 @@ on:
         required: false
         default: 'false'
         type: boolean
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   generate-ai-digest:
@@ -61,6 +66,25 @@ jobs:
           wc -w news_digest_ai_*.txt
         fi
     
+    - name: 🌐 Update website with new content
+      run: |
+        echo "🌐 Updating accessible newspaper website..."
+        python update_website.py
+        echo "✅ Website updated with today's digest"
+    
+    - name: 📱 Copy audio files to website
+      run: |
+        # Ensure audio directory exists
+        mkdir -p docs/audio
+        
+        # Copy new audio and text files
+        cp news_digest_ai_*.mp3 docs/audio/ 2>/dev/null || echo "No new audio files"
+        cp news_digest_ai_*.txt docs/ 2>/dev/null || echo "No new text files"
+        
+        # List what we have
+        echo "📁 Website audio files:"
+        ls -la docs/audio/ || echo "Audio directory empty"
+    
     - name: 🔍 Quality check
       run: |
         # Check if files were generated
@@ -76,6 +100,14 @@ jobs:
         else
           echo "✅ Audio file size OK: ${audio_size} bytes"
         fi
+        
+        # Check if website was updated
+        if [ ! -f docs/index.html ]; then
+          echo "❌ Website index.html missing"
+          exit 1
+        fi
+        
+        echo "✅ Quality checks passed"
     
     - name: 📝 Commit generated files
       run: |
@@ -83,7 +115,7 @@ jobs:
         git config --local user.name "AI News Digest Bot"
         
         # Add generated files
-        git add news_digest_ai_*.mp3 news_digest_ai_*.txt || true
+        git add news_digest_ai_*.mp3 news_digest_ai_*.txt docs/ || true
         
         # Create commit with date and stats
         if git diff --staged --quiet; then
@@ -91,11 +123,12 @@ jobs:
         else
           audio_file=$(ls news_digest_ai_*.mp3)
           audio_size=$(stat -c%s "$audio_file" | numfmt --to=iec)
-          git commit -m "🤖 Daily AI news digest $(date +%Y-%m-%d)
+          git commit -m "🤖 Daily AI news digest & website update $(date +%Y-%m-%d)
 
           📊 Generated: $(date '+%Y-%m-%d %H:%M UTC')
           🎧 Audio: ${audio_size}
           🤖 AI: Enhanced analysis
+          🌐 Website: Updated with accessible newspaper layout
           ♿ Accessibility: Optimized for visually impaired users"
           
           git push
@@ -109,6 +142,7 @@ jobs:
         path: |
           news_digest_ai_*.mp3
           news_digest_ai_*.txt
+          docs/
         retention-days: 90
     
     - name: 🏷️ Create release for audio file
@@ -129,8 +163,10 @@ jobs:
           - ✅ Irish Emily Neural voice (premium quality)
           - ✅ WhatsApp-ready MP3 format
           - ✅ Copyright-compliant synthesis
+          - ✅ Accessible newspaper website
           
-          ### 📥 Downloads
+          ### 📥 Access Options
+          - **🌐 Website**: [Daily News Digest](https://dynamicdevices.github.io/audio-transcription/)
           - **Audio**: `news_digest_ai_*.mp3` - Ready for WhatsApp sharing
           - **Text**: `news_digest_ai_*.txt` - Full transcript with sources
           
@@ -160,13 +196,41 @@ jobs:
             - Network connectivity issues
             - News source changes
             - Audio generation failure
+            - Website update failure
             
             This needs immediate attention for accessibility service continuity.`,
             labels: ['bug', 'ai-digest', 'urgent']
           })
 
-  notify-completion:
+  deploy-website:
     needs: generate-ai-digest
+    runs-on: ubuntu-latest
+    if: success()
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: 📥 Checkout repository  
+      uses: actions/checkout@v4
+      with:
+        ref: main  # Get the latest commit with updates
+    
+    - name: 🔧 Setup Pages
+      uses: actions/configure-pages@v4
+    
+    - name: 📦 Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./docs
+    
+    - name: 🚀 Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+  notify-completion:
+    needs: [generate-ai-digest, deploy-website]
     runs-on: ubuntu-latest
     if: success()
     
@@ -177,4 +241,7 @@ jobs:
         echo "📅 Date: $(date)"
         echo "🎧 Audio ready for visually impaired users"
         echo "🤖 AI analysis completed"
+        echo "🌐 Accessible website deployed"
         echo "♿ Accessibility service operational"
+        echo ""
+        echo "🔗 Website: https://dynamicdevices.github.io/audio-transcription/"
