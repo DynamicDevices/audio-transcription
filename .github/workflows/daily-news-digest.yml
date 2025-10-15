@@ -6,7 +6,7 @@ on:
     # This ensures 6 AM UK time during British Summer Time
     - cron: '0 5 * * *'
   push:
-    branches: [ main ]
+    branches: [ ci-updates ]  # Only trigger on ci-updates branch pushes
     paths:
       - 'docs/**'
       - '*.py'
@@ -48,6 +48,7 @@ jobs:
     - name: 📥 Checkout repository
       uses: actions/checkout@v4
       with:
+        ref: ci-updates  # Use ci-updates branch for automated commits
         token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: 🐍 Set up Python
@@ -280,7 +281,7 @@ jobs:
     - name: 📥 Checkout repository  
       uses: actions/checkout@v4
       with:
-        ref: main  # Get the latest commit with updates
+        ref: ci-updates  # Deploy from ci-updates branch
     
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v5
