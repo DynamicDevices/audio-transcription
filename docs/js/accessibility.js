@@ -99,40 +99,40 @@
                 
                 announceToScreenReader(`Autoplay blocked: ${reason}. Click play to start audio.`);
                 
-                // Show prominent play button
-                showAutoplayStatus('blocked', `▶️ <strong>Click to play:</strong> ${reason} blocked autoplay`);
+                // Show clean, integrated notice
+                showAutoplayStatus('blocked', `▶️ Click the play button below to start your news digest`);
                 
-                // Add click-to-play functionality
-                const playButton = document.createElement('button');
-                playButton.innerHTML = '🎵 <strong>Start Audio</strong>';
-                playButton.style.cssText = `
-                    background: #2196f3;
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 6px;
-                    font-size: 16px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    margin: 10px 0;
-                    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
-                `;
-                
-                playButton.onclick = function() {
-                    audioPlayer.play().then(function() {
-                        announceToScreenReader('Audio started after user interaction');
-                        playButton.remove();
-                        showAutoplayStatus('success', '🎵 Audio playing!');
-                    }).catch(function(err) {
-                        console.error('Failed to play even after user interaction:', err);
-                        announceToScreenReader('Audio playback failed. Please try using the main audio controls.');
-                    });
-                };
-                
-                const container = document.querySelector('.autoplay-notice') || 
-                                 document.querySelector('.audio-player-container');
-                if (container) {
-                    container.appendChild(playButton);
+                // Add a subtle highlight to the existing play button
+                const existingPlayButton = audioPlayer;
+                if (existingPlayButton) {
+                    existingPlayButton.style.cssText += `
+                        animation: gentle-pulse 2s ease-in-out infinite;
+                        border: 2px solid #2196f3 !important;
+                        border-radius: 8px !important;
+                    `;
+                    
+                    // Add CSS animation if not already present
+                    if (!document.querySelector('#autoplay-animation-styles')) {
+                        const style = document.createElement('style');
+                        style.id = 'autoplay-animation-styles';
+                        style.textContent = `
+                            @keyframes gentle-pulse {
+                                0%, 100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.4); }
+                                50% { box-shadow: 0 0 0 8px rgba(33, 150, 243, 0.1); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                    
+                    // Remove highlight after user plays
+                    const removeHighlight = function() {
+                        existingPlayButton.style.animation = '';
+                        existingPlayButton.style.border = '';
+                        existingPlayButton.style.borderRadius = '';
+                        audioPlayer.removeEventListener('play', removeHighlight);
+                    };
+                    
+                    audioPlayer.addEventListener('play', removeHighlight, { once: true });
                 }
             }
             
@@ -149,7 +149,7 @@
                 
                 const colors = {
                     success: { bg: '#e8f5e8', border: '#4caf50', color: '#2e7d32' },
-                    blocked: { bg: '#fff3e0', border: '#ff9800', color: '#e65100' }
+                    blocked: { bg: '#e3f2fd', border: '#2196f3', color: '#1565c0' }
                 };
                 
                 const style = colors[type] || colors.blocked;
@@ -158,10 +158,11 @@
                     border: 1px solid ${style.border};
                     color: ${style.color};
                     padding: 12px 16px;
-                    border-radius: 6px;
+                    border-radius: 8px;
                     margin: 12px 0;
                     font-size: 14px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    text-align: center;
+                    font-weight: 500;
                 `;
                 
                 const audioContainer = document.querySelector('.audio-player-container');
@@ -169,13 +170,13 @@
                     audioContainer.insertBefore(notice, audioContainer.firstChild);
                 }
                 
-                // Auto-remove success messages after 5 seconds
+                // Auto-remove success messages after 3 seconds
                 if (type === 'success') {
                     setTimeout(() => {
                         if (notice.parentNode) {
                             notice.remove();
                         }
-                    }, 5000);
+                    }, 3000);
                 }
             }
             
