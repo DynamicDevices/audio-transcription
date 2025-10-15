@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoplay Quick Test</title>
+    <style>
+        body { font-family: system-ui; max-width: 800px; margin: 2rem auto; padding: 1rem; }
+        .test { background: #f0f8ff; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
+        .log { background: #000; color: #0f0; padding: 1rem; font-family: monospace; font-size: 12px; }
+        button { background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; margin: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Autoplay Quick Test</h1>
+    
+    <div class="test">
+        <h2>Test Audio Player</h2>
+        <audio controls preload="auto" style="width: 100%;">
+            <source src="audio/news_digest_ai_2025_10_15.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    
+    <div class="test">
+        <h2>Manual Tests</h2>
+        <button onclick="testAutoplay()">Test Autoplay Now</button>
+        <button onclick="clearLog()">Clear Log</button>
+        <button onclick="location.href='?autoplay=true'">Reload with ?autoplay=true</button>
+    </div>
+    
+    <div class="test">
+        <h2>Debug Log</h2>
+        <div class="log" id="log"></div>
+    </div>
+
+    <script defer>
+        function log(msg) {
+            const logEl = document.getElementById('log');
+            logEl.innerHTML += new Date().toLocaleTimeString() + ': ' + msg + '<br>';
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(msg);
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        function testAutoplay() {
+            const audio = document.querySelector('audio');
+            log('🧪 Manual autoplay test started');
+            log('📊 Audio readyState: ' + audio.readyState);
+            log('📊 Audio src: ' + audio.currentSrc);
+            
+            const promise = audio.play();
+            if (promise) {
+                promise.then(() => {
+                    log('✅ Autoplay SUCCESS!');
+                }).catch(error => {
+                    log('❌ Autoplay FAILED: ' + error.name + ' - ' + error.message);
+                });
+            } else {
+                log('⚠️ No promise returned from play()');
+            }
+        }
+        
+        // Check for autoplay parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autoplay') === 'true') {
+            log('🎵 Autoplay parameter detected!');
+            
+            function attemptAutoplay() {
+                const audio = document.querySelector('audio');
+                if (!audio) {
+                    log('❌ No audio element found');
+                    return;
+                }
+                
+                log('🔍 Attempting autoplay...');
+                log('📊 ReadyState: ' + audio.readyState);
+                
+                if (audio.readyState >= 1) {
+                    testAutoplay();
+                } else {
+                    log('🕐 Waiting for audio to load...');
+                    audio.addEventListener('loadedmetadata', testAutoplay, {once: true});
+                    setTimeout(testAutoplay, 2000); // fallback
+                }
+            }
+            
+            // Try autoplay when ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', attemptAutoplay);
+            } else {
+                attemptAutoplay();
+            }
+        }
+        
+        log('📱 Test page loaded - script using defer');
+    </script>
+</body>
+</html>

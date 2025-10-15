@@ -46,7 +46,14 @@
             console.log('🎵 Autoplay requested via URL parameter');
             
             // Multiple strategies for better cross-browser support
+            let autoplayAttempted = false;
             function attemptAutoplay() {
+                if (autoplayAttempted) {
+                    console.log('🚫 Autoplay already attempted, skipping...');
+                    return;
+                }
+                autoplayAttempted = true;
+                
                 const audioPlayer = document.querySelector('audio');
                 if (!audioPlayer) {
                     console.log('❌ Audio player not found');
@@ -55,6 +62,7 @@
                 
                 console.log('🔍 Audio player found, checking readiness...');
                 console.log('📊 Audio readyState:', audioPlayer.readyState);
+                console.log('📊 Audio currentSrc:', audioPlayer.currentSrc);
                 console.log('🌐 User agent:', navigator.userAgent);
                 
                 // Strategy 1: Direct play attempt
@@ -172,19 +180,27 @@
             }
             
             // Wait for DOM and audio to be ready with multiple fallbacks
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(attemptAutoplay, 500);
-                });
-            } else {
-                // DOM already loaded
-                if (document.querySelector('audio')) {
-                    setTimeout(attemptAutoplay, 100);
+            function waitForAudioAndAttempt() {
+                const audioPlayer = document.querySelector('audio');
+                if (audioPlayer && audioPlayer.readyState >= 1) {
+                    // Audio metadata loaded, try autoplay
+                    attemptAutoplay();
+                } else if (audioPlayer) {
+                    // Audio found but not ready, wait for it
+                    console.log('🕐 Audio found but not ready, waiting...');
+                    audioPlayer.addEventListener('loadedmetadata', attemptAutoplay, { once: true });
+                    audioPlayer.addEventListener('canplay', attemptAutoplay, { once: true });
+                    // Fallback timeout
+                    setTimeout(attemptAutoplay, 2000);
                 } else {
-                    // Audio not yet in DOM, wait a bit longer
-                    setTimeout(attemptAutoplay, 1000);
+                    // No audio element found, wait longer
+                    console.log('🕐 No audio element found, waiting longer...');
+                    setTimeout(waitForAudioAndAttempt, 500);
                 }
             }
+            
+            // Start the process immediately since we're using defer
+            waitForAudioAndAttempt();
         }
     }
     
