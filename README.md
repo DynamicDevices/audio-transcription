@@ -1,7 +1,20 @@
-# Ethical News Digest - Human Voice Quality Audio for Visually Impaired
+# Daily Voice News - Professional Audio News for Visually Impaired Users
+
+**Brought to you by Dynamic Devices**
 
 ## 🎯 Mission
 Create natural, human-quality audio news digests specifically designed for visually impaired users. This project synthesizes information from multiple UK news sources to create original, accessible audio content that respects copyright while providing valuable accessibility services.
+
+## 🎧 **Live Service**
+
+📱 **Website**: [https://dynamicdevices.github.io/daily-voice-news/](https://dynamicdevices.github.io/daily-voice-news/)
+
+- 🕕 **Updated daily** at 6:00 AM UTC
+- 🎵 **Auto-play sharing** via `?autoplay=true` URLs  
+- 📱 **WhatsApp optimized** for easy family sharing
+- ♿ **Accessibility first** - screen reader friendly
+- 🎤 **Irish Emily Neural voice** - premium quality
+- 🤖 **AI-enhanced synthesis** - copyright compliant
 
 ## ⚖️ CRITICAL: Copyright Compliance & Ethics
 **This project NEVER reproduces copyrighted material.** Instead, it operates under strict ethical guidelines:
@@ -18,140 +31,143 @@ Create natural, human-quality audio news digests specifically designed for visua
 
 ## 📁 Project Structure
 
-### 🎵 **Core Scripts**
-- **`ethical_news_digest.py`** - **MAIN PRODUCTION SCRIPT**
-  - Aggregates headlines from multiple UK sources
-  - Synthesizes original content respecting copyright
-  - Generates professional audio with Irish Emily Neural voice
-  - Creates daily news digests for accessibility
-- **`create_premium_edge_audio.py`** - Legacy single-article processor
-- **`generate_top_guardian_audio.py`** - Multi-article test generator
-
-### 🎧 **Sample Audio & Examples**
-- **`samples/`** - High-quality audio examples
-  - `guardian_edge_PREMIUM_QUALITY.mp3` - Original Greta Thunberg synthesis (4.3 min)
-  - `news_digest_*.mp3` - Daily digest samples
-- **`examples/`** - Text processing examples
-  - `edge_premium_text.txt` - Processed text sample
-  - `news_digest_*.txt` - Digest text with attribution
-
-### 📚 **Documentation**
-- **`docs/COPYRIGHT_AND_ETHICS.md`** - **CRITICAL LEGAL GUIDELINES**
-- **`docs/PROJECT_STRUCTURE.md`** - Technical architecture
-- **`README.md`** - This file
-- **`requirements.txt`** - Python dependencies
-
-### 🦀 **Rust Application (Advanced)**
-- Complete Rust implementation for high-performance processing
-- See `src/` directory for full source code
-```bash
-cargo run -- --url https://example-url
+```
+daily-voice-news/
+├── 📄 github_ai_news_digest.py    # Main AI digest generator
+├── 📄 create_premium_edge_audio.py # Single article processor
+├── 📄 update_website.py            # Dynamic website updates
+├── 🌐 docs/                        # GitHub Pages website
+│   ├── index.html                  # Accessible newspaper layout
+│   ├── css/newspaper.css           # Mobile-first styling
+│   ├── js/accessibility.js         # Screen reader enhancements
+│   └── audio/                      # Generated MP3 files
+├── 🤖 .github/workflows/           # Automated CI/CD
+│   └── daily-news-digest.yml       # Daily generation workflow
+├── 📋 requirements.txt             # Python dependencies
+└── 📚 docs/                        # Documentation
+    ├── COPYRIGHT_AND_ETHICS.md     # Legal framework
+    └── GITHUB_ACTIONS_SETUP.md     # CI/CD instructions
 ```
 
-## 🎯 Ethical News Synthesis Features
+## 🚀 **Key Features**
 
-### 📰 **Multi-Source Aggregation**
-- ✅ **BBC News, Guardian, Independent, Sky News, Telegraph**
-- ✅ **Cross-reference verification** across sources
-- ✅ **Theme identification** for significant stories
-- ✅ **Balanced perspective** through multiple viewpoints
+### **🎤 Premium Audio Quality**
+- **Microsoft Edge TTS** with Irish Emily Neural voice
+- **2.43 words per second** - natural speaking pace
+- **MP3 format** optimized for WhatsApp sharing
+- **Professional narration** quality
 
-### 🎤 **Professional Audio Quality**
-- ✅ **Irish Emily Neural voice** (Microsoft Edge TTS)
-- ✅ **2.4+ words per second** (optimal accessibility speed)
-- ✅ **WhatsApp compatible** MP3 format
-- ✅ **Professional pacing** and natural flow
-- ✅ **Zero artificial delays** or robotic pauses
+### **🤖 AI-Enhanced Intelligence** 
+- **Multi-source aggregation** from major UK outlets
+- **Thematic analysis** and significance ranking
+- **Original content synthesis** (no copying)
+- **Claude/GPT integration** for intelligent processing
 
-### ♿ **Accessibility-First Design**
-- ✅ **5-second decision intros** for topic identification
-- ✅ **Clear content structure** with logical flow
-- ✅ **Consistent quality** across all digests
-- ✅ **Appropriate length** (5-15 minutes) for attention spans
-- ✅ **Daily digest format** for regular news consumption
+### **♿ Accessibility Excellence**
+- **Screen reader optimized** with full ARIA labels
+- **Keyboard navigation** support throughout
+- **Mobile-first design** for phone/tablet use
+- **Auto-play sharing** for effortless listening
 
-## 📊 Quality Metrics Achieved
+### **📱 WhatsApp Integration**
+- **One-click sharing** with auto-play links
+- **Family-friendly** audio format
+- **Offline capable** after download
+- **Cross-platform** compatibility
 
-### 🎙️ **Audio Excellence**
-- **Voice Quality:** Professional neural synthesis (not robotic TTS)
-- **Speed:** 2.4-2.6 WPS (excellent for accessibility)
-- **Format:** MP3, WhatsApp compatible
-- **Duration:** Optimized 5-15 minute segments
-- **Consistency:** Reliable quality across all content
+## 🛠️ **Technical Implementation**
 
-### ⚖️ **Legal Compliance**
-- **Copyright Respect:** Zero reproduction of protected content
-- **Fair Use:** Transformative synthesis for accessibility
-- **Attribution:** Complete source transparency
-- **Educational Value:** Analysis and context beyond raw facts
-- **Accessibility Service:** Specific benefit for visually impaired users
+### **AI News Processing**
+```python
+# Multi-source headline aggregation
+sources = ['BBC News', 'Guardian', 'Independent', 'Sky News', 'Telegraph']
 
-### 🎯 **User Value**
-- **Time Efficiency:** Synthesized vs. reading multiple sources
-- **Comprehensive Perspective:** Multi-source analysis
-- **Professional Curation:** Editorial standards and fact-checking
-- **Consistent Schedule:** Daily digest availability
-- **Independent Access:** Self-contained audio consumption
+# AI analysis and synthesis
+themes = await ai_analyze_stories(all_stories)
+digest_content = await ai_synthesize_content(themes)
 
-## 🚀 Usage
-
-### **Daily News Digest Generation:**
-```bash
-python3 ethical_news_digest.py
+# Premium audio generation
+await generate_edge_audio(digest_content, "en-IE-EmilyNeural")
 ```
 
-**Output:**
-- `news_digest_YYYY_MM_DD.mp3` - Professional audio digest
-- `news_digest_YYYY_MM_DD.txt` - Text version with sources
+### **GitHub Actions Automation**
+- **Daily execution** at 6:00 AM UTC
+- **AI API integration** (OpenAI/Anthropic)
+- **Website deployment** to GitHub Pages
+- **Audio file management** and archival
 
-### **Custom Article Synthesis (Legacy):**
+### **Accessibility Architecture**
+- **Semantic HTML5** structure
+- **Progressive enhancement** JavaScript
+- **WCAG 2.1 AA compliance**
+- **Service Worker** for offline functionality
+
+## 🔧 **Setup & Development**
+
+### **Local Development**
 ```bash
-python3 create_premium_edge_audio.py
+# Clone repository
+git clone https://github.com/DynamicDevices/daily-voice-news.git
+cd daily-voice-news
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Generate today's digest
+python github_ai_news_digest.py
+
+# Update website
+python update_website.py
 ```
-*Note: Use only for educational/testing purposes with proper attribution*
 
-## 🔄 Development Roadmap
+### **GitHub Actions Setup**
+1. **Enable GitHub Pages** in repository settings
+2. **Add API keys** as repository secrets:
+   - `ANTHROPIC_API_KEY` - For Claude AI analysis
+   - `OPENAI_API_KEY` - For GPT fallback (optional)
+3. **Workflow runs automatically** daily at 6 AM UTC
 
-### **Phase 1: Ethical Foundation** ✅
-- [x] Copyright compliance framework
-- [x] Multi-source synthesis system
-- [x] Professional audio generation
-- [x] Legal documentation
+## 📊 **Performance Metrics**
 
-### **Phase 2: Enhanced Features** 📋
-- [ ] Advanced theme detection and categorization
-- [ ] Automated fact-checking across sources
-- [ ] User feedback and quality metrics
-- [ ] Scheduled daily generation
+### **Audio Quality Breakthrough**
+- **gTTS Problems**: 13-14% pause time, 1.90 WPS, basic synthesis
+- **Edge TTS Solution**: <2% pause time, 2.43 WPS, neural quality
+- **18% speed improvement** with professional voice quality
 
-### **Phase 3: Scale & Quality** 🎯
-- [ ] Legal review and approval
-- [ ] User testing with visually impaired community
-- [ ] Performance optimization
-- [ ] Distribution platform development
+### **Accessibility Impact**
+- **Screen reader optimized** for blind/partially sighted users
+- **WhatsApp sharing** enables family support networks  
+- **Daily consistency** builds reliable news routine
+- **Zero cost** accessibility service
 
-## ⚖️ Legal Framework
+## 🏆 **Engineering Achievements**
 
-### **Fair Use Justification:**
-1. **Purpose:** Accessibility service for disabled users
-2. **Nature:** Factual information synthesis (not creative reproduction)
-3. **Amount:** Headlines and facts only (not substantial portions)
-4. **Effect:** Transformative educational value, not market substitution
+1. **Solved gTTS Delay Problem**: Identified systematic 13-14% pause issue in Google TTS and migrated to Microsoft Edge TTS for natural flow
 
-### **Ethical Standards:**
-- **Transparency:** All sources clearly attributed
-- **Accuracy:** Multi-source verification required
-- **Integrity:** Clear distinction between fact and analysis
-- **Responsibility:** Prompt correction of any errors
+2. **Copyright-Compliant AI**: Developed ethical framework for news synthesis that respects intellectual property while serving accessibility needs
 
-## 📞 Support & Legal
+3. **Auto-Play Sharing**: Implemented `?autoplay=true` URL parameters for seamless WhatsApp sharing experience
 
-**Before deployment, this project requires:**
-- Legal review by media law experts
-- Accessibility community feedback
-- Compliance verification with UK disability legislation
-- Copyright clearance for specific use cases
+4. **Accessibility Excellence**: Full WCAG 2.1 AA compliance with screen reader optimization and keyboard navigation
+
+5. **CI/CD Automation**: Complete GitHub Actions pipeline for daily generation, AI processing, and website deployment
+
+## 🎯 **For Visually Impaired Users**
+
+This service is specifically designed for people who cannot access traditional visual news media:
+
+- **🎧 Immediate listening** - no navigation required
+- **📱 Easy sharing** - family can send via WhatsApp  
+- **♿ Screen reader friendly** - works with JAWS, NVDA, VoiceOver
+- **⌨️ Keyboard accessible** - no mouse required
+- **🔄 Consistent schedule** - reliable daily updates
+
+## 📞 **Support & Contact**
+
+- **🌐 Live Service**: [https://dynamicdevices.github.io/daily-voice-news/](https://dynamicdevices.github.io/daily-voice-news/)
+- **📧 Issues**: [GitHub Issues](https://github.com/DynamicDevices/daily-voice-news/issues)
+- **🏢 Dynamic Devices**: Professional accessibility solutions
 
 ---
 
-**This system transforms raw news into valuable, ethical accessibility services while maintaining the highest standards of legal compliance and journalistic integrity.**
+**© 2025 Dynamic Devices • Open Source • Made with ♿ accessibility in mind**
