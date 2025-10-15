@@ -12,6 +12,16 @@ on:
         required: false
         default: 'false'
         type: boolean
+      force_ai_regeneration:
+        description: 'Force AI analysis even if today content exists (costs API credits)'
+        required: false
+        default: 'false'
+        type: boolean
+      deploy_only:
+        description: 'Skip AI generation, just redeploy existing content'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
@@ -45,7 +55,26 @@ jobs:
         pip install -r requirements.txt
         pip install openai anthropic  # Multiple AI providers
     
+    - name: 🔍 Check if today's content exists
+      id: check_content
+      run: |
+        TODAY=$(date +%Y_%m_%d)
+        AUDIO_FILE="news_digest_ai_${TODAY}.mp3"
+        TEXT_FILE="news_digest_ai_${TODAY}.txt"
+        
+        if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+          echo "content_exists=true" >> $GITHUB_OUTPUT
+          echo "✅ Today's content already exists: $AUDIO_FILE, $TEXT_FILE"
+        else
+          echo "content_exists=false" >> $GITHUB_OUTPUT
+          echo "❌ Today's content missing - will generate new content"
+        fi
+        
+        echo "today_date=$TODAY" >> $GITHUB_OUTPUT
+    
     - name: 🤖 Generate AI-Enhanced News Digest
+      # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
+      if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -53,8 +82,16 @@ jobs:
         DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
       run: |
         echo "🚀 Starting AI-enhanced news digest generation..."
+        echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         python github_ai_news_digest.py
         echo "✅ Digest generation completed"
+    
+    - name: ⚡ Skip AI Generation (Cost Optimization)
+      if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && inputs.deploy_only == 'true'
+      run: |
+        echo "💰 COST OPTIMIZATION: Skipping AI generation"
+        echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
+        echo "🔄 Will redeploy existing content with UX improvements"
     
     - name: 📊 Analyze generated content
       run: |
