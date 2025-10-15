@@ -202,7 +202,7 @@ class GitHubAINewsDigest:
             
             elif self.ai_provider == 'anthropic':
                 response = self.anthropic_client.messages.create(
-                    model="claude-3-5-sonnet-20241022",
+                    model="claude-sonnet-4-5-20250929",
                     max_tokens=1500,
                     temperature=0.3,
                     messages=[
@@ -313,7 +313,7 @@ class GitHubAINewsDigest:
             
             elif self.ai_provider == 'anthropic':
                 response = self.anthropic_client.messages.create(
-                    model="claude-3-5-sonnet-20241022",
+                    model="claude-sonnet-4-5-20250929",
                     max_tokens=300,
                     temperature=0.4,
                     messages=[
