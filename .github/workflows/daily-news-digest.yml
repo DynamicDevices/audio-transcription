@@ -17,17 +17,17 @@ on:
       debug_mode:
         description: 'Enable debug output'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       force_ai_regeneration:
         description: 'Force AI analysis even if today content exists (costs API credits)'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       deploy_only:
         description: 'Skip AI generation, just redeploy existing content'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 permissions:
@@ -79,38 +79,38 @@ jobs:
         
         echo "today_date=$TODAY" >> $GITHUB_OUTPUT
     
-        - name: 🤖 Generate AI-Enhanced News Digest
-          # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
-          if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-            ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-            DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
-          run: |
-            if [ "${{ github.event_name }}" = "push" ]; then
-              echo "🚀 Push-triggered build: Deploying UX improvements..."
-              echo "💰 Cost optimization: Will only generate AI content if missing"
-            elif [ "${{ github.event_name }}" = "schedule" ]; then
-              echo "⏰ Scheduled build: Daily news digest generation..."
-              echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
-            else
-              echo "🔧 Manual workflow: Custom parameters applied"
-              echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
-            fi
-            python github_ai_news_digest.py
-            echo "✅ Digest generation completed"
+    - name: 🤖 Generate AI-Enhanced News Digest
+      # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
+      if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
+      run: |
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "🚀 Push-triggered build: Deploying UX improvements..."
+          echo "💰 Cost optimization: Will only generate AI content if missing"
+        elif [ "${{ github.event_name }}" = "schedule" ]; then
+          echo "⏰ Scheduled build: Daily news digest generation..."
+          echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
+        else
+          echo "🔧 Manual workflow: Custom parameters applied"
+          echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
+        fi
+        python github_ai_news_digest.py
+        echo "✅ Digest generation completed"
     
-        - name: ⚡ Skip AI Generation (Cost Optimization)
-          if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && (inputs.deploy_only == 'true' || github.event_name == 'push')
-          run: |
-            echo "💰 COST OPTIMIZATION: Skipping AI generation"
-            echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
-            if [ "${{ github.event_name }}" = "push" ]; then
-              echo "🚀 Push event: Deploying UX/code improvements without regenerating content"
-            else
-              echo "🔄 Will redeploy existing content with UX improvements"
-            fi
+    - name: ⚡ Skip AI Generation (Cost Optimization)
+      if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && (inputs.deploy_only == 'true' || github.event_name == 'push')
+      run: |
+        echo "💰 COST OPTIMIZATION: Skipping AI generation"
+        echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "🚀 Push event: Deploying UX/code improvements without regenerating content"
+        else
+          echo "🔄 Will redeploy existing content with UX improvements"
+        fi
     
     - name: 📊 Analyze generated content
       run: |
