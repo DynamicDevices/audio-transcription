@@ -64,6 +64,22 @@ LANGUAGE_CONFIGS = {
         'output_dir': 'docs/fr_FR',
         'audio_dir': 'docs/fr_FR/audio',
         'service_name': 'AudioNews France'
+    },
+    'de_DE': {
+        'name': 'German (Germany)',
+        'native_name': 'Deutsch',
+        'sources': {
+            'Der Spiegel': 'https://www.spiegel.de/',
+            'Die Zeit': 'https://www.zeit.de/',
+            'Süddeutsche Zeitung': 'https://www.sueddeutsche.de/',
+            'Frankfurter Allgemeine': 'https://www.faz.net/'
+        },
+        'voice': 'de-DE-KatjaNeural',
+        'greeting': 'Guten Morgen',
+        'themes': ['politik', 'wirtschaft', 'gesundheit', 'international', 'klima', 'technologie', 'gesellschaft'],
+        'output_dir': 'docs/de_DE',
+        'audio_dir': 'docs/de_DE/audio',
+        'service_name': 'AudioNews Deutschland'
     }
 }
 
@@ -448,6 +464,24 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             - Si plusieurs histoires concernent le même événement, combinez-les en un résumé
             - Commencez par: "Dans l'actualité {theme} aujourd'hui..."
             """
+        elif self.language == 'de_DE':
+            return f"""
+            Erstellen Sie eine prägnante, informative Nachrichtenzusammenfassung über {theme} für sehbehinderte Zuhörer.
+            
+            Wichtige Themen basierend auf aktuellen Schlagzeilen:
+            {headlines}
+            
+            Anforderungen:
+            - Erstellen Sie originelle Inhalte (kopieren Sie NICHT die Schlagzeilen)
+            - Schreiben Sie für den Audio-Konsum (klare, fließende Sätze)
+            - Bleiben Sie unter 80 Wörtern
+            - Erwähnen Sie KEINE spezifischen Nachrichtenquellen
+            - Erwähnen Sie NICHT, wie viele Quellen dies abdecken
+            - Konzentrieren Sie sich darauf, was passiert, nicht wer darüber berichtet
+            - VERMEIDEN Sie wiederholende Inhalte - synthetisieren Sie zu EINER kohärenten Erzählung
+            - Wenn mehrere Geschichten dasselbe Ereignis betreffen, kombinieren Sie sie zu einer Zusammenfassung
+            - Beginnen Sie mit: "In den {theme}-Nachrichten heute..."
+            """
         else:  # Default to English
             return f"""
             Create a concise, informative news summary about {theme} news for visually impaired listeners.
@@ -471,6 +505,8 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         """Generate language-specific system message for AI"""
         if self.language == 'fr_FR':
             return "Vous créez du contenu d'actualités accessible pour les utilisateurs malvoyants. Écrivez clairement et de manière conversationnelle pour la consommation audio. Ne copiez jamais le texte original - synthétisez toujours. Évitez le contenu répétitif - combinez des histoires similaires en un récit cohérent."
+        elif self.language == 'de_DE':
+            return "Sie erstellen barrierefreie Nachrichteninhalte für sehbehinderte Nutzer. Schreiben Sie klar und gesprächig für den Audio-Konsum. Kopieren Sie niemals den ursprünglichen Text - synthetisieren Sie immer. Vermeiden Sie wiederholende Inhalte - kombinieren Sie ähnliche Geschichten zu einer kohärenten Erzählung."
         else:  # Default to English
             return "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize. Avoid repetitive content - combine similar stories into one coherent narrative."
 
@@ -545,6 +581,8 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         
         if self.language == 'fr_FR':
             digest = f"{greeting}. Voici votre résumé d'actualités françaises pour {today}, présenté par Dynamic Devices. "
+        elif self.language == 'de_DE':
+            digest = f"{greeting}. Hier ist Ihre deutsche Nachrichtenzusammenfassung für {today}, präsentiert von Dynamic Devices. "
         else:
             digest = f"{greeting}. Here's your UK news digest for {today}, brought to you by Dynamic Devices. "
         
@@ -560,6 +598,10 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             digest += "\n\nCe résumé fournit une synthèse des actualités les plus importantes d'aujourd'hui. "
             digest += "Tout le contenu est une analyse originale conçue pour l'accessibilité. "
             digest += "Pour une couverture complète, visitez directement les sites d'actualités."
+        elif self.language == 'de_DE':
+            digest += "\n\nDiese Zusammenfassung bietet eine Synthese der wichtigsten Nachrichten von heute. "
+            digest += "Alle Inhalte sind ursprüngliche Analysen, die für die Barrierefreiheit entwickelt wurden. "
+            digest += "Für eine vollständige Berichterstattung besuchen Sie direkt die Nachrichten-Websites."
         else:
             digest += "\n\nThis digest provides a synthesis of today's most significant news stories. "
             digest += "All content is original analysis designed for accessibility. "
@@ -737,7 +779,7 @@ async def main():
     """
     parser = argparse.ArgumentParser(description='Generate multi-language AI news digest')
     parser.add_argument('--language', '-l', 
-                       choices=['en_GB', 'fr_FR'], 
+                       choices=['en_GB', 'fr_FR', 'de_DE'], 
                        default='en_GB',
                        help='Language for news digest (default: en_GB)')
     
