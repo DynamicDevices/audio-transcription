@@ -703,10 +703,13 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         text_filename = f"{self.config['output_dir']}/news_digest_ai_{today_str}.txt"
         audio_filename = f"{self.config['audio_dir']}/news_digest_ai_{today_str}.mp3"
         
-        if os.path.exists(text_filename) and os.path.exists(audio_filename):
+        # Check if files exist AND audio file has reasonable size (>50KB)
+        audio_size = os.path.getsize(audio_filename) if os.path.exists(audio_filename) else 0
+        
+        if os.path.exists(text_filename) and os.path.exists(audio_filename) and audio_size > 50000:
             print(f"\n💰 COST OPTIMIZATION: Today's content already exists")
             print(f"   ✅ Text: {text_filename}")
-            print(f"   ✅ Audio: {audio_filename}")
+            print(f"   ✅ Audio: {audio_filename} ({audio_size:,} bytes)")
             print(f"   🚀 Skipping regeneration for efficiency")
             
             # Get existing file stats for summary
