@@ -76,8 +76,15 @@ jobs:
           AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
           TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
           
+          # Check if files exist AND audio file has reasonable size (>50KB)
           if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
-            echo "✅ ${LANG} content exists: $AUDIO_FILE, $TEXT_FILE"
+            AUDIO_SIZE=$(stat -c%s "$AUDIO_FILE" 2>/dev/null || echo "0")
+            if [[ $AUDIO_SIZE -gt 50000 ]]; then
+              echo "✅ ${LANG} content exists and valid: $AUDIO_FILE ($(numfmt --to=iec $AUDIO_SIZE)), $TEXT_FILE"
+            else
+              echo "⚠️ ${LANG} audio file too small (${AUDIO_SIZE} bytes) - needs regeneration"
+              ALL_EXIST=false
+            fi
           else
             echo "📝 ${LANG} content missing:"
             [[ ! -f "$AUDIO_FILE" ]] && echo "   ❌ Missing: $AUDIO_FILE"
