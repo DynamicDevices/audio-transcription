@@ -68,18 +68,30 @@ jobs:
       id: check_content
       run: |
         TODAY=$(date +%Y_%m_%d)
-        # Check for English content in new structure
-        EN_AUDIO_FILE="docs/en_GB/audio/news_digest_ai_${TODAY}.mp3"
-        EN_TEXT_FILE="docs/en_GB/news_digest_ai_${TODAY}.txt"
+        # Check for content in all supported languages
+        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        ALL_EXIST=true
         
-        if [[ -f "$EN_AUDIO_FILE" && -f "$EN_TEXT_FILE" ]]; then
+        for LANG in "${LANGUAGES[@]}"; do
+          AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
+          TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
+          
+          if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+            echo "✅ ${LANG} content exists: $AUDIO_FILE, $TEXT_FILE"
+          else
+            echo "📝 ${LANG} content missing:"
+            [[ ! -f "$AUDIO_FILE" ]] && echo "   ❌ Missing: $AUDIO_FILE"
+            [[ ! -f "$TEXT_FILE" ]] && echo "   ❌ Missing: $TEXT_FILE"
+            ALL_EXIST=false
+          fi
+        done
+        
+        if [[ "$ALL_EXIST" == "true" ]]; then
           echo "content_exists=true" >> $GITHUB_OUTPUT
-          echo "✅ Today's English content already exists: $EN_AUDIO_FILE, $EN_TEXT_FILE"
+          echo "🌍 All language content exists for today"
         else
           echo "content_exists=false" >> $GITHUB_OUTPUT
-          echo "📝 English content missing - will generate:"
-          [[ ! -f "$EN_AUDIO_FILE" ]] && echo "   ❌ Missing: $EN_AUDIO_FILE"
-          [[ ! -f "$EN_TEXT_FILE" ]] && echo "   ❌ Missing: $EN_TEXT_FILE"
+          echo "🌍 Some language content missing - will generate"
         fi
         
         echo "today_date=$TODAY" >> $GITHUB_OUTPUT
@@ -104,7 +116,23 @@ jobs:
           echo "🔧 Manual workflow: Custom parameters applied"
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
-        python github_ai_news_digest.py --language en_GB
+        # Generate content for all supported languages
+        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        for LANG in "${LANGUAGES[@]}"; do
+          echo "🌍 Generating content for ${LANG}..."
+          python github_ai_news_digest.py --language ${LANG}
+          
+          # Check if generation was successful
+          TODAY=$(date +%Y_%m_%d)
+          AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
+          TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
+          
+          if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+            echo "✅ ${LANG} generation successful"
+          else
+            echo "⚠️ ${LANG} generation may have failed"
+          fi
+        done
         echo "✅ Digest generation completed"
     
     - name: ⚡ Skip AI Generation (Cost Optimization)
@@ -133,40 +161,46 @@ jobs:
           wc -w news_digest_ai_*.txt
         fi
     
-    - name: 🌐 Update website with new content
+    - name: 🌐 Single-page website (no update needed)
       run: |
-        echo "🌐 Updating English language website page..."
-        python update_language_website.py --language en_GB
-        echo "✅ English website page updated with today's digest"
+        echo "🌐 Using single-page multi-language website"
+        echo "✅ No website update needed - content loaded dynamically"
     
-    - name: 📱 Verify audio files in correct location
+    - name: 📱 Verify files in correct locations
       run: |
-        # Check if audio files are in the correct language-specific directory
-        if ls docs/en_GB/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
-          echo "🎧 Audio files found in correct location:"
-          ls -la docs/en_GB/audio/news_digest_ai_*.mp3
-        else
-          echo "⚠️ No audio files found in docs/en_GB/audio/"
-          echo "🔍 Checking for files in wrong location..."
-          if ls news_digest_ai_*.mp3 1> /dev/null 2>&1; then
-            echo "📁 Moving audio files to correct location..."
-            mkdir -p docs/en_GB/audio
-            mv news_digest_ai_*.mp3 docs/en_GB/audio/
-            echo "✅ Audio files moved to docs/en_GB/audio/"
+        # Check if files are in the correct language-specific directories
+        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        
+        for LANG in "${LANGUAGES[@]}"; do
+          echo "🔍 Checking ${LANG} files..."
+          
+          # Check audio files
+          if ls docs/${LANG}/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+            echo "🎧 ${LANG} audio files found in correct location:"
+            ls -la docs/${LANG}/audio/news_digest_ai_*.mp3
+          else
+            echo "⚠️ No ${LANG} audio files found in docs/${LANG}/audio/"
           fi
+          
+          # Check text files
+          if ls docs/${LANG}/news_digest_ai_*.txt 1> /dev/null 2>&1; then
+            echo "📄 ${LANG} text files found in correct location:"
+            ls -la docs/${LANG}/news_digest_ai_*.txt
+          else
+            echo "⚠️ No ${LANG} text files found in docs/${LANG}/"
+          fi
+        done
+        
+        # Check for any files in wrong location and move them
+        if ls news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+          echo "📁 Moving audio files from root to en_GB..."
+          mkdir -p docs/en_GB/audio
+          mv news_digest_ai_*.mp3 docs/en_GB/audio/
         fi
         
-        # Check text files
-        if ls docs/en_GB/news_digest_ai_*.txt 1> /dev/null 2>&1; then
-          echo "📄 Text files found in correct location:"
-          ls -la docs/en_GB/news_digest_ai_*.txt
-        else
-          echo "⚠️ No text files found in docs/en_GB/"
-          if ls news_digest_ai_*.txt 1> /dev/null 2>&1; then
-            echo "📁 Moving text files to correct location..."
-            mv news_digest_ai_*.txt docs/en_GB/
-            echo "✅ Text files moved to docs/en_GB/"
-          fi
+        if ls news_digest_ai_*.txt 1> /dev/null 2>&1; then
+          echo "📁 Moving text files from root to en_GB..."
+          mv news_digest_ai_*.txt docs/en_GB/
         fi
     
     - name: 🔍 Quality check
@@ -200,7 +234,7 @@ jobs:
         
         # Add ONLY language-specific files to avoid conflicts
         # This prevents touching the root index.html and other development files
-        git add docs/en_GB/ || true
+        git add docs/en_GB/ docs/fr_FR/ docs/de_DE/ || true
         
         # Also add any files that might be in wrong location (for backward compatibility)
         git add news_digest_ai_*.mp3 news_digest_ai_*.txt 2>/dev/null || true
@@ -210,17 +244,23 @@ jobs:
           echo "💰 COST OPTIMIZATION: No new files to commit - content already exists"
           echo "📊 Estimated API cost savings: \$0.50-\$2.00"
         else
-          # Check if we have audio files to get stats
-          if ls docs/en_GB/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
-            audio_file=$(ls docs/en_GB/audio/news_digest_ai_*.mp3 | head -1)
-            audio_size=$(stat -c%s "$audio_file" | numfmt --to=iec)
-          else
-            audio_size="Unknown"
-          fi
+          # Check if we have audio files to get stats for all languages
+          TOTAL_SIZE=0
+          LANG_STATS=""
+          for LANG in en_GB fr_FR de_DE; do
+            if ls docs/${LANG}/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+              audio_file=$(ls docs/${LANG}/audio/news_digest_ai_*.mp3 | head -1)
+              size_bytes=$(stat -c%s "$audio_file")
+              size_human=$(numfmt --to=iec $size_bytes)
+              TOTAL_SIZE=$((TOTAL_SIZE + size_bytes))
+              LANG_STATS="${LANG_STATS}${LANG}: ${size_human} "
+            fi
+          done
+          total_size_human=$(numfmt --to=iec $TOTAL_SIZE)
           git commit -m "🤖 Daily AI news digest & website update $(date +%Y-%m-%d)
 
           📊 Generated: $(date '+%Y-%m-%d %H:%M UTC')
-          🎧 Audio: ${audio_size}
+          🎧 Audio: ${total_size_human} total (${LANG_STATS})
           🤖 AI: Enhanced analysis
           🌐 Website: Updated with accessible newspaper layout
           ♿ Accessibility: Optimized for visually impaired users"

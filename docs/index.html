@@ -3,330 +3,608 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioNews - Accessible News for Everyone</title>
-    <meta name="description" content="Professional audio news service for visually impaired users worldwide">
-    <link rel="icon" href="shared/images/favicon.ico" type="image/x-icon">
+    <title>AudioNews - Daily Voice News Digest</title>
+    <meta name="description" content="Daily AI-generated audio news digest. Professional voice, screen reader optimized, available in multiple languages.">
+    <meta name="keywords" content="audio news, voice news, daily news digest, accessible news, multilingual news, UK news, French news, German news">
     
-    <!-- Preload critical resources -->
-    <link rel="preload" href="config/languages.json" as="fetch" crossorigin>
+    <!-- SEO Meta Tags -->
+    <meta name="author" content="Dynamic Devices">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://audionews.uk/">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://audionews.uk/">
+    <meta property="og:title" content="AudioNews - Daily Voice News Digest">
+    <meta property="og:description" content="Daily AI-generated audio news digest in multiple languages">
+    <meta property="og:image" content="https://audionews.uk/shared/images/social-card.png">
+    <meta property="og:site_name" content="AudioNews">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://audionews.uk/">
+    <meta property="twitter:title" content="AudioNews - Daily Voice News Digest">
+    <meta property="twitter:description" content="Daily AI-generated audio news digest in multiple languages">
+    <meta property="twitter:image" content="https://audionews.uk/shared/images/social-card.png">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a365d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AudioNews">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
+    
+    <!-- Critical CSS -->
     <style>
-        /* Critical CSS for loading screen */
+        /* Critical styles for immediate rendering */
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f8fafc;
+            color: #2d3748;
+        }
+        
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #1a365d;
             color: white;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 1000;
+            border-radius: 0 0 4px 4px;
+        }
+        
+        .skip-link:focus {
+            top: 0;
         }
         
         .container {
-            max-width: 600px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: pulse 2s infinite;
+        .header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        h1 {
+        .header h1 {
+            margin: 0;
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 300;
+            font-weight: 700;
         }
         
-        .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+        .tagline {
+            margin: 0.5rem 0 0;
             opacity: 0.9;
-        }
-        
-        .loading {
             font-size: 1.1rem;
-            margin-bottom: 2rem;
         }
         
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
+        .language-selector {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            font-weight: 600;
+        }
+        
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
+            border-top-color: #3182ce;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
         }
         
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
-        .language-links {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        /* Content area */
+        .content {
+            min-height: 60vh;
+            padding: 2rem 0;
         }
         
-        .language-links h3 {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-        
-        .lang-link {
-            display: inline-block;
-            margin: 0.5rem;
-            padding: 0.8rem 1.5rem;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-        }
-        
-        .lang-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .error-message {
-            color: #ffeb3b;
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(255, 152, 0, 0.2);
-            border-radius: 10px;
+        /* Hide content initially */
+        .content-section {
             display: none;
         }
         
-        /* Accessibility improvements */
-        @media (prefers-reduced-motion: reduce) {
-            .logo, .spinner {
-                animation: none;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .logo {
-                font-size: 2.5rem;
-            }
+        .content-section.active {
+            display: block;
         }
     </style>
+    
+    <!-- Load full CSS asynchronously -->
+    <link rel="preload" href="shared/css/newspaper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="shared/css/newspaper.css"></noscript>
 </head>
 <body>
-    <div class="container">
-        <div class="logo" role="img" aria-label="AudioNews logo">🌍</div>
-        <h1>AudioNews</h1>
-        <p class="subtitle">Professional audio news for visually impaired users worldwide</p>
-        
-        <div class="loading" id="loading-message">
-            <span class="spinner" aria-hidden="true"></span>
-            <span>Detecting your location...</span>
-        </div>
-        
-        <div class="error-message" id="error-message" role="alert">
-            <strong>Location detection failed.</strong> Please select your preferred language below.
-        </div>
-        
-        <div class="language-links">
-            <h3>Choose your language:</h3>
-            <a href="en_GB/" class="lang-link" id="uk-link">
-                <span aria-hidden="true">🇬🇧</span> English (UK)
-            </a>
-            <a href="fr_FR/" class="lang-link" id="fr-link">
-                <span aria-hidden="true">🇫🇷</span> Français
-            </a>
-        </div>
-    </div>
-
-    <script>
-        // Language configuration
-        let languageConfig = null;
-        
-        // Load language configuration
-        async function loadLanguageConfig() {
-            try {
-                const response = await fetch('config/languages.json');
-                languageConfig = await response.json();
-                return languageConfig;
-            } catch (error) {
-                console.error('Failed to load language config:', error);
-                return null;
-            }
-        }
-        
-        // Detect user location and redirect
-        async function detectAndRedirect() {
-            const loadingEl = document.getElementById('loading-message');
-            const errorEl = document.getElementById('error-message');
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link" data-i18n="skip_link">Skip to main content</a>
+    
+    <header class="header">
+        <div class="container">
+            <h1><span id="site-flag">🌍</span> <span id="site-name">AudioNews</span></h1>
+            <p class="tagline" id="site-tagline">Brought to you by Dynamic Devices</p>
             
-            try {
-                // Load language configuration first
-                await loadLanguageConfig();
+            <!-- Language Selector -->
+            <div class="language-selector" role="navigation" aria-label="Language selection">
+                <button class="lang-btn active" data-lang="en_GB" aria-label="English (UK)">
+                    🇬🇧 English
+                </button>
+                <button class="lang-btn" data-lang="fr_FR" aria-label="Français (France)">
+                    🇫🇷 Français
+                </button>
+                <button class="lang-btn" data-lang="de_DE" aria-label="Deutsch (Deutschland)">
+                    🇩🇪 Deutsch
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <main id="main-content" class="content">
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p data-i18n="loading">Loading your personalized news digest...</p>
+        </div>
+        
+        <!-- Content will be dynamically loaded here -->
+        <div id="content-container"></div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text" id="footer-text">
+                © 2025 Dynamic Devices • <a href="https://github.com/DynamicDevices/daily-voice-news" class="footer-link">Open Source on GitHub</a> • Made with ♿ accessibility in mind
+            </p>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="shared/js/accessibility.js" defer></script>
+    
+    <!-- Multi-language App Logic -->
+    <script>
+        class AudioNewsApp {
+            constructor() {
+                this.currentLanguage = 'en_GB';
+                this.languages = {};
+                this.contentCache = {};
+                this.init();
+            }
+            
+            async init() {
+                // Detect user's preferred language
+                await this.detectLanguage();
                 
-                // Update loading message
-                loadingEl.innerHTML = '<span class="spinner" aria-hidden="true"></span><span>Finding your local news service...</span>';
+                // Load language configurations
+                await this.loadLanguageConfigs();
                 
-                // Try multiple geolocation services for reliability
-                let locationData = null;
+                // Set up event listeners
+                this.setupEventListeners();
                 
-                // Try ipapi.co first (free, reliable)
+                // Load initial content
+                await this.loadContent(this.currentLanguage);
+            }
+            
+            async detectLanguage() {
                 try {
-                    const response = await fetch('https://ipapi.co/json/', {
-                        timeout: 5000
-                    });
-                    if (response.ok) {
-                        locationData = await response.json();
+                    // Check URL parameter first
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const langParam = urlParams.get('lang');
+                    if (langParam && ['en_GB', 'fr_FR', 'de_DE'].includes(langParam)) {
+                        this.currentLanguage = langParam;
+                        return;
+                    }
+                    
+                    // Check localStorage
+                    const savedLang = localStorage.getItem('audioNewsLanguage');
+                    if (savedLang && ['en_GB', 'fr_FR', 'de_DE'].includes(savedLang)) {
+                        this.currentLanguage = savedLang;
+                        return;
+                    }
+                    
+                    // Auto-detect based on location (optional)
+                    try {
+                        const response = await fetch('https://ipapi.co/json/');
+                        const data = await response.json();
+                        
+                        if (data.country_code === 'GB') {
+                            this.currentLanguage = 'en_GB';
+                        } else if (data.country_code === 'FR') {
+                            this.currentLanguage = 'fr_FR';
+                        } else if (data.country_code === 'DE') {
+                            this.currentLanguage = 'de_DE';
+                        }
+                        // Default to en_GB for other countries
+                    } catch (e) {
+                        console.log('Location detection failed, using default language');
                     }
                 } catch (e) {
-                    console.log('ipapi.co failed, trying fallback...');
+                    console.log('Language detection failed, using default');
                 }
-                
-                // Fallback to ip-api.com
-                if (!locationData || !locationData.country_code) {
+            }
+            
+            async loadLanguageConfigs() {
+                const languages = ['en_GB', 'fr_FR', 'de_DE'];
+                for (const lang of languages) {
                     try {
-                        const response = await fetch('https://ip-api.com/json/', {
-                            timeout: 5000
-                        });
+                        const response = await fetch(`config/languages/${lang}.json`);
+                        this.languages[lang] = await response.json();
+                    } catch (e) {
+                        console.error(`Failed to load ${lang} config:`, e);
+                    }
+                }
+            }
+            
+            setupEventListeners() {
+                // Language selector buttons
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const lang = e.target.dataset.lang;
+                        this.switchLanguage(lang);
+                    });
+                });
+            }
+            
+            async switchLanguage(language) {
+                if (language === this.currentLanguage) return;
+                
+                this.currentLanguage = language;
+                
+                // Save preference
+                localStorage.setItem('audioNewsLanguage', language);
+                
+                // Update URL without reload
+                const url = new URL(window.location);
+                url.searchParams.set('lang', language);
+                window.history.replaceState({}, '', url);
+                
+                // Update UI
+                this.updateLanguageSelector();
+                await this.loadContent(language);
+            }
+            
+            updateLanguageSelector() {
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === this.currentLanguage);
+                });
+            }
+            
+            async loadContent(language) {
+                const loading = document.getElementById('loading');
+                const container = document.getElementById('content-container');
+                
+                // Show loading
+                loading.style.display = 'block';
+                container.innerHTML = '';
+                
+                try {
+                    // Load content from cache or fetch
+                    let content = this.contentCache[language];
+                    if (!content) {
+                        content = await this.fetchContent(language);
+                        this.contentCache[language] = content;
+                    }
+                    
+                    // Update page metadata
+                    this.updatePageMetadata(language);
+                    
+                    // Render content
+                    container.innerHTML = content;
+                    
+                    // Initialize audio player and other interactive elements
+                    this.initializeInteractiveElements();
+                    
+                } catch (e) {
+                    console.error('Failed to load content:', e);
+                    container.innerHTML = `
+                        <div class="container">
+                            <div class="error-message">
+                                <h2>⚠️ Content Loading Error</h2>
+                                <p>Unable to load content for this language. Please try again later.</p>
+                                <button onclick="location.reload()" class="action-button">Reload Page</button>
+                            </div>
+                        </div>
+                    `;
+                } finally {
+                    loading.style.display = 'none';
+                }
+            }
+            
+            async fetchContent(language) {
+                // Try to load from language-specific directory first
+                const paths = [
+                    `${language}/content.html`,
+                    `config/content/${language}.html`
+                ];
+                
+                for (const path of paths) {
+                    try {
+                        const response = await fetch(path);
                         if (response.ok) {
-                            const data = await response.json();
-                            locationData = {
-                                country_code: data.countryCode,
-                                country_name: data.country
-                            };
+                            return await response.text();
                         }
                     } catch (e) {
-                        console.log('ip-api.com also failed');
+                        continue;
                     }
                 }
                 
-                if (locationData && locationData.country_code && languageConfig) {
-                    const countryCode = locationData.country_code.toUpperCase();
-                    console.log(`Detected country: ${countryCode}`);
+                // Fallback: generate content dynamically
+                return this.generateContent(language);
+            }
+            
+            generateContent(language) {
+                const config = this.languages[language];
+                if (!config) {
+                    throw new Error(`No configuration found for ${language}`);
+                }
+                
+                const today = new Date().toISOString().split('T')[0];
+                const audioFile = `${language}/audio/news_digest_ai_${today}.mp3`;
+                
+                return `
+                    <section class="audio-section" aria-labelledby="audio-title">
+                        <div class="container">
+                            <div class="news-card">
+                                <div class="card-header">
+                                    <h2 id="audio-title" class="section-title">${config.sections.todays_digest.title}</h2>
+                                    <p class="update-time">${config.sections.todays_digest.description}</p>
+                                    <div class="date-display">
+                                        <span class="date-label">${this.formatDate(today, language)}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="audio-container">
+                                    <div class="audio-description">
+                                        <p>${config.audio.description}</p>
+                                    </div>
+                                    
+                                    <div class="audio-player-wrapper">
+                                        <audio 
+                                            id="news-audio" 
+                                            controls 
+                                            preload="metadata"
+                                            aria-label="${config.audio.description}"
+                                            class="audio-player">
+                                            <source src="${audioFile}" type="audio/mpeg">
+                                            ${config.audio.fallback.replace('{{AUDIO_FILE}}', audioFile)}
+                                        </audio>
+                                    </div>
+                                    
+                                    <div class="audio-actions">
+                                        <a href="${audioFile}" 
+                                           download="news_digest_${today}.mp3" 
+                                           class="action-button download-btn"
+                                           aria-describedby="download-help">
+                                            📱 ${config.audio.download_button}
+                                        </a>
+                                        
+                                        <button id="copy-share-link" 
+                                                class="action-button share-btn"
+                                                aria-describedby="share-help">
+                                            🔗 ${config.audio.share_button}
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="help-text">
+                                        <p id="download-help" class="help-item">
+                                            <strong>📱 ${config.audio.download_button}:</strong> ${config.audio.download_help}
+                                        </p>
+                                        <p id="share-help" class="help-item">
+                                            <strong>🔗 ${config.audio.share_button}:</strong> ${config.audio.share_help}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     
-                    // Find matching language based on country code
-                    let targetLanguage = languageConfig.default_language;
-                    
-                    for (const [langCode, langData] of Object.entries(languageConfig.supported_languages)) {
-                        if (langData.country_codes.includes(countryCode)) {
-                            targetLanguage = langCode;
-                            break;
+                    <section class="about-section" aria-labelledby="about-title">
+                        <div class="container">
+                            <h2 id="about-title" class="section-title">${config.sections.about.title}</h2>
+                            
+                            <div class="about-grid">
+                                <div class="about-card">
+                                    <h3>${config.about_content.what_you_get.title}</h3>
+                                    <ul class="feature-list">
+                                        ${config.about_content.what_you_get.items.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                
+                                <div class="about-card">
+                                    <h3>${config.about_content.accessibility.title}</h3>
+                                    <ul class="feature-list">
+                                        ${config.about_content.accessibility.items.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                
+                                <div class="about-card">
+                                    <h3>${config.about_content.contact.title}</h3>
+                                    <ul class="feature-list">
+                                        ${config.about_content.contact.items.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                
+                                ${config.about_content.development_status ? `
+                                <div class="about-card development-notice">
+                                    <h3>${config.about_content.development_status.title}</h3>
+                                    <ul class="feature-list">
+                                        ${config.about_content.development_status.items.map(item => `<li>${item}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </section>
+                `;
+            }
+            
+            updatePageMetadata(language) {
+                const config = this.languages[language];
+                if (!config) return;
+                
+                // Update page title
+                document.title = config.page.title.replace('{{DATE}}', this.formatDate(new Date().toISOString().split('T')[0], language));
+                
+                // Update meta description
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) {
+                    metaDesc.content = config.page.description.replace('{{DATE}}', this.formatDate(new Date().toISOString().split('T')[0], language));
+                }
+                
+                // Update header
+                document.getElementById('site-flag').textContent = config.site.flag;
+                document.getElementById('site-name').textContent = config.site.name;
+                document.getElementById('site-tagline').textContent = config.site.tagline;
+                
+                // Update footer
+                document.getElementById('footer-text').innerHTML = config.footer.copyright;
+                
+                // Update HTML lang attribute
+                document.documentElement.lang = config.language_code;
+            }
+            
+            formatDate(dateStr, language) {
+                const date = new Date(dateStr + 'T00:00:00');
+                
+                if (language === 'en_GB') {
+                    return date.toLocaleDateString('en-GB', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                } else if (language === 'fr_FR') {
+                    return date.toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                } else if (language === 'de_DE') {
+                    return date.toLocaleDateString('de-DE', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                }
+                
+                return dateStr;
+            }
+            
+            initializeInteractiveElements() {
+                // Copy to clipboard functionality
+                const copyButton = document.getElementById('copy-share-link');
+                if (copyButton) {
+                    copyButton.addEventListener('click', async () => {
+                        const config = this.languages[this.currentLanguage];
+                        const shareUrl = window.location.origin + window.location.pathname + '?autoplay=1&lang=' + this.currentLanguage;
+                        
+                        try {
+                            await navigator.clipboard.writeText(shareUrl);
+                            
+                            const originalText = copyButton.textContent;
+                            copyButton.textContent = '✅ ' + config.javascript.copy_success;
+                            copyButton.style.background = '#48bb78';
+                            
+                            setTimeout(() => {
+                                copyButton.textContent = originalText;
+                                copyButton.style.background = '';
+                            }, 2000);
+                            
+                        } catch (err) {
+                            alert(config.javascript.copy_error + shareUrl);
                         }
-                    }
-                    
-                    // Show redirect message
-                    loadingEl.innerHTML = `<span class="spinner" aria-hidden="true"></span><span>Redirecting to ${languageConfig.supported_languages[targetLanguage].native_name} service...</span>`;
-                    
-                    // Add a small delay for better UX
-                    setTimeout(() => {
-                        window.location.href = `${targetLanguage}/`;
-                    }, 1500);
-                    
-                } else {
-                    throw new Error('Could not determine location');
+                    });
                 }
                 
-            } catch (error) {
-                console.error('Location detection failed:', error);
-                
-                // Show error message and manual selection
-                loadingEl.style.display = 'none';
-                errorEl.style.display = 'block';
-                
-                // Announce error to screen readers
-                const announcement = document.createElement('div');
-                announcement.setAttribute('aria-live', 'polite');
-                announcement.setAttribute('aria-atomic', 'true');
-                announcement.textContent = 'Location detection failed. Please manually select your preferred language.';
-                announcement.style.position = 'absolute';
-                announcement.style.left = '-10000px';
-                document.body.appendChild(announcement);
-                
-                // Focus on the first language link for keyboard users
-                setTimeout(() => {
-                    document.getElementById('uk-link').focus();
-                }, 100);
+                // Auto-play functionality
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('autoplay') === '1') {
+                    const audioElement = document.getElementById('news-audio');
+                    if (audioElement) {
+                        setTimeout(() => {
+                            audioElement.play().catch(e => {
+                                console.log('Auto-play prevented by browser policy');
+                            });
+                        }, 500);
+                    }
+                }
             }
         }
         
-        // Enhanced keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (e.target.classList.contains('lang-link')) {
-                    e.preventDefault();
-                    window.location.href = e.target.href;
-                }
-            }
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new AudioNewsApp();
         });
-        
-        // Start detection when page loads
-        document.addEventListener('DOMContentLoaded', detectAndRedirect);
-        
-        // Fallback timeout - show manual selection after 10 seconds
-        setTimeout(() => {
-            const loadingEl = document.getElementById('loading-message');
-            const errorEl = document.getElementById('error-message');
-            
-            if (loadingEl.style.display !== 'none') {
-                loadingEl.style.display = 'none';
-                errorEl.style.display = 'block';
-                errorEl.innerHTML = '<strong>Taking too long?</strong> Please select your preferred language below.';
-            }
-        }, 10000);
     </script>
     
-    <!-- Structured data for search engines -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "AudioNews",
-        "description": "Professional audio news service for visually impaired users worldwide",
-        "url": "https://audionews.uk",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://audionews.uk/{search_term_string}",
-            "query-input": "required name=search_term_string"
-        },
-        "accessibilityFeature": [
-            "audioDescription",
-            "screenReaderSupport",
-            "keyboardNavigation"
-        ],
-        "audience": {
-            "@type": "Audience",
-            "audienceType": "visually impaired users"
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function(registration) {
+                        console.log('✅ ServiceWorker registered successfully:', registration.scope);
+                    }, function(err) {
+                        console.log('❌ ServiceWorker registration failed:', err);
+                    });
+            });
         }
-    }
     </script>
 </body>
 </html>

@@ -1,0 +1,87 @@
+<!-- JavaScript -->
+<script src="../shared/js/accessibility.js" defer></script>
+
+<!-- Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('../sw.js')
+            .then(function(registration) {
+                console.log('✅ ServiceWorker registered successfully:', registration.scope);
+            }, function(err) {
+                console.log('❌ ServiceWorker registration failed:', err);
+            });
+    });
+}
+</script>
+
+<!-- Copy to Clipboard Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButton = document.getElementById('copy-share-link');
+    if (copyButton) {
+        copyButton.addEventListener('click', async function() {
+            const audioElement = document.getElementById('news-audio');
+            if (!audioElement) return;
+            
+            const shareUrl = window.location.origin + window.location.pathname + '?autoplay=1';
+            
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                
+                // Visual feedback
+                const originalText = copyButton.textContent;
+                copyButton.textContent = '✅ {{COPY_SUCCESS}}';
+                copyButton.style.background = '#48bb78';
+                
+                // Announce to screen readers
+                const announcement = document.createElement('div');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.setAttribute('aria-atomic', 'true');
+                announcement.className = 'sr-only';
+                announcement.textContent = '{{COPY_ANNOUNCEMENT}}';
+                document.body.appendChild(announcement);
+                
+                setTimeout(() => {
+                    copyButton.textContent = originalText;
+                    copyButton.style.background = '';
+                    document.body.removeChild(announcement);
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = shareUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    copyButton.textContent = '✅ {{COPY_FALLBACK}}';
+                    setTimeout(() => {
+                        copyButton.textContent = '🔗 {{SHARE_BUTTON}}';
+                    }, 2000);
+                } catch (fallbackErr) {
+                    alert('{{COPY_ERROR}}' + shareUrl);
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        });
+    }
+    
+    // Auto-play functionality
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('autoplay') === '1') {
+        const audioElement = document.getElementById('news-audio');
+        if (audioElement) {
+            // Small delay to ensure audio is loaded
+            setTimeout(() => {
+                audioElement.play().catch(e => {
+                    console.log('Auto-play prevented by browser policy');
+                });
+            }, 500);
+        }
+    }
+});
+</script>

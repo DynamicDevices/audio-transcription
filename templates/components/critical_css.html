@@ -1,0 +1,61 @@
+<!-- Critical CSS for above-the-fold content -->
+<style>
+/* Critical styles for immediate rendering */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #f8fafc;
+    color: #2d3748;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #1a365d;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1000;
+    border-radius: 0 0 4px 4px;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header {
+    background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.tagline {
+    margin: 0.5rem 0 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Loading state */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #718096;
+}
+</style>

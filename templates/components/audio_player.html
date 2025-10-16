@@ -1,0 +1,55 @@
+<section class="audio-section" aria-labelledby="audio-title">
+    <div class="container">
+        <div class="news-card">
+            <div class="card-header">
+                <h2 id="audio-title" class="section-title">{{TODAYS_DIGEST_TITLE}}</h2>
+                <p class="update-time">{{TODAYS_DIGEST_DESCRIPTION}}</p>
+                <div class="date-display">
+                    <span class="date-label">{{DATE_DISPLAY}}</span>
+                </div>
+            </div>
+            
+            <div class="audio-container">
+                <div class="audio-description">
+                    <p>{{AUDIO_DESCRIPTION}}</p>
+                </div>
+                
+                <div class="audio-player-wrapper">
+                    <audio 
+                        id="news-audio" 
+                        controls 
+                        preload="metadata"
+                        aria-label="{{AUDIO_DESCRIPTION}}"
+                        class="audio-player">
+                        <source src="{{AUDIO_FILE}}" type="audio/mpeg">
+                        {{AUDIO_FALLBACK}}
+                    </audio>
+                </div>
+                
+                <div class="audio-actions">
+                    <a href="{{AUDIO_FILE}}" 
+                       download="{{AUDIO_FILENAME}}" 
+                       class="action-button download-btn"
+                       aria-describedby="download-help">
+                        📱 {{DOWNLOAD_BUTTON}}
+                    </a>
+                    
+                    <button id="copy-share-link" 
+                            class="action-button share-btn"
+                            aria-describedby="share-help">
+                        🔗 {{SHARE_BUTTON}}
+                    </button>
+                </div>
+                
+                <div class="help-text">
+                    <p id="download-help" class="help-item">
+                        <strong>📱 {{DOWNLOAD_BUTTON}}:</strong> {{DOWNLOAD_HELP}}
+                    </p>
+                    <p id="share-help" class="help-item">
+                        <strong>🔗 {{SHARE_BUTTON}}:</strong> {{SHARE_HELP}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

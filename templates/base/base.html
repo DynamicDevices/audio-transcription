@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{LANGUAGE_CODE}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{PAGE_TITLE}}</title>
+    <meta name="description" content="{{PAGE_DESCRIPTION}}">
+    
+    {{SEO_META}}
+    {{STRUCTURED_DATA}}
+    {{CRITICAL_CSS}}
+    
+    <!-- Load full CSS asynchronously -->
+    <link rel="preload" href="../shared/css/newspaper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../shared/css/newspaper.css"></noscript>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">{{SKIP_LINK_TEXT}}</a>
+    
+    {{HEADER}}
+    {{MAIN_CONTENT}}
+    {{FOOTER}}
+    {{SCRIPTS}}
+</body>
+</html>

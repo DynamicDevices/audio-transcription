@@ -1,0 +1,88 @@
+{
+  "language_code": "fr",
+  "locale": "fr_FR",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews France - Digest Audio Quotidien - {{DATE}}",
+    "description": "Résumé quotidien d'actualités audio généré par IA pour le {{DATE}} présenté par Dynamic Devices. Voix française professionnelle, optimisé pour lecteurs d'écran.",
+    "keywords": "actualités audio, nouvelles vocales, digest quotidien, actualités accessibles, nouvelles pour aveugles, actualités malvoyants, audio nouvelles France, voix française, lecteur d'écran, partage WhatsApp, digest IA, Dynamic Devices"
+  },
+  "site": {
+    "name": "AudioNews France",
+    "service_name": "AudioNews France",
+    "tagline": "Présenté par Dynamic Devices",
+    "flag": "🇫🇷"
+  },
+  "navigation": {
+    "skip_link": "Aller au contenu principal"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Digest Audio d'Aujourd'hui",
+      "description": "Mis à jour quotidiennement à 7h00 (heure française)",
+      "date_format": "{{DATE}} - Résumé d'Actualités Françaises"
+    },
+    "recent_digests": {
+      "title": "Digests Récents",
+      "description": "Rattrapez les résumés d'actualités des jours précédents"
+    },
+    "about": {
+      "title": "À Propos de Ce Service"
+    }
+  },
+  "audio": {
+    "description": "Résumé d'actualités d'aujourd'hui. Utilisez les contrôles audio de votre navigateur ou téléchargez pour une écoute hors ligne.",
+    "fallback": "Votre navigateur ne supporte pas la lecture audio. <a href=\"{{AUDIO_FILE}}\" download>Téléchargez le fichier audio</a> à la place.",
+    "download_button": "Télécharger MP3",
+    "share_button": "Copier Lien Auto-Play",
+    "download_help": "Téléchargez le fichier MP3 sur votre appareil pour le partage WhatsApp ou l'écoute hors ligne",
+    "share_help": "Copiez le lien qui démarrera automatiquement la lecture à l'ouverture - parfait pour le partage WhatsApp"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 Ce Que Vous Obtenez",
+      "items": [
+        "<strong>Digest quotidien :</strong> Résumé d'actualités fraîches chaque matin à 7h (heure française)",
+        "<strong>Voix professionnelle :</strong> Voix Denise Neural française pour une écoute naturelle",
+        "<strong>Prêt pour WhatsApp :</strong> Parfait pour partager avec famille et amis",
+        "<strong>Design accessible :</strong> Optimisé pour lecteurs d'écran et navigation clavier"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Fonctionnalités d'Accessibilité",
+      "items": [
+        "<strong>Optimisé lecteur d'écran :</strong> Labels ARIA complets et HTML sémantique",
+        "<strong>Navigation clavier :</strong> Naviguez facilement dans tous les contrôles avec Tab",
+        "<strong>Mobile-friendly :</strong> Fonctionne parfaitement sur téléphones et tablettes",
+        "<strong>Audio haute qualité :</strong> Technologie vocale neurale française premium"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contact & Support",
+      "items": [
+        "<strong>Demandes générales :</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Support technique :</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Retours accessibilité :</strong> Aidez-nous à améliorer le service pour tous les utilisateurs",
+        "<strong>Temps de réponse :</strong> Nous visons à répondre dans les 24 heures"
+      ]
+    },
+    "development_status": {
+      "title": "🚧 Statut de Développement",
+      "items": [
+        "<strong>Service en développement :</strong> AudioNews France est actuellement en cours de développement",
+        "<strong>Fonctionnalités à venir :</strong> Synthèse IA des actualités françaises avec voix Denise Neural",
+        "<strong>Sources prévues :</strong> Le Monde, Le Figaro, Libération, France 24",
+        "<strong>En attendant :</strong> Consultez notre <a href=\"../en_GB/\">service anglais complet</a>"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source sur GitHub</a> • Conçu avec ♿ l'accessibilité à l'esprit"
+  },
+  "javascript": {
+    "copy_success": "Lien Copié!",
+    "copy_announcement": "Lien de partage copié dans le presse-papiers",
+    "copy_error": "Impossible de copier le lien. Veuillez copier manuellement: ",
+    "copy_fallback": "Lien de partage copié!"
+  }
+}

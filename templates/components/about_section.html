@@ -1,0 +1,45 @@
+<section class="about-section" aria-labelledby="about-title">
+    <div class="container">
+        <h2 id="about-title" class="section-title">{{ABOUT_TITLE}}</h2>
+        
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>{{WHAT_YOU_GET_TITLE}}</h3>
+                <ul class="feature-list">
+                    {{#WHAT_YOU_GET_ITEMS}}
+                    <li>{{{.}}}</li>
+                    {{/WHAT_YOU_GET_ITEMS}}
+                </ul>
+            </div>
+            
+            <div class="about-card">
+                <h3>{{ACCESSIBILITY_TITLE}}</h3>
+                <ul class="feature-list">
+                    {{#ACCESSIBILITY_ITEMS}}
+                    <li>{{{.}}}</li>
+                    {{/ACCESSIBILITY_ITEMS}}
+                </ul>
+            </div>
+            
+            <div class="about-card">
+                <h3>{{CONTACT_TITLE}}</h3>
+                <ul class="feature-list">
+                    {{#CONTACT_ITEMS}}
+                    <li>{{{.}}}</li>
+                    {{/CONTACT_ITEMS}}
+                </ul>
+            </div>
+            
+            {{#DEVELOPMENT_STATUS_ITEMS}}
+            <div class="about-card development-notice">
+                <h3>{{DEVELOPMENT_STATUS_TITLE}}</h3>
+                <ul class="feature-list">
+                    {{#DEVELOPMENT_STATUS_ITEMS}}
+                    <li>{{{.}}}</li>
+                    {{/DEVELOPMENT_STATUS_ITEMS}}
+                </ul>
+            </div>
+            {{/DEVELOPMENT_STATUS_ITEMS}}
+        </div>
+    </div>
+</section>

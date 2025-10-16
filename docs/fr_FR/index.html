@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioNews France - Digest Audio Quotidien - Octobre 16, 2025</title>
+    <title>AudioNews France - Digest Audio Quotidien - 16 Octobre 2025</title>
     <meta name="description" content="Résumé quotidien d'actualités audio généré par IA pour le 16 octobre 2025 présenté par Dynamic Devices. Voix française professionnelle, optimisé pour lecteurs d'écran.">
     
     <!-- SEO Meta Tags -->
@@ -33,7 +33,6 @@
     <!-- Additional Meta Tags -->
     <meta name="application-name" content="AudioNews France">
     <meta name="msapplication-TileColor" content="#1a365d">
-    <meta name="msapplication-config" content="browserconfig.xml">
     <meta name="format-detection" content="telephone=no">
     
     <!-- Structured Data - Organization -->
@@ -114,7 +113,7 @@
 
     <!-- Critical CSS for immediate rendering -->
     <style>
-        /* Critical styles for above-the-fold content */
+        /* Critical styles for above-the-fold content - matches English site exactly */
         * {
             margin: 0;
             padding: 0;
@@ -129,33 +128,80 @@
             font-size: 16px;
         }
         
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem;
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #1a365d;
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 1000;
         }
         
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 2rem 0;
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        .site-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        .header h1 {
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .site-title {
             font-size: 2.5rem;
-            margin-bottom: 0.5rem;
             font-weight: 300;
+            margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .header .tagline {
+        .site-icon {
+            font-size: 3rem;
+            margin-right: 0.5rem;
+        }
+        
+        .site-tagline {
             font-size: 1.1rem;
             opacity: 0.9;
             font-weight: 300;
+        }
+        
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .section-icon {
+            font-size: 2.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        .section-description {
+            font-size: 1.1rem;
+            color: #718096;
         }
         
         .digest-card {
@@ -173,10 +219,9 @@
             text-align: center;
         }
         
-        .digest-date {
-            font-size: 1.2rem;
+        .digest-title {
+            font-size: 1.5rem;
             font-weight: 500;
-            margin-bottom: 0.5rem;
         }
         
         .audio-player-container {
@@ -184,14 +229,7 @@
             text-align: center;
         }
         
-        .audio-description {
-            font-size: 1.1rem;
-            color: #4a5568;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        audio {
+        .audio-player {
             width: 100%;
             max-width: 500px;
             margin: 1rem 0;
@@ -199,14 +237,25 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        .download-section {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #e2e8f0;
+        .audio-description {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-top: 1rem;
+            line-height: 1.6;
         }
         
-        .download-link {
-            display: inline-block;
+        .digest-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
             text-decoration: none;
@@ -215,39 +264,134 @@
             font-weight: 500;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
         
-        .download-link:hover {
+        .action-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
         }
         
-        .digest-content {
-            padding: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #2d3748;
+        .share-button {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
         }
         
-        .digest-content p {
-            margin-bottom: 1.5rem;
+        .share-button:hover {
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
         }
         
-        .footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: #718096;
+        .action-help {
+            margin-top: 1rem;
+            padding-top: 1rem;
             border-top: 1px solid #e2e8f0;
+        }
+        
+        .help-text {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+        
+        .about-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .instructions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .instruction-group {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instruction-title {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .instruction-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+        
+        .instruction-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+        
+        .site-footer {
+            background: #2d3748;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
             margin-top: 3rem;
         }
         
-        .footer a {
-            color: #4299e1;
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .footer-link {
+            color: #90cdf4;
             text-decoration: none;
         }
         
-        .footer a:hover {
+        .footer-link:hover {
             text-decoration: underline;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 2rem;
+            }
+            
+            .site-icon {
+                font-size: 2.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem 0.5rem;
+            }
+            
+            .digest-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .instructions {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* Accessibility improvements */
@@ -259,28 +403,9 @@
             }
         }
         
-        @media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .audio-player-container {
-                padding: 1.5rem;
-            }
-            
-            .digest-content {
-                padding: 1.5rem;
-                font-size: 1rem;
-            }
-        }
-        
         /* High contrast mode support */
         @media (prefers-contrast: high) {
-            .header {
+            .site-header {
                 background: #000;
                 color: #fff;
             }
@@ -292,8 +417,8 @@
         }
         
         /* Focus styles for keyboard navigation */
-        audio:focus,
-        .download-link:focus {
+        .action-button:focus,
+        .footer-link:focus {
             outline: 3px solid #4299e1;
             outline-offset: 2px;
         }
@@ -307,76 +432,228 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- Favicon -->
-    <link rel="icon" href="../shared/images/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="../shared/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../shared/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../shared/images/favicon-16x16.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>🇫🇷 AudioNews France</h1>
-            <p class="tagline">Actualités audio professionnelles pour utilisateurs malvoyants</p>
-        </header>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    
+    <!-- Header -->
+    <header class="site-header" role="banner">
+        <div class="header-container" style="text-align: center;">
+            <h1 class="site-title">
+                <span class="site-icon" aria-hidden="true">📰</span>
+                AudioNews France
+            </h1>
+            <p class="site-tagline">Présenté par Dynamic Devices</p>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <main id="main-content" class="main-content" role="main">
         
-        <main role="main">
-            <article class="digest-card">
+        <!-- Today's audio digest -->
+        <section id="todays-digest" class="featured-digest" aria-labelledby="todays-heading">
+            <header class="section-header">
+                <h2 id="todays-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">🎧</span>
+                    Digest Audio d'Aujourd'hui
+                </h2>
+                <p class="section-description">Mis à jour quotidiennement à 7h00 (heure française)</p>
+            </header>
+            
+            <article class="digest-card main-digest">
                 <header class="digest-header">
-                    <h2 class="digest-date">Résumé d'Actualités du 16 Octobre 2025</h2>
+                    <h3 class="digest-title">
+                        <time datetime="2025-10-16" class="digest-date">16 Octobre 2025</time>
+                        - Résumé d'Actualités Françaises
+                    </h3>
                 </header>
                 
+                <!-- Accessible audio player -->
                 <div class="audio-player-container">
+                    <audio 
+                        class="audio-player" 
+                        controls 
+                        preload="auto"
+                        crossorigin="anonymous"
+                        aria-describedby="audio-description"
+                    >
+                        <source src="audio/news_digest_ai_2025_10_16.mp3" type="audio/mpeg">
+                        <p>Votre navigateur ne supporte pas la lecture audio. <a href="audio/news_digest_ai_2025_10_16.mp3" download>Téléchargez le fichier audio</a> à la place.</p>
+                    </audio>
                     <p id="audio-description" class="audio-description">
                         Résumé d'actualités d'aujourd'hui. Utilisez les contrôles audio de votre navigateur ou téléchargez pour une écoute hors ligne.
                     </p>
-                    
-                    <audio controls preload="metadata" aria-describedby="audio-description">
-                        <source src="audio/news_digest_ai_2025_10_16.mp3" type="audio/mpeg">
-                        Votre navigateur ne supporte pas l'élément audio. Veuillez <a href="audio/news_digest_ai_2025_10_16.mp3" download>télécharger le fichier audio</a>.
-                    </audio>
-                    
-                    <div class="download-section">
-                        <a download="audionews-france-2025-10-16.mp3" 
-                           href="audio/news_digest_ai_2025_10_16.mp3" 
-                           class="download-link"
-                           aria-label="Télécharger le résumé d'actualités audio pour écoute hors ligne">
-                            📱 Télécharger pour WhatsApp
-                        </a>
-                    </div>
                 </div>
                 
-                <div class="digest-content">
-                    <p><strong>Service temporairement en développement.</strong></p>
-                    <p>Le service AudioNews France est actuellement en cours de développement. Bientôt, vous pourrez écouter un résumé quotidien des actualités françaises avec une voix IA française de qualité professionnelle.</p>
-                    <p><strong>Fonctionnalités à venir :</strong></p>
-                    <ul style="margin-left: 2rem; margin-bottom: 1.5rem;">
-                        <li>📰 Synthèse quotidienne des actualités françaises (Le Monde, Le Figaro, Libération, France 24)</li>
-                        <li>🎤 Voix française Denise Neural de Microsoft Edge TTS</li>
-                        <li>♿ Design entièrement accessible conforme WCAG 2.1 AA</li>
-                        <li>📱 Partage WhatsApp optimisé pour les familles</li>
-                        <li>🤖 Analyse IA avec Claude 4.5 Sonnet pour une synthèse intelligente</li>
-                        <li>🕖 Mise à jour quotidienne automatique à 7h00 (heure française)</li>
-                        <li>🌐 Interface multilingue avec détection automatique de localisation</li>
-                    </ul>
-                    <p>En attendant, vous pouvez consulter notre service anglais complet à <a href="../en_GB/" style="color: #4299e1;">AudioNews UK</a>.</p>
+                <!-- Action buttons -->
+                <div class="digest-actions">
+                    <a href="audio/news_digest_ai_2025_10_16.mp3" 
+                       download 
+                       class="action-button download-button"
+                       aria-describedby="download-help">
+                        <span class="button-icon" aria-hidden="true">⬇️</span>
+                        Télécharger MP3
+                    </a>
+                    <button class="action-button share-button" 
+                            onclick="copyShareLink()" 
+                            aria-describedby="share-help">
+                        <span class="button-icon" aria-hidden="true">📱</span>
+                        Copier Lien Auto-Play
+                    </button>
+                </div>
+                
+                <!-- Help text for actions -->
+                <div class="action-help">
+                    <p id="download-help" class="help-text">Téléchargez le fichier MP3 sur votre appareil pour le partage WhatsApp ou l'écoute hors ligne</p>
+                    <p id="share-help" class="help-text">Copiez le lien qui démarrera automatiquement la lecture à l'ouverture - parfait pour le partage WhatsApp</p>
                 </div>
             </article>
-        </main>
-        
-        <footer class="footer">
-            <p>
-                <strong>AudioNews France</strong> - Service par 
-                <a href="https://dynamicdevices.co.uk">Dynamic Devices</a>
-            </p>
-            <p>Conçu avec ❤️ pour l'accessibilité • <a href="../en_GB/">🇬🇧 English</a> • <a href="../">🌍 Choisir la langue</a></p>
-            <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.8;">
-                Service d'actualités audio professionnel • Synthèse IA éthique • Conforme aux droits d'auteur
-            </p>
-        </footer>
-    </div>
+        </section>
 
-    <!-- JavaScript for enhanced functionality -->
+        <!-- Recent digests section -->
+        <!-- Recent Digests - Hidden until previous content exists -->
+        <section id="recent-digests" class="recent-digests-section" aria-labelledby="recent-heading" style="display: none;">
+            <header class="section-header">
+                <h2 id="recent-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">📅</span>
+                    Digests Récents
+                </h2>
+                <p class="section-description">Rattrapez les résumés d'actualités des jours précédents</p>
+            </header>
+            
+            <div class="recent-digests-grid">
+                <!-- Previous digests will be populated by update_language_website.py when they exist -->
+            </div>
+        </section>
+
+        <!-- Simple about section -->
+        <section id="about" class="about-section" aria-labelledby="about-heading">
+            <header class="section-header">
+                <h2 id="about-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">💡</span>
+                    À Propos de Ce Service
+                </h2>
+            </header>
+            
+            <div class="instructions">
+                <div class="instruction-group">
+                    <h3 class="instruction-title">🎧 Ce Que Vous Obtenez</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Digest quotidien :</strong> Résumé d'actualités fraîches chaque matin à 7h (heure française)</li>
+                        <li><strong>Voix professionnelle :</strong> Voix Denise Neural française pour une écoute naturelle</li>
+                        <li><strong>Prêt pour WhatsApp :</strong> Parfait pour partager avec famille et amis</li>
+                        <li><strong>Design accessible :</strong> Optimisé pour lecteurs d'écran et navigation clavier</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">♿ Fonctionnalités d'Accessibilité</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Optimisé lecteur d'écran :</strong> Labels ARIA complets et HTML sémantique</li>
+                        <li><strong>Navigation clavier :</strong> Naviguez facilement dans tous les contrôles avec Tab</li>
+                        <li><strong>Mobile-friendly :</strong> Fonctionne parfaitement sur téléphones et tablettes</li>
+                        <li><strong>Audio haute qualité :</strong> Technologie vocale neurale française premium</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">📧 Contact & Support</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Demandes générales :</strong> <a href="mailto:contact@audionews.uk">contact@audionews.uk</a></li>
+                        <li><strong>Support technique :</strong> <a href="https://github.com/DynamicDevices/daily-voice-news/issues">GitHub Issues</a></li>
+                        <li><strong>Retours accessibilité :</strong> Aidez-nous à améliorer le service pour tous les utilisateurs</li>
+                        <li><strong>Temps de réponse :</strong> Nous visons à répondre dans les 24 heures</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">🚧 Statut de Développement</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Service en développement :</strong> AudioNews France est actuellement en cours de développement</li>
+                        <li><strong>Fonctionnalités à venir :</strong> Synthèse IA des actualités françaises avec voix Denise Neural</li>
+                        <li><strong>Sources prévues :</strong> Le Monde, Le Figaro, Libération, France 24</li>
+                        <li><strong>En attendant :</strong> Consultez notre <a href="../en_GB/">service anglais complet</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container" style="text-align: center;">
+            <p class="copyright">
+                © 2025 Dynamic Devices • 
+                <a href="https://github.com/DynamicDevices/daily-voice-news" class="footer-link">Open Source sur GitHub</a> • 
+                Conçu avec ♿ l'accessibilité à l'esprit
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for enhanced functionality - deferred for performance -->
     <script src="../shared/js/accessibility.js" defer></script>
+    
+    <!-- Share functionality -->
+    <script>
+        function copyShareLink() {
+            const shareUrl = window.location.href + '?autoplay=true';
+            
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    // Visual feedback
+                    const button = event.target.closest('.share-button');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<span class="button-icon" aria-hidden="true">✅</span>Lien Copié!';
+                    
+                    // Screen reader announcement
+                    const announcement = document.createElement('div');
+                    announcement.setAttribute('aria-live', 'polite');
+                    announcement.setAttribute('aria-atomic', 'true');
+                    announcement.textContent = 'Lien de partage copié dans le presse-papiers';
+                    announcement.style.position = 'absolute';
+                    announcement.style.left = '-10000px';
+                    document.body.appendChild(announcement);
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        document.body.removeChild(announcement);
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Erreur lors de la copie: ', err);
+                    fallbackCopyTextToClipboard(shareUrl);
+                });
+            } else {
+                fallbackCopyTextToClipboard(shareUrl);
+            }
+        }
+        
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('Lien de partage copié!');
+                } else {
+                    alert('Impossible de copier le lien. Veuillez copier manuellement: ' + text);
+                }
+            } catch (err) {
+                alert('Impossible de copier le lien. Veuillez copier manuellement: ' + text);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+    </script>
     
     <!-- Service worker for offline functionality -->
     <script>
