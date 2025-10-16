@@ -205,19 +205,42 @@ jobs:
     
     - name: 🔍 Quality check
       run: |
-        # Check if files were generated
-        if [ ! -f news_digest_ai_*.mp3 ]; then
-          echo "❌ No audio file generated"
+        # Check if files were generated in language-specific directories
+        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        TOTAL_FILES=0
+        TOTAL_SIZE=0
+        
+        for LANG in "${LANGUAGES[@]}"; do
+          AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_*.mp3"
+          TEXT_FILE="docs/${LANG}/news_digest_ai_*.txt"
+          
+          if ls $AUDIO_FILE 1> /dev/null 2>&1; then
+            audio_size=$(stat -c%s $AUDIO_FILE)
+            TOTAL_SIZE=$((TOTAL_SIZE + audio_size))
+            TOTAL_FILES=$((TOTAL_FILES + 1))
+            
+            if [ $audio_size -lt 100000 ]; then
+              echo "⚠️ ${LANG} audio file seems small: ${audio_size} bytes"
+            else
+              echo "✅ ${LANG} audio file OK: ${audio_size} bytes"
+            fi
+          else
+            echo "⚠️ ${LANG} audio file not found"
+          fi
+          
+          if ls $TEXT_FILE 1> /dev/null 2>&1; then
+            echo "✅ ${LANG} text file exists"
+          else
+            echo "⚠️ ${LANG} text file not found"
+          fi
+        done
+        
+        if [ $TOTAL_FILES -eq 0 ]; then
+          echo "❌ No audio files generated in any language"
           exit 1
         fi
         
-        # Check audio file size (should be > 100KB for meaningful content)
-        audio_size=$(stat -c%s news_digest_ai_*.mp3)
-        if [ $audio_size -lt 100000 ]; then
-          echo "⚠️ Audio file seems too small: ${audio_size} bytes"
-        else
-          echo "✅ Audio file size OK: ${audio_size} bytes"
-        fi
+        echo "✅ Generated $TOTAL_FILES audio files, total size: $(numfmt --to=iec $TOTAL_SIZE)"
         
         # Check if website was updated
         if [ ! -f docs/index.html ]; then
