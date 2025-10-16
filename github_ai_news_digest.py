@@ -616,9 +616,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
         # Retry logic for Edge TTS authentication issues
-        # Longer delays and more retries to avoid voice quality degradation from fallbacks
-        max_retries = 5
-        retry_delay = 30  # seconds - longer initial delay for service recovery
+        # Balanced retries to avoid timeouts while maintaining voice quality
+        max_retries = 3
+        retry_delay = 10  # seconds - reasonable delay for service recovery
         
         for attempt in range(max_retries):
             try:
@@ -786,7 +786,7 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
 
 async def main():
     """
-    Generate AI-enhanced daily digest using GitHub infrastructure
+    Generate AI-enhanced daily digest using GitHub infrastructure with comprehensive error handling
     """
     parser = argparse.ArgumentParser(description='Generate multi-language AI news digest')
     parser.add_argument('--language', '-l', 
@@ -800,14 +800,37 @@ async def main():
     print(f"🎤 Voice: {LANGUAGE_CONFIGS[args.language]['voice']}")
     print(f"📁 Output: {LANGUAGE_CONFIGS[args.language]['output_dir']}")
     
-    digest_generator = GitHubAINewsDigest(language=args.language)
-    result = await digest_generator.generate_daily_ai_digest()
-    
-    if result:
-        print(f"\n🎉 SUCCESS: AI-enhanced digest ready!")
-        print(f"   🤖 AI Analysis: {'ENABLED' if result['ai_enabled'] else 'FALLBACK'}")
-        print(f"   🎧 Audio: {result['audio_file']}")
-        print(f"   📄 Text: {result['text_file']}")
+    try:
+        print(f"🔧 Initializing digest generator...")
+        digest_generator = GitHubAINewsDigest(language=args.language)
+        print(f"✅ Digest generator initialized successfully")
+        
+        print(f"🚀 Starting digest generation...")
+        result = await digest_generator.generate_daily_ai_digest()
+        print(f"✅ Digest generation completed successfully")
+        
+        if result:
+            print(f"\n🎉 SUCCESS: AI-enhanced digest ready!")
+            print(f"   🤖 AI Analysis: {'ENABLED' if result['ai_enabled'] else 'FALLBACK'}")
+            print(f"   🎧 Audio: {result['audio_file']}")
+            print(f"   📄 Text: {result['text_file']}")
+        else:
+            print(f"\n⚠️ WARNING: No result returned from digest generation")
+            exit(1)
+            
+    except Exception as e:
+        print(f"\n❌ CRITICAL ERROR in {args.language} generation:")
+        print(f"   🔍 Error type: {type(e).__name__}")
+        print(f"   📝 Error message: {str(e)}")
+        
+        # Print stack trace for debugging
+        import traceback
+        print(f"\n📋 Full stack trace:")
+        traceback.print_exc()
+        
+        # Exit with error code
+        print(f"\n💥 Exiting with error code 1")
+        exit(1)
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -116,23 +116,66 @@ jobs:
           echo "🔧 Manual workflow: Custom parameters applied"
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
-        # Generate content for all supported languages
+        # Generate content for all supported languages with better error handling
         LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        FAILED_LANGUAGES=()
+        SUCCESS_COUNT=0
+        
         for LANG in "${LANGUAGES[@]}"; do
           echo "🌍 Generating content for ${LANG}..."
-          python github_ai_news_digest.py --language ${LANG}
+          echo "⏰ Started at: $(date)"
           
-          # Check if generation was successful
-          TODAY=$(date +%Y_%m_%d)
-          AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
-          TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
+          # Run with timeout and capture exit code
+          set +e  # Don't exit on error
+          timeout 600 python github_ai_news_digest.py --language ${LANG}
+          EXIT_CODE=$?
+          set -e  # Re-enable exit on error
           
-          if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
-            echo "✅ ${LANG} generation successful"
+          echo "⏰ Completed at: $(date)"
+          echo "🔍 Exit code: ${EXIT_CODE}"
+          
+          # Check exit code
+          if [ $EXIT_CODE -eq 124 ]; then
+            echo "⏰ ${LANG} generation timed out after 10 minutes"
+            FAILED_LANGUAGES+=("${LANG} (timeout)")
+          elif [ $EXIT_CODE -ne 0 ]; then
+            echo "❌ ${LANG} generation failed with exit code ${EXIT_CODE}"
+            FAILED_LANGUAGES+=("${LANG} (exit ${EXIT_CODE})")
           else
-            echo "⚠️ ${LANG} generation may have failed"
+            # Check if files were actually created
+            TODAY=$(date +%Y_%m_%d)
+            AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
+            TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
+            
+            if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+              echo "✅ ${LANG} generation successful"
+              SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+            else
+              echo "⚠️ ${LANG} generation completed but files missing"
+              FAILED_LANGUAGES+=("${LANG} (no files)")
+            fi
           fi
+          
+          echo "---"
         done
+        
+        # Report results
+        echo "📊 GENERATION SUMMARY:"
+        echo "✅ Successful: ${SUCCESS_COUNT}/3 languages"
+        if [ ${#FAILED_LANGUAGES[@]} -gt 0 ]; then
+          echo "❌ Failed languages:"
+          for failed in "${FAILED_LANGUAGES[@]}"; do
+            echo "   - ${failed}"
+          done
+        fi
+        
+        # Require at least one successful generation
+        if [ $SUCCESS_COUNT -eq 0 ]; then
+          echo "❌ No languages generated successfully - failing CI"
+          exit 1
+        else
+          echo "✅ At least one language generated successfully - continuing"
+        fi
         echo "✅ Digest generation completed"
     
     - name: ⚡ Skip AI Generation (Cost Optimization)
