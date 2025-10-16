@@ -673,6 +673,7 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             return {
                 'audio_file': audio_filename,
                 'text_file': text_filename,
+                'ai_enabled': self.ai_enabled,
                 'regenerated': False,
                 'size_kb': audio_size_kb
             }
