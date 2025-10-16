@@ -1,7 +1,7 @@
 {
-  "name": "AudioNews France",
+  "name": "AudioNews France - Actualités Audio Quotidiennes",
   "short_name": "AudioNews FR",
-  "description": "Service d'actualités audio professionnel pour les utilisateurs malvoyants",
+  "description": "Service professionnel d'actualités audio quotidiennes pour utilisateurs malvoyants. Synthèse IA des actualités françaises avec voix Denise Neural.",
   "start_url": "/fr_FR/",
   "display": "standalone",
   "background_color": "#1a365d",
@@ -24,30 +24,30 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["news", "accessibility", "audio"],
+  "categories": ["news", "accessibility", "audio", "actualités", "accessibilité"],
   "screenshots": [
     {
-      "src": "../shared/images/screenshot-mobile.png",
+      "src": "../shared/images/screenshot-mobile-fr.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Interface mobile AudioNews France"
+      "label": "Interface mobile AudioNews France - Actualités audio accessibles"
     },
     {
-      "src": "../shared/images/screenshot-desktop.png", 
+      "src": "../shared/images/screenshot-desktop-fr.png", 
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Interface bureau AudioNews France"
+      "label": "Interface bureau AudioNews France - Service professionnel"
     }
   ],
   "share_target": {
-    "action": "/share",
+    "action": "/fr_FR/share",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {
-      "title": "title",
-      "text": "text", 
+      "title": "titre",
+      "text": "texte", 
       "url": "url"
     }
   },
@@ -55,11 +55,23 @@
     {
       "name": "Actualités du jour",
       "short_name": "Aujourd'hui",
-      "description": "Écouter les actualités d'aujourd'hui",
+      "description": "Écouter le résumé d'actualités d'aujourd'hui",
       "url": "/fr_FR/?today=true",
       "icons": [
         {
           "src": "../shared/images/shortcut-today.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Télécharger audio",
+      "short_name": "Télécharger",
+      "description": "Télécharger l'audio pour WhatsApp",
+      "url": "/fr_FR/?download=true",
+      "icons": [
+        {
+          "src": "../shared/images/shortcut-download.png",
           "sizes": "96x96"
         }
       ]
