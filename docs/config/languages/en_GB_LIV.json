@@ -1,0 +1,80 @@
+{
+  "language_code": "en",
+  "locale": "en_GB_LIV",
+  "region": "Liverpool",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews Liverpool - Daily Liverpool News Digest - {{DATE}}",
+    "description": "Daily AI-generated Liverpool news digest for {{DATE}} presented by Dynamic Devices. Professional Scouse-friendly voice, optimized for screen readers.",
+    "keywords": "liverpool news audio, liverpool voice news, daily liverpool news digest, accessible liverpool news, news for blind liverpool, liverpool news disability, audio news liverpool, scouse voice, screen reader liverpool, whatsapp liverpool news, AI liverpool news, Dynamic Devices, merseyside news"
+  },
+  "site": {
+    "name": "AudioNews Liverpool",
+    "service_name": "AudioNews Liverpool", 
+    "tagline": "Presented by Dynamic Devices",
+    "flag": "🔴"
+  },
+  "navigation": {
+    "skip_link": "Skip to main content"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Today's Liverpool Audio Digest",
+      "description": "Updated daily at 7:00 AM (Liverpool time)",
+      "date_format": "{{DATE}} - Liverpool News Summary"
+    },
+    "recent_digests": {
+      "title": "Recent Digests",
+      "description": "Catch up with previous days' Liverpool news summaries"
+    },
+    "about": {
+      "title": "About This Service"
+    }
+  },
+  "audio": {
+    "description": "Today's Liverpool news digest covering Merseyside, football, culture and local politics. Use your browser's audio controls or download for offline listening.",
+    "fallback": "Your browser doesn't support audio playback. <a href=\"{{AUDIO_FILE}}\" download>Download the audio file</a> instead.",
+    "download_button": "Download MP3",
+    "share_button": "Copy Auto-Play Link", 
+    "download_help": "Download MP3 file to your device for WhatsApp sharing or offline listening",
+    "share_help": "Copy link that will auto-play when opened - perfect for WhatsApp sharing"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 What You Get",
+      "items": [
+        "<strong>Daily Liverpool digest:</strong> Fresh Liverpool news summary every morning at 7:00 AM covering Merseyside, LFC, culture",
+        "<strong>Professional voice:</strong> Emily Neural voice with Liverpool-friendly pronunciation",
+        "<strong>WhatsApp ready:</strong> Perfect for sharing with family and friends across Merseyside",
+        "<strong>Local focus:</strong> Liverpool FC, Everton FC, Albert Dock, Liverpool Council, Merseyside transport"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Accessibility Features", 
+      "items": [
+        "<strong>Screen reader optimized:</strong> Full ARIA labels and semantic HTML for Liverpool users",
+        "<strong>Keyboard navigation:</strong> Navigate easily through all controls with Tab",
+        "<strong>Mobile friendly:</strong> Works perfectly on phones and tablets across Merseyside",
+        "<strong>High quality audio:</strong> Premium neural voice technology"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contact & Support",
+      "items": [
+        "<strong>General enquiries:</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Technical support:</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Accessibility feedback:</strong> Help us improve the service for all Liverpool users",
+        "<strong>Response time:</strong> We aim to respond within 24 hours"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source on GitHub</a> • Made with ♿ accessibility in mind"
+  },
+  "javascript": {
+    "copy_success": "Link Copied!",
+    "copy_announcement": "Share link copied to clipboard", 
+    "copy_error": "Failed to copy link. Please copy manually: ",
+    "copy_fallback": "Share link copied!"
+  }
+}

@@ -1,32 +1,45 @@
 # Daily Voice News - Professional Audio News for Visually Impaired Users
 
+[![CI/CD Pipeline](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml/badge.svg)](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/DynamicDevices/daily-voice-news?style=flat-square&logo=github&color=blue)](https://github.com/DynamicDevices/daily-voice-news/releases/latest)
+[![Languages Supported](https://img.shields.io/badge/Languages-6-brightgreen?style=flat-square&logo=googletranslate)](https://audionews.uk)
+[![Live Service](https://img.shields.io/badge/Live%20Service-AudioNews.uk-success?style=flat-square&logo=firefox)](https://audionews.uk)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA%20Compliant-blue?style=flat-square&logo=accessibility)](https://audionews.uk)
+[![License](https://img.shields.io/github/license/DynamicDevices/daily-voice-news?style=flat-square&color=blue)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/DynamicDevices/daily-voice-news?style=flat-square&logo=github)](https://github.com/DynamicDevices/daily-voice-news/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/DynamicDevices/daily-voice-news?style=flat-square&logo=git)](https://github.com/DynamicDevices/daily-voice-news/commits/main)
+
 **Brought to you by Dynamic Devices**
 
 ## 🎯 Mission
 Create natural, human-quality audio news digests specifically designed for visually impaired users. This project synthesizes information from multiple UK news sources to create original, accessible audio content that respects copyright while providing valuable accessibility services.
 
-## 🚀 Recent Improvements (v2.1.0)
+## 🚀 Recent Improvements (v2.4.0)
+
+### 🌍 Multi-Language Support
+- **6 Languages Supported** - English, French, German, Spanish, Italian, Dutch
+- **Intelligent geolocation** - Automatic language detection via IP location
+- **Premium TTS voices** - Native Edge TTS voices for each language
+- **Language-specific news sources** - Curated sources for each region
+- **Single-page application** - Dynamic content loading with language switching
+
+### 🎤 Robust Audio Generation
+- **Google TTS fallback** - Automatic fallback when Edge TTS fails in CI
+- **Content validation** - File size checks prevent empty audio files
+- **Resilient CI pipeline** - Handles individual language failures gracefully
+- **Voice consistency** - Maintains premium quality across all languages
 
 ### 🎯 User Experience Enhancements
-- **Fixed autoplay fallback** - Clean visual highlighting instead of broken buttons
-- **Centered layout** - Header tagline and footer properly centered
-- **Corrected duration display** - Shows actual audio length (2min 49sec)
-- **Hidden empty sections** - Recent Digests only shown when content exists
-- **Streamlined interface** - Removed redundant metadata and visual clutter
-- **Mobile optimization** - Better touch targets and responsive design
+- **Professional help formatting** - Better visual hierarchy and styling
+- **Consistent layout** - 3-column design across all languages
+- **Enhanced accessibility** - Semantic HTML structure and ARIA labels
+- **Mobile-optimized interface** - Responsive design for all devices
 
 ### 🔧 Technical Improvements  
-- **Accurate duration calculation** - Fixed `update_website.py` to use correct file paths
-- **CSS conflict resolution** - Resolved paragraph width constraints affecting centering
-- **Performance optimizations** - Critical CSS inlined, deferred JavaScript loading
-- **Cost optimization** - AI analysis only runs once per day, reuses existing content
-- **Enhanced error handling** - Better fallback logic and debugging capabilities
-
-### ♿ Accessibility Enhancements
-- **WCAG 2.1 AA compliance** - Fixed color contrast issues throughout
-- **Improved screen reader support** - Better ARIA labels and semantic structure
-- **Keyboard navigation** - Enhanced focus management and skip links
-- **Audio player improvements** - Better compatibility across browsers and devices
+- **Modular architecture** - Scalable language configuration system
+- **Comprehensive error handling** - Detailed logging and graceful failures
+- **Cost optimization** - AI generation only when content missing
+- **Git LFS integration** - Reliable audio file deployment
 
 ## 🎧 **Live Service**
 

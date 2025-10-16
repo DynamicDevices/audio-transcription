@@ -316,9 +316,31 @@
                         const response = await fetch('https://ipapi.co/json/');
                         const data = await response.json();
                         
-                        // Map country codes to languages
+                        // Enhanced city and regional detection
+                        let detectedLanguage = null;
+                        
+                        // City-level detection (highest priority after URL/localStorage)
+                        if (data.country_code === 'GB') {
+                            // London detection via city name or postal codes
+                            if (data.city && data.city.toLowerCase().includes('london')) {
+                                detectedLanguage = 'en_GB_LON';
+                            } else if (data.postal && this.isLondonPostalCode(data.postal)) {
+                                detectedLanguage = 'en_GB_LON';
+                            }
+                            // Liverpool detection via city name or postal codes  
+                            else if (data.city && data.city.toLowerCase().includes('liverpool')) {
+                                detectedLanguage = 'en_GB_LIV';
+                            } else if (data.postal && this.isLiverpoolPostalCode(data.postal)) {
+                                detectedLanguage = 'en_GB_LIV';
+                            }
+                            // Default to general UK
+                            else {
+                                detectedLanguage = 'en_GB';
+                            }
+                        }
+                        
+                        // Country-level mapping for other countries
                         const countryLanguageMap = {
-                            'GB': 'en_GB',
                             'FR': 'fr_FR', 
                             'DE': 'de_DE',
                             'ES': 'es_ES',
@@ -326,8 +348,12 @@
                             'NL': 'nl_NL'
                         };
                         
-                        if (countryLanguageMap[data.country_code]) {
-                            this.currentLanguage = countryLanguageMap[data.country_code];
+                        if (!detectedLanguage && countryLanguageMap[data.country_code]) {
+                            detectedLanguage = countryLanguageMap[data.country_code];
+                        }
+                        
+                        if (detectedLanguage) {
+                            this.currentLanguage = detectedLanguage;
                         }
                         // Default to en_GB for other countries
                     } catch (e) {
@@ -599,21 +625,24 @@
                 const isoDateStr = dateStr.replace(/_/g, '-');
                 const date = new Date(isoDateStr + 'T00:00:00');
                 
-                if (language === 'en_GB') {
+                // Handle city-level locales by using base language
+                const baseLanguage = language.split('_')[0] + '_' + language.split('_')[1];
+                
+                if (baseLanguage === 'en_GB') {
                     return date.toLocaleDateString('en-GB', { 
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
                     });
-                } else if (language === 'fr_FR') {
+                } else if (baseLanguage === 'fr_FR') {
                     return date.toLocaleDateString('fr-FR', { 
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
                         day: 'numeric' 
                     });
-                } else if (language === 'de_DE') {
+                } else if (baseLanguage === 'de_DE') {
                     return date.toLocaleDateString('de-DE', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -623,6 +652,46 @@
                 }
                 
                 return dateStr;
+            }
+            
+            isLondonPostalCode(postal) {
+                if (!postal) return false;
+                
+                // London postal code patterns
+                const londonCodes = [
+                    // Central London
+                    'W1', 'WC1', 'WC2', 'EC1', 'EC2', 'EC3', 'EC4',
+                    // West London  
+                    'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12', 'W13', 'W14',
+                    // South West London
+                    'SW1', 'SW2', 'SW3', 'SW4', 'SW5', 'SW6', 'SW7', 'SW8', 'SW9', 'SW10', 'SW11', 'SW12', 'SW13', 'SW14', 'SW15', 'SW16', 'SW17', 'SW18', 'SW19', 'SW20',
+                    // South East London
+                    'SE1', 'SE2', 'SE3', 'SE4', 'SE5', 'SE6', 'SE7', 'SE8', 'SE9', 'SE10', 'SE11', 'SE12', 'SE13', 'SE14', 'SE15', 'SE16', 'SE17', 'SE18', 'SE19', 'SE20', 'SE21', 'SE22', 'SE23', 'SE24', 'SE25', 'SE26', 'SE27', 'SE28',
+                    // East London
+                    'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12', 'E13', 'E14', 'E15', 'E16', 'E17', 'E18', 'E20',
+                    // North London
+                    'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8', 'N9', 'N10', 'N11', 'N12', 'N13', 'N14', 'N15', 'N16', 'N17', 'N18', 'N19', 'N20', 'N21', 'N22',
+                    // North West London
+                    'NW1', 'NW2', 'NW3', 'NW4', 'NW5', 'NW6', 'NW7', 'NW8', 'NW9', 'NW10', 'NW11'
+                ];
+                
+                // Check if postal code starts with any London pattern
+                return londonCodes.some(code => postal.toUpperCase().startsWith(code));
+            }
+            
+            isLiverpoolPostalCode(postal) {
+                if (!postal) return false;
+                
+                // Liverpool postal code patterns
+                const liverpoolCodes = [
+                    'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10',
+                    'L11', 'L12', 'L13', 'L14', 'L15', 'L16', 'L17', 'L18', 'L19', 'L20',
+                    'L21', 'L22', 'L23', 'L24', 'L25', 'L26', 'L27', 'L28', 'L29', 'L30',
+                    'L31', 'L32', 'L33', 'L34', 'L35', 'L36', 'L37', 'L38', 'L39', 'L40'
+                ];
+                
+                // Check if postal code starts with any Liverpool pattern
+                return liverpoolCodes.some(code => postal.toUpperCase().startsWith(code));
             }
             
             initializeInteractiveElements() {

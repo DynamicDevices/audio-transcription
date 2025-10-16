@@ -128,6 +128,40 @@ LANGUAGE_CONFIGS = {
         'output_dir': 'docs/nl_NL',
         'audio_dir': 'docs/nl_NL/audio',
         'service_name': 'AudioNews Nederland'
+    },
+    'en_GB_LON': {
+        'name': 'English (London)',
+        'native_name': 'English (London)',
+        'sources': {
+            'Evening Standard': 'https://www.standard.co.uk/',
+            'Time Out London': 'https://www.timeout.com/london/news',
+            'MyLondon': 'https://www.mylondon.news/',
+            'BBC London': 'https://www.bbc.co.uk/news/england/london',
+            'ITV London': 'https://www.itv.com/news/london'
+        },
+        'voice': 'en-IE-EmilyNeural',
+        'greeting': 'Good morning London',
+        'themes': ['transport', 'housing', 'westminster', 'culture', 'crime', 'business', 'tfl'],
+        'output_dir': 'docs/en_GB_LON',
+        'audio_dir': 'docs/en_GB_LON/audio',
+        'service_name': 'AudioNews London'
+    },
+    'en_GB_LIV': {
+        'name': 'English (Liverpool)',
+        'native_name': 'English (Liverpool)',
+        'sources': {
+            'Liverpool Echo': 'https://www.liverpoolecho.co.uk/',
+            'Liverpool FC': 'https://www.liverpoolfc.com/news',
+            'BBC Merseyside': 'https://www.bbc.co.uk/news/england/merseyside',
+            'Radio City': 'https://www.radiocity.co.uk/news/liverpool-news/',
+            'The Guide Liverpool': 'https://www.theguideliverpool.com/news/'
+        },
+        'voice': 'en-IE-EmilyNeural',
+        'greeting': 'Good morning Liverpool',
+        'themes': ['football', 'merseyside', 'culture', 'waterfront', 'music', 'business', 'transport'],
+        'output_dir': 'docs/en_GB_LIV',
+        'audio_dir': 'docs/en_GB_LIV/audio',
+        'service_name': 'AudioNews Liverpool'
     }
 }
 
@@ -897,7 +931,7 @@ async def main():
     """
     parser = argparse.ArgumentParser(description='Generate multi-language AI news digest')
     parser.add_argument('--language', '-l', 
-                       choices=['en_GB', 'fr_FR', 'de_DE', 'es_ES', 'it_IT', 'nl_NL'], 
+                       choices=['en_GB', 'fr_FR', 'de_DE', 'es_ES', 'it_IT', 'nl_NL', 'en_GB_LON', 'en_GB_LIV'], 
                        default='en_GB',
                        help='Language for news digest (default: en_GB)')
     

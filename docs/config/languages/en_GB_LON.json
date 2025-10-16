@@ -1,0 +1,80 @@
+{
+  "language_code": "en",
+  "locale": "en_GB_LON",
+  "region": "London",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews London - Daily London News Digest - {{DATE}}",
+    "description": "Daily AI-generated London news digest for {{DATE}} presented by Dynamic Devices. Professional London voice, optimized for screen readers.",
+    "keywords": "london news audio, london voice news, daily london news digest, accessible london news, news for blind london, london news disability, audio news london, london voice, screen reader london, whatsapp london news, AI london news, Dynamic Devices, tfl news, london transport"
+  },
+  "site": {
+    "name": "AudioNews London",
+    "service_name": "AudioNews London",
+    "tagline": "Presented by Dynamic Devices",
+    "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+  },
+  "navigation": {
+    "skip_link": "Skip to main content"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Today's London Audio Digest",
+      "description": "Updated daily at 7:00 AM (London time)",
+      "date_format": "{{DATE}} - London News Summary"
+    },
+    "recent_digests": {
+      "title": "Recent Digests",
+      "description": "Catch up with previous days' London news summaries"
+    },
+    "about": {
+      "title": "About This Service"
+    }
+  },
+  "audio": {
+    "description": "Today's London news digest covering transport, housing, local politics and culture. Use your browser's audio controls or download for offline listening.",
+    "fallback": "Your browser doesn't support audio playback. <a href=\"{{AUDIO_FILE}}\" download>Download the audio file</a> instead.",
+    "download_button": "Download MP3",
+    "share_button": "Copy Auto-Play Link",
+    "download_help": "Download MP3 file to your device for WhatsApp sharing or offline listening",
+    "share_help": "Copy link that will auto-play when opened - perfect for WhatsApp sharing"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 What You Get",
+      "items": [
+        "<strong>Daily London digest:</strong> Fresh London news summary every morning at 7:00 AM covering TfL, housing, local politics",
+        "<strong>Professional voice:</strong> Emily Neural voice optimized for London listeners",
+        "<strong>WhatsApp ready:</strong> Perfect for sharing with family and friends across London",
+        "<strong>Local focus:</strong> Transport updates, housing news, Westminster politics, cultural events"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Accessibility Features",
+      "items": [
+        "<strong>Screen reader optimized:</strong> Full ARIA labels and semantic HTML for London users",
+        "<strong>Keyboard navigation:</strong> Navigate easily through all controls with Tab",
+        "<strong>Mobile friendly:</strong> Works perfectly on phones and tablets across London transport",
+        "<strong>High quality audio:</strong> Premium neural voice technology"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contact & Support",
+      "items": [
+        "<strong>General enquiries:</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Technical support:</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Accessibility feedback:</strong> Help us improve the service for all London users",
+        "<strong>Response time:</strong> We aim to respond within 24 hours"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source on GitHub</a> • Made with ♿ accessibility in mind"
+  },
+  "javascript": {
+    "copy_success": "Link Copied!",
+    "copy_announcement": "Share link copied to clipboard",
+    "copy_error": "Failed to copy link. Please copy manually: ",
+    "copy_fallback": "Share link copied!"
+  }
+}
