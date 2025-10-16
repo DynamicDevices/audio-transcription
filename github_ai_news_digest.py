@@ -624,6 +624,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 if attempt > 0:
                     print(f"   🔄 Retry attempt {attempt + 1}/{max_retries}")
                     
+                # Ensure the directory exists
+                os.makedirs(os.path.dirname(output_filename), exist_ok=True)
+                
                 communicate = edge_tts.Communicate(digest_text, self.voice_name)
                 with open(output_filename, "wb") as file:
                     async for chunk in communicate.stream():
@@ -739,6 +742,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         # Save files (only if they don't exist)
         
         # Save text with metadata
+        # Ensure the directory exists for text file
+        os.makedirs(os.path.dirname(text_filename), exist_ok=True)
+        
         with open(text_filename, 'w', encoding='utf-8') as f:
             f.write("GITHUB AI-ENHANCED NEWS DIGEST\n")
             f.write("=" * 40 + "\n")
