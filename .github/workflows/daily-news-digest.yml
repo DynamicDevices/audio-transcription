@@ -69,7 +69,7 @@ jobs:
       run: |
         TODAY=$(date +%Y_%m_%d)
         # Check for content in all supported languages
-        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL")
         ALL_EXIST=true
         
         for LANG in "${LANGUAGES[@]}"; do
@@ -124,7 +124,7 @@ jobs:
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
         # Generate content for all supported languages with better error handling
-        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL")
         FAILED_LANGUAGES=()
         SUCCESS_COUNT=0
         
@@ -219,7 +219,7 @@ jobs:
     - name: 📱 Verify files in correct locations
       run: |
         # Check if files are in the correct language-specific directories
-        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL")
         
         for LANG in "${LANGUAGES[@]}"; do
           echo "🔍 Checking ${LANG} files..."
@@ -256,7 +256,7 @@ jobs:
     - name: 🔍 Quality check
       run: |
         # Check if files were generated in language-specific directories
-        LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL")
         TOTAL_FILES=0
         TOTAL_SIZE=0
         
@@ -309,7 +309,7 @@ jobs:
         
         # Add ONLY language-specific files to avoid conflicts
         # This prevents touching the root index.html and other development files
-        git add docs/en_GB/ docs/fr_FR/ docs/de_DE/ || true
+        git add docs/en_GB/ docs/fr_FR/ docs/de_DE/ docs/es_ES/ docs/it_IT/ docs/nl_NL/ || true
         
         # Also add any files that might be in wrong location (for backward compatibility)
         git add news_digest_ai_*.mp3 news_digest_ai_*.txt 2>/dev/null || true
@@ -322,7 +322,7 @@ jobs:
           # Check if we have audio files to get stats for all languages
           TOTAL_SIZE=0
           LANG_STATS=""
-          for LANG in en_GB fr_FR de_DE; do
+          for LANG in en_GB fr_FR de_DE es_ES it_IT nl_NL; do
             if ls docs/${LANG}/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
               audio_file=$(ls docs/${LANG}/audio/news_digest_ai_*.mp3 | head -1)
               size_bytes=$(stat -c%s "$audio_file")

@@ -1,0 +1,79 @@
+{
+  "language_code": "nl",
+  "locale": "nl_NL",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews Nederland - Dagelijkse Nieuwssamenvatting - {{DATE}}",
+    "description": "Dagelijkse AI-gegenereerde nieuwssamenvatting voor {{DATE}} aangeboden door Dynamic Devices. Professionele Nederlandse stem, geoptimaliseerd voor schermlezer.",
+    "keywords": "audio nieuws, spraak nieuws, dagelijkse nieuwssamenvatting, toegankelijk nieuws, nieuws voor blinden, slechtzienden nieuws, Nederlands audio nieuws, Nederlandse stem, schermlezer nieuws, WhatsApp nieuws delen, AI nieuws, Dynamic Devices"
+  },
+  "site": {
+    "name": "AudioNews Nederland",
+    "service_name": "AudioNews Nederland",
+    "tagline": "Aangeboden door Dynamic Devices",
+    "flag": "🇳🇱"
+  },
+  "navigation": {
+    "skip_link": "Ga naar hoofdinhoud"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Vandaag's Audio Samenvatting",
+      "description": "Dagelijks bijgewerkt om 7:00 (Nederlandse tijd)",
+      "date_format": "{{DATE}} - Nederlandse Nieuwssamenvatting"
+    },
+    "recent_digests": {
+      "title": "Recente Samenvattingen",
+      "description": "Haal de nieuwssamenvattingen van vorige dagen bij"
+    },
+    "about": {
+      "title": "Over Deze Service"
+    }
+  },
+  "audio": {
+    "description": "Vandaag's nieuwssamenvatting. Gebruik de audiobediening van je browser of download voor offline luisteren.",
+    "fallback": "Je browser ondersteunt geen audio-afspelen. <a href=\"{{AUDIO_FILE}}\" download>Download het audiobestand</a> in plaats daarvan.",
+    "download_button": "Download MP3",
+    "share_button": "Kopieer Auto-Play Link",
+    "download_help": "Download MP3-bestand naar je apparaat voor WhatsApp delen of offline luisteren",
+    "share_help": "Kopieer link die automatisch start met afspelen wanneer geopend - perfect voor WhatsApp delen"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 Wat Je Krijgt",
+      "items": [
+        "<strong>Dagelijkse samenvatting:</strong> Verse nieuwssamenvatting elke ochtend om 7:00 (Nederlandse tijd)",
+        "<strong>Professionele stem:</strong> Colette Neural Nederlandse stem voor natuurlijk luisteren",
+        "<strong>WhatsApp klaar:</strong> Perfect voor delen met familie en vrienden",
+        "<strong>Toegankelijk ontwerp:</strong> Geoptimaliseerd voor schermlezers en toetsenbordnavigatie"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Toegankelijkheidskenmerken",
+      "items": [
+        "<strong>Schermlezer geoptimaliseerd:</strong> Volledige ARIA-labels en semantische HTML",
+        "<strong>Toetsenbordnavigatie:</strong> Navigeer eenvoudig door alle bedieningselementen met Tab",
+        "<strong>Mobiel vriendelijk:</strong> Werkt perfect op telefoons en tablets",
+        "<strong>Hoge kwaliteit audio:</strong> Premium Nederlandse neurale spraaktechnologie"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contact & Ondersteuning",
+      "items": [
+        "<strong>Algemene vragen:</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Technische ondersteuning:</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Toegankelijkheidsfeedback:</strong> Help ons de service voor alle gebruikers te verbeteren",
+        "<strong>Reactietijd:</strong> We streven ernaar binnen 24 uur te reageren"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source op GitHub</a> • Gemaakt met ♿ toegankelijkheid in gedachten"
+  },
+  "javascript": {
+    "copy_success": "Link Gekopieerd!",
+    "copy_announcement": "Deel link gekopieerd naar klembord",
+    "copy_error": "Kan link niet kopiëren. Kopieer handmatig: ",
+    "copy_fallback": "Deel link gekopieerd!"
+  }
+}

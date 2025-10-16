@@ -1,0 +1,79 @@
+{
+  "language_code": "it",
+  "locale": "it_IT",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews Italia - Riassunto Quotidiano delle Notizie - {{DATE}}",
+    "description": "Riassunto quotidiano delle notizie generato dall'IA per {{DATE}} presentato da Dynamic Devices. Voce italiana professionale, ottimizzato per lettori di schermo.",
+    "keywords": "notizie audio, notizie vocali, riassunto quotidiano notizie, notizie accessibili, notizie per ciechi, notizie ipovedenti, notizie audio Italia, voce italiana, lettore schermo, condivisione WhatsApp, riassunto IA, Dynamic Devices"
+  },
+  "site": {
+    "name": "AudioNews Italia",
+    "service_name": "AudioNews Italia",
+    "tagline": "Presentato da Dynamic Devices",
+    "flag": "🇮🇹"
+  },
+  "navigation": {
+    "skip_link": "Salta al contenuto principale"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Riassunto Audio di Oggi",
+      "description": "Aggiornato quotidianamente alle 7:00 (ora italiana)",
+      "date_format": "{{DATE}} - Riassunto Notizie Italiane"
+    },
+    "recent_digests": {
+      "title": "Riassunti Recenti",
+      "description": "Recupera i riassunti delle notizie dei giorni precedenti"
+    },
+    "about": {
+      "title": "Informazioni su Questo Servizio"
+    }
+  },
+  "audio": {
+    "description": "Riassunto delle notizie di oggi. Usa i controlli audio del tuo browser o scarica per l'ascolto offline.",
+    "fallback": "Il tuo browser non supporta la riproduzione audio. <a href=\"{{AUDIO_FILE}}\" download>Scarica il file audio</a> invece.",
+    "download_button": "Scarica MP3",
+    "share_button": "Copia Link Auto-Play",
+    "download_help": "Scarica il file MP3 sul tuo dispositivo per condividere su WhatsApp o ascoltare offline",
+    "share_help": "Copia il link che si avvierà automaticamente quando aperto - perfetto per condividere su WhatsApp"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 Cosa Ottieni",
+      "items": [
+        "<strong>Riassunto quotidiano:</strong> Riassunto di notizie fresche ogni mattina alle 7:00 (ora italiana)",
+        "<strong>Voce professionale:</strong> Voce Elsa Neural italiana per un ascolto naturale",
+        "<strong>Pronto per WhatsApp:</strong> Perfetto per condividere con famiglia e amici",
+        "<strong>Design accessibile:</strong> Ottimizzato per lettori di schermo e navigazione da tastiera"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Caratteristiche di Accessibilità",
+      "items": [
+        "<strong>Ottimizzato per lettori di schermo:</strong> Etichette ARIA complete e HTML semantico",
+        "<strong>Navigazione da tastiera:</strong> Naviga facilmente attraverso tutti i controlli con Tab",
+        "<strong>Mobile-friendly:</strong> Funziona perfettamente su telefoni e tablet",
+        "<strong>Audio di alta qualità:</strong> Tecnologia vocale neurale italiana premium"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contatto e Supporto",
+      "items": [
+        "<strong>Richieste generali:</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Supporto tecnico:</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Feedback accessibilità:</strong> Aiutaci a migliorare il servizio per tutti gli utenti",
+        "<strong>Tempo di risposta:</strong> Miriamo a rispondere entro 24 ore"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source su GitHub</a> • Realizzato con ♿ accessibilità in mente"
+  },
+  "javascript": {
+    "copy_success": "Link Copiato!",
+    "copy_announcement": "Link di condivisione copiato negli appunti",
+    "copy_error": "Impossibile copiare il link. Per favore copia manualmente: ",
+    "copy_fallback": "Link di condivisione copiato!"
+  }
+}

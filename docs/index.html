@@ -220,18 +220,27 @@
             </h1>
             <p class="site-tagline" id="site-tagline">Brought to you by Dynamic Devices</p>
             
-            <!-- Language Selector -->
-            <div class="language-selector" role="navigation" aria-label="Language selection">
-                <button class="lang-btn active" data-lang="en_GB" aria-label="English (UK)">
-                    🇬🇧 English
-                </button>
-                <button class="lang-btn" data-lang="fr_FR" aria-label="Français (France)">
-                    🇫🇷 Français
-                </button>
-                <button class="lang-btn" data-lang="de_DE" aria-label="Deutsch (Deutschland)">
-                    🇩🇪 Deutsch
-                </button>
-            </div>
+                    <!-- Language Selector -->
+                    <div class="language-selector" role="navigation" aria-label="Language selection">
+                        <button class="lang-btn active" data-lang="en_GB" aria-label="English (UK)">
+                            🇬🇧 English
+                        </button>
+                        <button class="lang-btn" data-lang="fr_FR" aria-label="Français (France)">
+                            🇫🇷 Français
+                        </button>
+                        <button class="lang-btn" data-lang="de_DE" aria-label="Deutsch (Deutschland)">
+                            🇩🇪 Deutsch
+                        </button>
+                        <button class="lang-btn" data-lang="es_ES" aria-label="Español (España)">
+                            🇪🇸 Español
+                        </button>
+                        <button class="lang-btn" data-lang="it_IT" aria-label="Italiano (Italia)">
+                            🇮🇹 Italiano
+                        </button>
+                        <button class="lang-btn" data-lang="nl_NL" aria-label="Nederlands (Nederland)">
+                            🇳🇱 Nederlands
+                        </button>
+                    </div>
         </div>
     </header>
 
@@ -307,12 +316,18 @@
                         const response = await fetch('https://ipapi.co/json/');
                         const data = await response.json();
                         
-                        if (data.country_code === 'GB') {
-                            this.currentLanguage = 'en_GB';
-                        } else if (data.country_code === 'FR') {
-                            this.currentLanguage = 'fr_FR';
-                        } else if (data.country_code === 'DE') {
-                            this.currentLanguage = 'de_DE';
+                        // Map country codes to languages
+                        const countryLanguageMap = {
+                            'GB': 'en_GB',
+                            'FR': 'fr_FR', 
+                            'DE': 'de_DE',
+                            'ES': 'es_ES',
+                            'IT': 'it_IT',
+                            'NL': 'nl_NL'
+                        };
+                        
+                        if (countryLanguageMap[data.country_code]) {
+                            this.currentLanguage = countryLanguageMap[data.country_code];
                         }
                         // Default to en_GB for other countries
                     } catch (e) {

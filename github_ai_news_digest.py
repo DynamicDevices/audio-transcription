@@ -80,6 +80,54 @@ LANGUAGE_CONFIGS = {
         'output_dir': 'docs/de_DE',
         'audio_dir': 'docs/de_DE/audio',
         'service_name': 'AudioNews Deutschland'
+    },
+    'es_ES': {
+        'name': 'Spanish (Spain)',
+        'native_name': 'Español',
+        'sources': {
+            'El País': 'https://elpais.com/',
+            'El Mundo': 'https://www.elmundo.es/',
+            'ABC': 'https://www.abc.es/',
+            'La Vanguardia': 'https://www.lavanguardia.com/'
+        },
+        'voice': 'es-ES-ElviraNeural',
+        'greeting': 'Buenos días',
+        'themes': ['política', 'economía', 'salud', 'internacional', 'clima', 'tecnología', 'crimen'],
+        'output_dir': 'docs/es_ES',
+        'audio_dir': 'docs/es_ES/audio',
+        'service_name': 'AudioNews España'
+    },
+    'it_IT': {
+        'name': 'Italian (Italy)',
+        'native_name': 'Italiano',
+        'sources': {
+            'Corriere della Sera': 'https://www.corriere.it/',
+            'La Repubblica': 'https://www.repubblica.it/',
+            'La Gazzetta dello Sport': 'https://www.gazzetta.it/',
+            'Il Sole 24 Ore': 'https://www.ilsole24ore.com/'
+        },
+        'voice': 'it-IT-ElsaNeural',
+        'greeting': 'Buongiorno',
+        'themes': ['politica', 'economia', 'salute', 'internazionale', 'clima', 'tecnologia', 'crimine'],
+        'output_dir': 'docs/it_IT',
+        'audio_dir': 'docs/it_IT/audio',
+        'service_name': 'AudioNews Italia'
+    },
+    'nl_NL': {
+        'name': 'Dutch (Netherlands)',
+        'native_name': 'Nederlands',
+        'sources': {
+            'NOS': 'https://nos.nl/',
+            'De Telegraaf': 'https://www.telegraaf.nl/',
+            'Volkskrant': 'https://www.volkskrant.nl/',
+            'NRC': 'https://www.nrc.nl/'
+        },
+        'voice': 'nl-NL-ColetteNeural',
+        'greeting': 'Goedemorgen',
+        'themes': ['politiek', 'economie', 'gezondheid', 'internationaal', 'klimaat', 'technologie', 'misdaad'],
+        'output_dir': 'docs/nl_NL',
+        'audio_dir': 'docs/nl_NL/audio',
+        'service_name': 'AudioNews Nederland'
     }
 }
 
@@ -708,7 +756,10 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             lang_map = {
                 'en-IE-EmilyNeural': 'en',
                 'fr-FR-DeniseNeural': 'fr', 
-                'de-DE-KatjaNeural': 'de'
+                'de-DE-KatjaNeural': 'de',
+                'es-ES-ElviraNeural': 'es',
+                'it-IT-ElsaNeural': 'it',
+                'nl-NL-ColetteNeural': 'nl'
             }
             
             gtts_lang = lang_map.get(self.voice_name, 'en')
@@ -846,7 +897,7 @@ async def main():
     """
     parser = argparse.ArgumentParser(description='Generate multi-language AI news digest')
     parser.add_argument('--language', '-l', 
-                       choices=['en_GB', 'fr_FR', 'de_DE'], 
+                       choices=['en_GB', 'fr_FR', 'de_DE', 'es_ES', 'it_IT', 'nl_NL'], 
                        default='en_GB',
                        help='Language for news digest (default: en_GB)')
     
