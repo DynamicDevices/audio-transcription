@@ -68,24 +68,26 @@ jobs:
       id: check_content
       run: |
         TODAY=$(date +%Y_%m_%d)
-        AUDIO_FILE="docs/audio/news_digest_ai_${TODAY}.mp3"
-        TEXT_FILE="docs/news_digest_ai_${TODAY}.txt"
+        # Check for English content in new structure
+        EN_AUDIO_FILE="docs/en_GB/audio/news_digest_ai_${TODAY}.mp3"
+        EN_TEXT_FILE="docs/en_GB/news_digest_ai_${TODAY}.txt"
         
-        if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+        if [[ -f "$EN_AUDIO_FILE" && -f "$EN_TEXT_FILE" ]]; then
           echo "content_exists=true" >> $GITHUB_OUTPUT
-          echo "✅ Today's content already exists: $AUDIO_FILE, $TEXT_FILE"
+          echo "✅ Today's English content already exists: $EN_AUDIO_FILE, $EN_TEXT_FILE"
         else
           echo "content_exists=false" >> $GITHUB_OUTPUT
-          echo "📝 Content missing - will generate:"
-          [[ ! -f "$AUDIO_FILE" ]] && echo "   ❌ Missing: $AUDIO_FILE"
-          [[ ! -f "$TEXT_FILE" ]] && echo "   ❌ Missing: $TEXT_FILE"
+          echo "📝 English content missing - will generate:"
+          [[ ! -f "$EN_AUDIO_FILE" ]] && echo "   ❌ Missing: $EN_AUDIO_FILE"
+          [[ ! -f "$EN_TEXT_FILE" ]] && echo "   ❌ Missing: $EN_TEXT_FILE"
         fi
         
         echo "today_date=$TODAY" >> $GITHUB_OUTPUT
     
     - name: 🤖 Generate AI-Enhanced News Digest
-      # Only run AI generation if content doesn't exist OR forced regeneration OR not deploy-only
-      if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true' || (inputs.deploy_only != 'true' && github.event_name == 'schedule')
+      # CRITICAL: Only run AI generation if content doesn't exist OR explicitly forced
+      # This prevents unnecessary API costs on push events
+      if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -102,18 +104,22 @@ jobs:
           echo "🔧 Manual workflow: Custom parameters applied"
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
-        python github_ai_news_digest.py
+        python github_ai_news_digest.py --language en_GB
         echo "✅ Digest generation completed"
     
     - name: ⚡ Skip AI Generation (Cost Optimization)
-      if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true' && (inputs.deploy_only == 'true' || github.event_name == 'push')
+      if: steps.check_content.outputs.content_exists == 'true' && inputs.force_ai_regeneration != 'true'
       run: |
         echo "💰 COST OPTIMIZATION: Skipping AI generation"
         echo "✅ Today's content already exists: ${{ steps.check_content.outputs.today_date }}"
+        echo "📊 Estimated savings: \$0.50-\$2.00 per skip"
+        echo "💡 Use 'force_ai_regeneration: true' to override if needed"
         if [ "${{ github.event_name }}" = "push" ]; then
-          echo "🚀 Push event: Deploying UX/code improvements without regenerating content"
+          echo "🚀 Push event: Deploying code improvements without regenerating content"
+        elif [ "${{ github.event_name }}" = "schedule" ]; then
+          echo "⏰ Scheduled event: Content exists, no regeneration needed"
         else
-          echo "🔄 Will redeploy existing content with UX improvements"
+          echo "🔄 Will redeploy existing content with any improvements"
         fi
     
     - name: 📊 Analyze generated content
@@ -129,22 +135,39 @@ jobs:
     
     - name: 🌐 Update website with new content
       run: |
-        echo "🌐 Updating accessible newspaper website..."
-        python update_website.py
-        echo "✅ Website updated with today's digest"
+        echo "🌐 Updating English language website page..."
+        python update_language_website.py --language en_GB
+        echo "✅ English website page updated with today's digest"
     
-    - name: 📱 Copy audio files to website
+    - name: 📱 Verify audio files in correct location
       run: |
-        # Ensure audio directory exists
-        mkdir -p docs/audio
+        # Check if audio files are in the correct language-specific directory
+        if ls docs/en_GB/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+          echo "🎧 Audio files found in correct location:"
+          ls -la docs/en_GB/audio/news_digest_ai_*.mp3
+        else
+          echo "⚠️ No audio files found in docs/en_GB/audio/"
+          echo "🔍 Checking for files in wrong location..."
+          if ls news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+            echo "📁 Moving audio files to correct location..."
+            mkdir -p docs/en_GB/audio
+            mv news_digest_ai_*.mp3 docs/en_GB/audio/
+            echo "✅ Audio files moved to docs/en_GB/audio/"
+          fi
+        fi
         
-        # Copy new audio and text files
-        cp news_digest_ai_*.mp3 docs/audio/ 2>/dev/null || echo "No new audio files"
-        cp news_digest_ai_*.txt docs/ 2>/dev/null || echo "No new text files"
-        
-        # List what we have
-        echo "📁 Website audio files:"
-        ls -la docs/audio/ || echo "Audio directory empty"
+        # Check text files
+        if ls docs/en_GB/news_digest_ai_*.txt 1> /dev/null 2>&1; then
+          echo "📄 Text files found in correct location:"
+          ls -la docs/en_GB/news_digest_ai_*.txt
+        else
+          echo "⚠️ No text files found in docs/en_GB/"
+          if ls news_digest_ai_*.txt 1> /dev/null 2>&1; then
+            echo "📁 Moving text files to correct location..."
+            mv news_digest_ai_*.txt docs/en_GB/
+            echo "✅ Text files moved to docs/en_GB/"
+          fi
+        fi
     
     - name: 🔍 Quality check
       run: |
@@ -175,15 +198,25 @@ jobs:
         git config --local user.email "ai-digest@github.com"
         git config --local user.name "AI News Digest Bot"
         
-        # Add generated files
-        git add news_digest_ai_*.mp3 news_digest_ai_*.txt docs/ || true
+        # Add ONLY language-specific files to avoid conflicts
+        # This prevents touching the root index.html and other development files
+        git add docs/en_GB/ || true
+        
+        # Also add any files that might be in wrong location (for backward compatibility)
+        git add news_digest_ai_*.mp3 news_digest_ai_*.txt 2>/dev/null || true
         
         # Create commit with date and stats
         if git diff --staged --quiet; then
-          echo "No new files to commit"
+          echo "💰 COST OPTIMIZATION: No new files to commit - content already exists"
+          echo "📊 Estimated API cost savings: \$0.50-\$2.00"
         else
-          audio_file=$(ls news_digest_ai_*.mp3)
-          audio_size=$(stat -c%s "$audio_file" | numfmt --to=iec)
+          # Check if we have audio files to get stats
+          if ls docs/en_GB/audio/news_digest_ai_*.mp3 1> /dev/null 2>&1; then
+            audio_file=$(ls docs/en_GB/audio/news_digest_ai_*.mp3 | head -1)
+            audio_size=$(stat -c%s "$audio_file" | numfmt --to=iec)
+          else
+            audio_size="Unknown"
+          fi
           git commit -m "🤖 Daily AI news digest & website update $(date +%Y-%m-%d)
 
           📊 Generated: $(date '+%Y-%m-%d %H:%M UTC')
