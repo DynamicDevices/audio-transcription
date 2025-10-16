@@ -65,15 +65,6 @@
         "<strong>Retours accessibilité :</strong> Aidez-nous à améliorer le service pour tous les utilisateurs",
         "<strong>Temps de réponse :</strong> Nous visons à répondre dans les 24 heures"
       ]
-    },
-    "development_status": {
-      "title": "🚧 Statut de Développement",
-      "items": [
-        "<strong>Service en développement :</strong> AudioNews France est actuellement en cours de développement",
-        "<strong>Fonctionnalités à venir :</strong> Synthèse IA des actualités françaises avec voix Denise Neural",
-        "<strong>Sources prévues :</strong> Le Monde, Le Figaro, Libération, France 24",
-        "<strong>En attendant :</strong> Consultez notre <a href=\"../en_GB/\">service anglais complet</a>"
-      ]
     }
   },
   "footer": {

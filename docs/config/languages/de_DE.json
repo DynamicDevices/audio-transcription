@@ -65,15 +65,6 @@
         "<strong>Barrierefreiheits-Feedback:</strong> Helfen Sie uns, den Service für alle Nutzer zu verbessern",
         "<strong>Antwortzeit:</strong> Wir bemühen uns, innerhalb von 24 Stunden zu antworten"
       ]
-    },
-    "development_status": {
-      "title": "🚧 Entwicklungsstatus",
-      "items": [
-        "<strong>Service in Entwicklung:</strong> AudioNews Deutschland ist derzeit in Entwicklung",
-        "<strong>Kommende Funktionen:</strong> KI-Synthese deutscher Nachrichten mit Katja Neural Stimme",
-        "<strong>Geplante Quellen:</strong> Der Spiegel, Die Zeit, Süddeutsche Zeitung, FAZ",
-        "<strong>In der Zwischenzeit:</strong> Besuchen Sie unseren <a href=\"../en_GB/\">vollständigen englischen Service</a>"
-      ]
     }
   },
   "footer": {

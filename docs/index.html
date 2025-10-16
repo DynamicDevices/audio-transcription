@@ -549,14 +549,6 @@
                                 </ul>
                             </div>
                             
-                            ${config.about_content.development_status ? `
-                            <div class="instruction-group development-notice">
-                                <h3 class="instruction-title">${config.about_content.development_status.title}</h3>
-                                <ul class="instruction-list">
-                                    ${config.about_content.development_status.items.map(item => `<li>${item}</li>`).join('')}
-                                </ul>
-                            </div>
-                            ` : ''}
                         </div>
                     </section>
                 `;
