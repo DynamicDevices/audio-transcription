@@ -14,6 +14,7 @@ from datetime import datetime, date
 import json
 from typing import List, Dict, Optional
 import time
+import argparse
 from dataclasses import dataclass
 
 # Optional AI imports - will be imported only if needed
@@ -28,6 +29,43 @@ try:
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
+
+# Multi-language configuration
+LANGUAGE_CONFIGS = {
+    'en_GB': {
+        'name': 'English (UK)',
+        'native_name': 'English (UK)',
+        'sources': {
+            'BBC News': 'https://www.bbc.co.uk/news',
+            'Guardian': 'https://www.theguardian.com/uk',
+            'Independent': 'https://www.independent.co.uk',
+            'Sky News': 'https://news.sky.com',
+            'Telegraph': 'https://www.telegraph.co.uk'
+        },
+        'voice': 'en-IE-EmilyNeural',
+        'greeting': 'Good morning',
+        'themes': ['politics', 'economy', 'health', 'international', 'climate', 'technology', 'crime'],
+        'output_dir': 'docs/en_GB',
+        'audio_dir': 'docs/en_GB/audio',
+        'service_name': 'AudioNews UK'
+    },
+    'fr_FR': {
+        'name': 'French (France)',
+        'native_name': 'Français',
+        'sources': {
+            'Le Monde': 'https://www.lemonde.fr/',
+            'Le Figaro': 'https://www.lefigaro.fr/',
+            'Libération': 'https://www.liberation.fr/',
+            'France 24': 'https://www.france24.com/fr/'
+        },
+        'voice': 'fr-FR-DeniseNeural',
+        'greeting': 'Bonjour',
+        'themes': ['politique', 'économie', 'santé', 'international', 'climat', 'technologie', 'société'],
+        'output_dir': 'docs/fr_FR',
+        'audio_dir': 'docs/fr_FR/audio',
+        'service_name': 'AudioNews France'
+    }
+}
 
 @dataclass
 class NewsStory:
@@ -44,20 +82,16 @@ class GitHubAINewsDigest:
     Provides intelligent analysis while maintaining copyright compliance
     """
     
-    def __init__(self):
-        self.sources = {
-            'BBC News': 'https://www.bbc.co.uk/news',
-            'Guardian': 'https://www.theguardian.com/uk',
-            'Independent': 'https://www.independent.co.uk',
-            'Sky News': 'https://news.sky.com',
-            'Telegraph': 'https://www.telegraph.co.uk',
-        }
+    def __init__(self, language='en_GB'):
+        self.language = language
+        self.config = LANGUAGE_CONFIGS.get(language, LANGUAGE_CONFIGS['en_GB'])
+        self.sources = self.config['sources']
         
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        self.voice_name = "en-IE-EmilyNeural"
+        self.voice_name = self.config['voice']
         
         # Initialize GitHub Copilot API
         self.setup_github_ai()
@@ -98,6 +132,37 @@ class GitHubAINewsDigest:
             # FAIL FAST - don't produce garbage content
             raise Exception("AI Analysis is required for professional news service. Cannot continue without valid API keys.")
     
+    def get_selectors_for_language(self) -> List[str]:
+        """Get language and source-specific CSS selectors"""
+        base_selectors = [
+            'h1, h2, h3',
+            '[data-testid*="headline"]',
+            '.headline',
+            '.title',
+            'article h1, article h2'
+        ]
+        
+        if self.language == 'fr_FR':
+            # French news site specific selectors
+            french_selectors = [
+                '.article__title',           # Le Monde
+                '.fig-headline',             # Le Figaro
+                '.teaser__title',           # Libération
+                '.t-content__title',        # France 24
+                '.article-title',
+                '.titre',
+                '.headline-title'
+            ]
+            return base_selectors + french_selectors
+        else:
+            # UK news site specific selectors
+            uk_selectors = [
+                '.fc-item__title',          # Guardian
+                '.story-headline',          # BBC
+                '.headline-text'            # Independent
+            ]
+            return base_selectors + uk_selectors
+
     def fetch_headlines_from_source(self, source_name: str, url: str) -> List[NewsStory]:
         """
         Extract headlines and create NewsStory objects
@@ -110,16 +175,8 @@ class GitHubAINewsDigest:
             soup = BeautifulSoup(response.content, 'html.parser')
             stories = []
             
-            # Enhanced selectors for better extraction
-            selectors = [
-                'h1, h2, h3',
-                '[data-testid*="headline"]',
-                '.fc-item__title',
-                '.headline',
-                '.title',
-                'article h1, article h2',
-                '.story-headline'
-            ]
+            # Get language-specific selectors
+            selectors = self.get_selectors_for_language()
             
             seen_headlines = set()
             
@@ -369,29 +426,34 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         
         return themes
     
-    async def ai_synthesize_content(self, theme: str, stories: List[NewsStory]) -> str:
-        """
-        Use GitHub AI to create intelligent, coherent content synthesis
-        """
-        if not self.ai_enabled or not stories:
-            return self.fallback_synthesis(theme, stories)
+    def get_synthesis_prompt(self, theme: str, stories: List[NewsStory]) -> str:
+        """Generate language-specific synthesis prompt"""
+        headlines = chr(10).join([f"- {story.title}" for story in stories[:3]])
         
-        try:
-            story_info = []
-            for story in stories[:5]:  # Top 5 stories
-                info = f"- {story.title} (Source: {story.source}"
-                if story.significance_score:
-                    info += f", Significance: {story.significance_score}/10"
-                info += ")"
-                story_info.append(info)
+        if self.language == 'fr_FR':
+            return f"""
+            Créez un résumé d'actualités concis et informatif sur {theme} pour les auditeurs malvoyants.
             
-            sources = list(set(story.source for story in stories))
+            Sujets clés basés sur les titres actuels:
+            {headlines}
             
-            ai_prompt = f"""
+            Exigences:
+            - Créez du contenu original (NE copiez PAS les titres)
+            - Écrivez pour la consommation audio (phrases claires et fluides)
+            - Gardez sous 80 mots
+            - NE mentionnez PAS les sources d'information spécifiques
+            - NE mentionnez PAS combien de sources couvrent ceci
+            - Concentrez-vous sur ce qui se passe, pas sur qui le rapporte
+            - ÉVITEZ le contenu répétitif - synthétisez en UN récit cohérent
+            - Si plusieurs histoires concernent le même événement, combinez-les en un résumé
+            - Commencez par: "Dans l'actualité {theme} aujourd'hui..."
+            """
+        else:  # Default to English
+            return f"""
             Create a concise, informative news summary about {theme} news for visually impaired listeners.
             
             Key topics to cover based on current headlines:
-            {chr(10).join([f"- {story.title}" for story in stories[:3]])}
+            {headlines}
             
             Requirements:
             - Create original content (do NOT copy headlines)
@@ -404,12 +466,42 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             - If multiple stories are about the same event, combine them into one summary
             - Start with: "In {theme} news today..."
             """
+    
+    def get_system_message(self) -> str:
+        """Generate language-specific system message for AI"""
+        if self.language == 'fr_FR':
+            return "Vous créez du contenu d'actualités accessible pour les utilisateurs malvoyants. Écrivez clairement et de manière conversationnelle pour la consommation audio. Ne copiez jamais le texte original - synthétisez toujours. Évitez le contenu répétitif - combinez des histoires similaires en un récit cohérent."
+        else:  # Default to English
+            return "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize. Avoid repetitive content - combine similar stories into one coherent narrative."
+
+    async def ai_synthesize_content(self, theme: str, stories: List[NewsStory]) -> str:
+        """
+        Use GitHub AI to create intelligent, coherent content synthesis
+        """
+        if not self.ai_enabled:
+            raise Exception("🚨 CRITICAL: AI Analysis is REQUIRED. Cannot produce professional news digest without AI analysis.")
+        
+        if not stories:
+            return ""
+        
+        try:
+            story_info = []
+            for story in stories[:5]:  # Top 5 stories
+                info = f"- {story.title} (Source: {story.source}"
+                if story.significance_score:
+                    info += f", Significance: {story.significance_score}/10"
+                info += ")"
+                story_info.append(info)
+            
+            sources = list(set(story.source for story in stories))
+            
+            ai_prompt = self.get_synthesis_prompt(theme, stories)
             
             if self.ai_provider == 'openai':
                 response = self.openai_client.chat.completions.create(
                     model="gpt-4",
                     messages=[
-                        {"role": "system", "content": "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize. Avoid repetitive content - combine similar stories into one coherent narrative."},
+                        {"role": "system", "content": self.get_system_message()},
                         {"role": "user", "content": ai_prompt}
                     ],
                     temperature=0.4,
@@ -418,78 +510,22 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 return response.choices[0].message.content.strip()
             
             elif self.ai_provider == 'anthropic':
+                system_msg = self.get_system_message()
                 response = self.anthropic_client.messages.create(
                     model="claude-sonnet-4-5-20250929",
                     max_tokens=300,
                     temperature=0.4,
                     messages=[
-                        {"role": "user", "content": f"You are creating accessible news content. Avoid repetitive content - synthesize similar stories into one narrative. {ai_prompt}"}
+                        {"role": "user", "content": f"{system_msg} {ai_prompt}"}
                     ]
                 )
                 return response.content[0].text.strip()
             
         except Exception as e:
             print(f"   ⚠️ AI synthesis failed for {theme}: {e}")
-            return self.fallback_synthesis(theme, stories)
+            print("   🚨 CRITICAL: Cannot continue without AI analysis")
+            raise Exception(f"AI Analysis failed and fallback is not acceptable for professional service: {e}")
     
-    def fallback_synthesis(self, theme: str, stories: List[NewsStory]) -> str:
-        """
-        Enhanced fallback synthesis method that creates meaningful content from story titles
-        """
-        if not stories:
-            return f"In {theme} news today, there are significant developments across multiple areas."
-        
-        # Extract key information from story titles
-        story_summaries = []
-        seen_topics = set()
-        
-        for story in stories[:3]:  # Top 3 stories
-            title_words = story.title.lower().split()
-            # Extract meaningful keywords (avoid common words)
-            keywords = [word for word in title_words 
-                       if len(word) > 3 and word not in ['news', 'says', 'after', 'with', 'from', 'about', 'could', 'will', 'would', 'should']]
-            
-            if keywords:
-                # Check if this topic is already covered
-                topic_key = ' '.join(keywords[:2])  # Use first 2 keywords as topic identifier
-                if topic_key not in seen_topics:
-                    seen_topics.add(topic_key)
-                    
-                    # Create a meaningful summary from the title
-                    if theme == 'politics':
-                        if any(word in title_words for word in ['government', 'minister', 'mp', 'parliament']):
-                            story_summaries.append(f"government developments involving {' '.join(keywords[:3])}")
-                        else:
-                            story_summaries.append(f"political developments regarding {' '.join(keywords[:3])}")
-                    elif theme == 'international':
-                        if any(word in title_words for word in ['ukraine', 'russia', 'china', 'usa']):
-                            country = next((word for word in title_words if word in ['ukraine', 'russia', 'china', 'usa']), 'international')
-                            story_summaries.append(f"{country} developments")
-                        else:
-                            story_summaries.append(f"international developments involving {' '.join(keywords[:2])}")
-                    elif theme == 'technology':
-                        if any(word in title_words for word in ['ai', 'tech', 'digital', 'cyber']):
-                            story_summaries.append(f"technology sector developments in {' '.join(keywords[:2])}")
-                        else:
-                            story_summaries.append(f"technological developments regarding {' '.join(keywords[:2])}")
-                    elif theme == 'economy':
-                        if any(word in title_words for word in ['inflation', 'market', 'bank', 'business']):
-                            story_summaries.append(f"economic developments affecting {' '.join(keywords[:2])}")
-                        else:
-                            story_summaries.append(f"economic developments in {' '.join(keywords[:2])}")
-                    else:
-                        story_summaries.append(f"developments in {' '.join(keywords[:3])}")
-        
-        if story_summaries:
-            if len(story_summaries) == 1:
-                return f"In {theme} news today, there are {story_summaries[0]}."
-            elif len(story_summaries) == 2:
-                return f"In {theme} news today, there are {story_summaries[0]} and {story_summaries[1]}."
-            else:
-                summary_text = ', '.join(story_summaries[:-1]) + f', and {story_summaries[-1]}'
-                return f"In {theme} news today, there are {summary_text}."
-        else:
-            return f"In {theme} news today, there are significant developments across multiple areas."
     
     async def create_ai_enhanced_digest(self, all_stories: List[NewsStory]) -> str:
         """
@@ -503,8 +539,14 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         if not themes:
             return "No significant news themes identified today."
         
-        # Create simple introduction
-        digest = f"Good morning. Here's your UK news digest for {today}, brought to you by Dynamic Devices. "
+        # Create language-specific introduction
+        greeting = self.config['greeting']
+        service_name = self.config['service_name']
+        
+        if self.language == 'fr_FR':
+            digest = f"{greeting}. Voici votre résumé d'actualités françaises pour {today}, présenté par Dynamic Devices. "
+        else:
+            digest = f"{greeting}. Here's your UK news digest for {today}, brought to you by Dynamic Devices. "
         
         # Add AI-synthesized content for each theme
         for theme, stories in themes.items():
@@ -513,10 +555,15 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 if theme_content:
                     digest += f"\n\n{theme_content}"
         
-        # Simple closing
-        digest += "\n\nThis digest provides a synthesis of today's most significant news stories. "
-        digest += "All content is original analysis designed for accessibility. "
-        digest += "For complete coverage, visit news websites directly."
+        # Language-specific closing
+        if self.language == 'fr_FR':
+            digest += "\n\nCe résumé fournit une synthèse des actualités les plus importantes d'aujourd'hui. "
+            digest += "Tout le contenu est une analyse originale conçue pour l'accessibilité. "
+            digest += "Pour une couverture complète, visitez directement les sites d'actualités."
+        else:
+            digest += "\n\nThis digest provides a synthesis of today's most significant news stories. "
+            digest += "All content is original analysis designed for accessibility. "
+            digest += "For complete coverage, visit news websites directly."
         
         return digest
     
@@ -603,8 +650,8 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         
         # Check if today's files already exist
         today_str = date.today().strftime("%Y_%m_%d")
-        text_filename = f"news_digest_ai_{today_str}.txt"
-        audio_filename = f"news_digest_ai_{today_str}.mp3"
+        text_filename = f"{self.config['output_dir']}/news_digest_ai_{today_str}.txt"
+        audio_filename = f"{self.config['audio_dir']}/news_digest_ai_{today_str}.mp3"
         
         if os.path.exists(text_filename) and os.path.exists(audio_filename):
             print(f"\n💰 COST OPTIMIZATION: Today's content already exists")
@@ -687,7 +734,19 @@ async def main():
     """
     Generate AI-enhanced daily digest using GitHub infrastructure
     """
-    digest_generator = GitHubAINewsDigest()
+    parser = argparse.ArgumentParser(description='Generate multi-language AI news digest')
+    parser.add_argument('--language', '-l', 
+                       choices=['en_GB', 'fr_FR'], 
+                       default='en_GB',
+                       help='Language for news digest (default: en_GB)')
+    
+    args = parser.parse_args()
+    
+    print(f"🌍 Language: {LANGUAGE_CONFIGS[args.language]['native_name']}")
+    print(f"🎤 Voice: {LANGUAGE_CONFIGS[args.language]['voice']}")
+    print(f"📁 Output: {LANGUAGE_CONFIGS[args.language]['output_dir']}")
+    
+    digest_generator = GitHubAINewsDigest(language=args.language)
     result = await digest_generator.generate_daily_ai_digest()
     
     if result:
