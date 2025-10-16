@@ -215,7 +215,9 @@ jobs:
           TEXT_FILE="docs/${LANG}/news_digest_ai_*.txt"
           
           if ls $AUDIO_FILE 1> /dev/null 2>&1; then
-            audio_size=$(stat -c%s $AUDIO_FILE)
+            # Get the first matching file (there should only be one per language per day)
+            audio_file=$(ls $AUDIO_FILE | head -1)
+            audio_size=$(stat -c%s "$audio_file")
             TOTAL_SIZE=$((TOTAL_SIZE + audio_size))
             TOTAL_FILES=$((TOTAL_FILES + 1))
             
