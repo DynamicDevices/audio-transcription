@@ -173,10 +173,14 @@
     <!-- Skip to main content link for screen readers -->
     <a href="#main-content" class="skip-link" data-i18n="skip_link">Skip to main content</a>
     
-    <header class="header">
-        <div class="container">
-            <h1><span id="site-flag">🌍</span> <span id="site-name">AudioNews</span></h1>
-            <p class="tagline" id="site-tagline">Brought to you by Dynamic Devices</p>
+    <!-- Header -->
+    <header class="site-header" role="banner">
+        <div class="header-container" style="text-align: center;">
+            <h1 class="site-title">
+                <span class="site-icon" aria-hidden="true" id="site-flag">📰</span>
+                <span id="site-name">AudioNews</span>
+            </h1>
+            <p class="site-tagline" id="site-tagline">Brought to you by Dynamic Devices</p>
             
             <!-- Language Selector -->
             <div class="language-selector" role="navigation" aria-label="Language selection">
@@ -192,8 +196,9 @@
             </div>
         </div>
     </header>
-    
-    <main id="main-content" class="content">
+
+    <!-- Main content area -->
+    <main id="main-content" class="main-content" role="main">
         <!-- Loading State -->
         <div id="loading" class="loading">
             <div class="loading-spinner"></div>
@@ -203,11 +208,14 @@
         <!-- Content will be dynamically loaded here -->
         <div id="content-container"></div>
     </main>
-    
-    <footer class="footer">
-        <div class="container">
-            <p class="footer-text" id="footer-text">
-                © 2025 Dynamic Devices • <a href="https://github.com/DynamicDevices/daily-voice-news" class="footer-link">Open Source on GitHub</a> • Made with ♿ accessibility in mind
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container" style="text-align: center;">
+            <p class="copyright" id="footer-text">
+                © 2025 Dynamic Devices • 
+                <a href="https://github.com/DynamicDevices/daily-voice-news" class="footer-link">Open Source on GitHub</a> • 
+                Made with ♿ accessibility in mind
             </p>
         </div>
     </footer>
@@ -396,97 +404,111 @@
                 const audioFile = `${language}/audio/news_digest_ai_${today}.mp3`;
                 
                 return `
-                    <section class="audio-section" aria-labelledby="audio-title">
-                        <div class="container">
-                            <div class="news-card">
-                                <div class="card-header">
-                                    <h2 id="audio-title" class="section-title">${config.sections.todays_digest.title}</h2>
-                                    <p class="update-time">${config.sections.todays_digest.description}</p>
-                                    <div class="date-display">
-                                        <span class="date-label">${this.formatDate(today, language)}</span>
-                                    </div>
-                                </div>
+                    <!-- Today's audio digest -->
+                    <section id="todays-digest" class="featured-digest" aria-labelledby="todays-heading">
+                        <header class="section-header">
+                            <h2 id="todays-heading" class="section-title">
+                                <span class="section-icon" aria-hidden="true">🎧</span>
+                                ${config.sections.todays_digest.title}
+                            </h2>
+                            <p class="section-description">${config.sections.todays_digest.description}</p>
+                        </header>
+                        
+                        <article class="digest-card main-digest">
+                            <header class="digest-header">
+                                <h3 class="digest-title">
+                                    <time datetime="${today.replace(/_/g, '-')}" class="digest-date">${this.formatDate(today, language)}</time>
+                                    - ${config.site.name} Summary
+                                </h3>
+                            </header>
+                            
+                            <!-- Accessible audio player -->
+                            <div class="audio-player-container">
+                                <audio 
+                                    class="audio-player" 
+                                    controls 
+                                    preload="auto"
+                                    crossorigin="anonymous"
+                                    aria-describedby="audio-description"
+                                    id="news-audio"
+                                >
+                                    <source src="${audioFile}" type="audio/mpeg">
+                                    ${config.audio.fallback.replace('{{AUDIO_FILE}}', audioFile)}
+                                </audio>
                                 
-                                <div class="audio-container">
-                                    <div class="audio-description">
-                                        <p>${config.audio.description}</p>
-                                    </div>
-                                    
-                                    <div class="audio-player-wrapper">
-                                        <audio 
-                                            id="news-audio" 
-                                            controls 
-                                            preload="metadata"
-                                            aria-label="${config.audio.description}"
-                                            class="audio-player">
-                                            <source src="${audioFile}" type="audio/mpeg">
-                                            ${config.audio.fallback.replace('{{AUDIO_FILE}}', audioFile)}
-                                        </audio>
-                                    </div>
-                                    
-                                    <div class="audio-actions">
-                                        <a href="${audioFile}" 
-                                           download="news_digest_ai_${today}.mp3" 
-                                           class="action-button download-btn"
-                                           aria-describedby="download-help">
-                                            📱 ${config.audio.download_button}
-                                        </a>
-                                        
-                                        <button id="copy-share-link" 
-                                                class="action-button share-btn"
-                                                aria-describedby="share-help">
-                                            🔗 ${config.audio.share_button}
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="help-text">
-                                        <p id="download-help" class="help-item">
-                                            <strong>📱 ${config.audio.download_button}:</strong> ${config.audio.download_help}
-                                        </p>
-                                        <p id="share-help" class="help-item">
-                                            <strong>🔗 ${config.audio.share_button}:</strong> ${config.audio.share_help}
-                                        </p>
-                                    </div>
-                                </div>
+                                <p id="audio-description" class="audio-description">
+                                    ${config.audio.description}
+                                </p>
                             </div>
-                        </div>
+                            
+                            <!-- Download and sharing options -->
+                            <div class="digest-actions">
+                                <a href="${audioFile}" 
+                                   download="news_digest_ai_${today}.mp3" 
+                                   class="action-btn download-btn"
+                                   aria-describedby="download-help">
+                                    <span class="btn-icon" aria-hidden="true">📱</span>
+                                    ${config.audio.download_button}
+                                </a>
+                                
+                                <button id="copy-share-link" 
+                                        class="action-btn share-btn"
+                                        aria-describedby="share-help">
+                                    <span class="btn-icon" aria-hidden="true">🔗</span>
+                                    ${config.audio.share_button}
+                                </button>
+                            </div>
+                            
+                            <div class="help-text">
+                                <p id="download-help" class="help-item">
+                                    <strong>📱 ${config.audio.download_button}:</strong> ${config.audio.download_help}
+                                </p>
+                                <p id="share-help" class="help-item">
+                                    <strong>🔗 ${config.audio.share_button}:</strong> ${config.audio.share_help}
+                                </p>
+                            </div>
+                        </article>
                     </section>
                     
-                    <section class="about-section" aria-labelledby="about-title">
-                        <div class="container">
-                            <h2 id="about-title" class="section-title">${config.sections.about.title}</h2>
-                            
-                            <div class="about-grid">
-                                <div class="about-card">
-                                    <h3>${config.about_content.what_you_get.title}</h3>
-                                    <ul class="feature-list">
-                                        ${config.about_content.what_you_get.items.map(item => `<li>${item}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                
-                                <div class="about-card">
-                                    <h3>${config.about_content.accessibility.title}</h3>
-                                    <ul class="feature-list">
-                                        ${config.about_content.accessibility.items.map(item => `<li>${item}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                
-                                <div class="about-card">
-                                    <h3>${config.about_content.contact.title}</h3>
-                                    <ul class="feature-list">
-                                        ${config.about_content.contact.items.map(item => `<li>${item}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                
-                                ${config.about_content.development_status ? `
-                                <div class="about-card development-notice">
-                                    <h3>${config.about_content.development_status.title}</h3>
-                                    <ul class="feature-list">
-                                        ${config.about_content.development_status.items.map(item => `<li>${item}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                ` : ''}
+                    <!-- About this service -->
+                    <section id="about-service" class="about-service" aria-labelledby="about-heading">
+                        <header class="section-header">
+                            <h2 id="about-heading" class="section-title">
+                                <span class="section-icon" aria-hidden="true">💡</span>
+                                ${config.sections.about.title}
+                            </h2>
+                        </header>
+                        
+                        <div class="instructions">
+                            <div class="instruction-group">
+                                <h3 class="instruction-title">${config.about_content.what_you_get.title}</h3>
+                                <ul class="instruction-list">
+                                    ${config.about_content.what_you_get.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
                             </div>
+                            
+                            <div class="instruction-group">
+                                <h3 class="instruction-title">${config.about_content.accessibility.title}</h3>
+                                <ul class="instruction-list">
+                                    ${config.about_content.accessibility.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="instruction-group">
+                                <h3 class="instruction-title">${config.about_content.contact.title}</h3>
+                                <ul class="instruction-list">
+                                    ${config.about_content.contact.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            ${config.about_content.development_status ? `
+                            <div class="instruction-group development-notice">
+                                <h3 class="instruction-title">${config.about_content.development_status.title}</h3>
+                                <ul class="instruction-list">
+                                    ${config.about_content.development_status.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                            ` : ''}
                         </div>
                     </section>
                 `;
