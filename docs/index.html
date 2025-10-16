@@ -282,11 +282,11 @@
             }
             
             async init() {
+                // Load language configurations first
+                await this.loadLanguageConfigs();
+                
                 // Detect user's preferred language
                 await this.detectLanguage();
-                
-                // Load language configurations
-                await this.loadLanguageConfigs();
                 
                 // Set up event listeners
                 this.setupEventListeners();
@@ -366,14 +366,20 @@
             }
             
             async loadLanguageConfigs() {
+                console.log('Loading language configurations...');
                 for (const lang of this.supportedLanguages) {
                     try {
                         const response = await fetch(`config/languages/${lang}.json`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
                         this.languages[lang] = await response.json();
+                        console.log(`✅ Loaded ${lang} config`);
                     } catch (e) {
-                        console.error(`Failed to load ${lang} config:`, e);
+                        console.error(`❌ Failed to load ${lang} config:`, e);
                     }
                 }
+                console.log('Language configurations loaded:', Object.keys(this.languages));
             }
             
             setupEventListeners() {
@@ -476,6 +482,7 @@
             generateContent(language) {
                 const config = this.languages[language];
                 if (!config) {
+                    console.error(`No configuration found for ${language}. Available languages:`, Object.keys(this.languages));
                     throw new Error(`No configuration found for ${language}`);
                 }
                 
