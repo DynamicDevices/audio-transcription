@@ -1,0 +1,44 @@
+{
+  "supported_languages": {
+    "en_GB": {
+      "name": "English (UK)",
+      "native_name": "English (UK)",
+      "flag": "🇬🇧",
+      "direction": "ltr",
+      "voice": "en-IE-EmilyNeural",
+      "country_codes": ["GB", "IE"],
+      "sources": {
+        "BBC News": "https://www.bbc.co.uk/news",
+        "Guardian": "https://www.theguardian.com/uk",
+        "Independent": "https://www.independent.co.uk",
+        "Sky News": "https://news.sky.com"
+      },
+      "themes": ["politics", "economy", "health", "international", "climate", "technology", "crime"],
+      "update_time": "06:00",
+      "timezone": "Europe/London",
+      "greeting": "Good morning",
+      "service_name": "AudioNews UK"
+    },
+    "fr_FR": {
+      "name": "French (France)",
+      "native_name": "Français",
+      "flag": "🇫🇷",
+      "direction": "ltr", 
+      "voice": "fr-FR-DeniseNeural",
+      "country_codes": ["FR", "BE", "CH", "LU", "MC"],
+      "sources": {
+        "Le Monde": "https://www.lemonde.fr/",
+        "Le Figaro": "https://www.lefigaro.fr/",
+        "Libération": "https://www.liberation.fr/",
+        "France 24": "https://www.france24.com/fr/"
+      },
+      "themes": ["politique", "économie", "santé", "international", "climat", "technologie", "société"],
+      "update_time": "07:00",
+      "timezone": "Europe/Paris",
+      "greeting": "Bonjour",
+      "service_name": "AudioNews France"
+    }
+  },
+  "default_language": "en_GB",
+  "fallback_language": "en_GB"
+}

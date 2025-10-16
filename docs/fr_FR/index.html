@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioNews France - Actualités Audio Quotidiennes</title>
+    <meta name="description" content="Service d'actualités audio professionnel pour les utilisateurs malvoyants. Synthèse quotidienne des nouvelles françaises avec voix IA de qualité.">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="actualités audio, nouvelles vocales, digest quotidien, actualités accessibles, nouvelles pour aveugles, actualités malvoyants, audio nouvelles France, synthèse vocale française">
+    <meta name="author" content="Dynamic Devices">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://audionews.uk/fr_FR/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://audionews.uk/fr_FR/">
+    <meta property="og:title" content="AudioNews France - Actualités Audio pour Utilisateurs Malvoyants">
+    <meta property="og:description" content="Voix française professionnelle livre un digest quotidien des actualités. Design accessible, partage WhatsApp. Parfait pour les utilisateurs malvoyants.">
+    <meta property="og:image" content="https://audionews.uk/images/audionews-social-card-fr.png">
+    <meta property="og:site_name" content="AudioNews France">
+    <meta property="og:locale" content="fr_FR">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://audionews.uk/fr_FR/">
+    <meta name="twitter:title" content="AudioNews France - Actualités Vocales pour l'Accessibilité">
+    <meta name="twitter:description" content="Voix française professionnelle livre un digest quotidien des actualités. Design accessible, partage WhatsApp. Parfait pour les utilisateurs malvoyants.">
+    <meta name="twitter:image" content="https://audionews.uk/images/audionews-social-card-fr.png">
+    <meta name="twitter:creator" content="@DynamicDevices">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="application-name" content="AudioNews France">
+    <meta name="msapplication-TileColor" content="#1a365d">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Critical CSS for immediate rendering -->
+    <style>
+        /* Critical styles for above-the-fold content */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background-color: #f7fafc;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+        
+        .header .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .coming-soon h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .coming-soon p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #4a5568;
+        }
+        
+        .language-switcher {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .lang-link {
+            display: inline-block;
+            margin: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .lang-link:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .coming-soon {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+    
+    <!-- Load full CSS asynchronously -->
+    <link rel="preload" href="../shared/css/newspaper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="../shared/css/newspaper.css"></noscript>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AudioNews France",
+        "description": "Service d'actualités audio professionnel pour les utilisateurs malvoyants",
+        "url": "https://audionews.uk/fr_FR/",
+        "inLanguage": "fr-FR",
+        "accessibilityFeature": [
+            "audioDescription",
+            "screenReaderSupport",
+            "keyboardNavigation"
+        ],
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "utilisateurs malvoyants"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🇫🇷 AudioNews France</h1>
+            <p class="tagline">Actualités audio professionnelles pour utilisateurs malvoyants</p>
+        </header>
+        
+        <main class="coming-soon" role="main">
+            <h2>🚧 Bientôt Disponible</h2>
+            <p>
+                Nous préparons actuellement le service d'actualités audio français. 
+                Bientôt, vous pourrez écouter un résumé quotidien des actualités françaises 
+                avec une voix IA de qualité professionnelle.
+            </p>
+            <p>
+                <strong>Fonctionnalités à venir :</strong>
+            </p>
+            <ul style="text-align: left; display: inline-block; margin: 1rem 0;">
+                <li>📰 Synthèse quotidienne des actualités françaises</li>
+                <li>🎤 Voix française Denise Neural de Microsoft</li>
+                <li>♿ Design entièrement accessible</li>
+                <li>📱 Partage WhatsApp optimisé</li>
+                <li>🤖 Analyse IA avec Claude 4.5 Sonnet</li>
+                <li>🕖 Mise à jour quotidienne à 7h00</li>
+            </ul>
+            
+            <div class="language-switcher">
+                <h3>En attendant, visitez :</h3>
+                <a href="../en_GB/" class="lang-link">
+                    <span aria-hidden="true">🇬🇧</span> English (UK)
+                </a>
+                <a href="../" class="lang-link">
+                    <span aria-hidden="true">🌍</span> Choisir la langue
+                </a>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>
+                <strong>AudioNews France</strong> - Service par 
+                <a href="https://dynamicdevices.co.uk" style="color: #667eea;">Dynamic Devices</a>
+            </p>
+            <p>Conçu avec ❤️ pour l'accessibilité</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript for enhanced functionality -->
+    <script src="../shared/js/accessibility.js" defer></script>
+    
+    <!-- Service worker for offline functionality -->
+    <script>
+        // Load service worker after page load for better performance
+        window.addEventListener('load', function() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('../sw.js');
+            }
+        });
+    </script>
+</body>
+</html>

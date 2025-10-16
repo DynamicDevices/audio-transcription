@@ -1,0 +1,107 @@
+{
+  "name": "Daily News Digest - Accessible Audio News",
+  "short_name": "News Digest",
+  "description": "AI-enhanced daily news digests designed for visually impaired users with professional Irish voice narration",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a365d",
+  "theme_color": "#1a365d",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-GB",
+  "dir": "ltr",
+  
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%231a365d'/><text x='96' y='120' font-size='120' text-anchor='middle' fill='white'>📰</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%231a365d'/><text x='256' y='320' font-size='320' text-anchor='middle' fill='white'>📰</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  
+  "categories": ["news", "accessibility", "audio", "education"],
+  
+  "shortcuts": [
+    {
+      "name": "Today's Digest",
+      "short_name": "Today",
+      "description": "Listen to today's news digest",
+      "url": "/?shortcut=today",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='60' font-size='60' text-anchor='middle'>🎧</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Download Audio",
+      "short_name": "Download",
+      "description": "Download today's news digest",
+      "url": "/?shortcut=download",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='60' font-size='60' text-anchor='middle'>⬇️</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Recent Digests",
+      "short_name": "Archive",
+      "description": "Browse previous news digests",
+      "url": "/?shortcut=archive",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text x='48' y='60' font-size='60' text-anchor='middle'>📅</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect width='540' height='720' fill='%23f7fafc'/><rect x='20' y='20' width='500' height='100' fill='%231a365d' rx='8'/><text x='270' y='75' font-size='24' text-anchor='middle' fill='white'>Daily News Digest</text><rect x='20' y='140' width='500' height='200' fill='white' stroke='%23e2e8f0' rx='8'/><text x='270' y='180' font-size='18' text-anchor='middle'>Today's Audio Digest</text><rect x='40' y='200' width='460' height='40' fill='%23667eea' rx='20'/><text x='270' y='225' font-size='14' text-anchor='middle' fill='white'>🎧 Audio Player</text><rect x='20' y='360' width='500' height='320' fill='white' stroke='%23e2e8f0' rx='8'/><text x='270' y='400' font-size='16' text-anchor='middle'>News Sections</text></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Main news digest page with audio player"
+    }
+  ],
+  
+  "prefer_related_applications": false,
+  
+  "protocol_handlers": [
+    {
+      "protocol": "web+newsdigest",
+      "url": "/?share=%s"
+    }
+  ],
+  
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
+}
