@@ -616,8 +616,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
         # Retry logic for Edge TTS authentication issues
-        max_retries = 3
-        retry_delay = 5  # seconds
+        # Longer delays and more retries to avoid voice quality degradation from fallbacks
+        max_retries = 5
+        retry_delay = 30  # seconds - longer initial delay for service recovery
         
         for attempt in range(max_retries):
             try:
@@ -649,13 +650,15 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                         continue
                     else:
                         print(f"   ❌ All retry attempts exhausted for authentication error")
-                        print(f"   🔄 Falling back to Google TTS...")
-                        return await self.generate_gtts_fallback(digest_text, output_filename)
+                        print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
+                        print(f"   📋 See GitHub Issue #17 for voice quality concerns")
+                        raise Exception(f"Edge TTS authentication failed after {max_retries} attempts: {error_msg}")
                 else:
-                    # Non-authentication error, try gTTS fallback
+                    # Non-authentication error, fail fast to maintain voice quality
                     print(f"   ❌ Non-retryable Edge TTS error: {error_msg}")
-                    print(f"   🔄 Falling back to Google TTS...")
-                    return await self.generate_gtts_fallback(digest_text, output_filename)
+                    print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
+                    print(f"   📋 See GitHub Issue #17 for voice quality concerns")
+                    raise Exception(f"Edge TTS failed with non-retryable error: {error_msg}")
         
         # Analyze the generated audio with error handling
         try:
@@ -685,83 +688,6 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             'wps': words_per_second,
             'size_kb': file_size_kb
         }
-    
-    async def generate_gtts_fallback(self, digest_text: str, output_filename: str) -> dict:
-        """
-        Fallback audio generation using Google Text-to-Speech (gTTS)
-        Used when Edge TTS fails due to authentication or other issues
-        """
-        try:
-            from gtts import gTTS
-            import tempfile
-            
-            # Map language codes to gTTS language codes
-            gtts_lang_map = {
-                'en-IE-EmilyNeural': 'en',
-                'fr-FR-DeniseNeural': 'fr', 
-                'de-DE-KatjaNeural': 'de'
-            }
-            
-            gtts_lang = gtts_lang_map.get(self.voice_name, 'en')
-            print(f"   🌐 Using gTTS language: {gtts_lang}")
-            
-            # Create gTTS object
-            tts = gTTS(text=digest_text, lang=gtts_lang, slow=False)
-            
-            # Save to temporary file first
-            with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as temp_file:
-                temp_filename = temp_file.name
-                
-            tts.save(temp_filename)
-            
-            # Move to final location
-            import shutil
-            shutil.move(temp_filename, output_filename)
-            
-            print(f"   ✅ Google TTS audio generated successfully")
-            
-            # Analyze the generated audio
-            try:
-                from pydub import AudioSegment
-                audio = AudioSegment.from_mp3(output_filename)
-                duration_s = len(audio) / 1000.0
-                word_count = len(digest_text.split())
-                words_per_second = word_count / duration_s if duration_s > 0 else 0
-                file_size_kb = os.path.getsize(output_filename) / 1024
-                
-                print(f"   ✅ gTTS Audio created: {duration_s:.1f}s, {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
-                
-                return {
-                    'filename': output_filename,
-                    'duration': duration_s,
-                    'words': word_count,
-                    'wps': words_per_second,
-                    'size_kb': file_size_kb
-                }
-                
-            except Exception as analysis_error:
-                print(f"   ⚠️ Audio analysis failed: {analysis_error}")
-                file_size_kb = os.path.getsize(output_filename) / 1024
-                word_count = len(digest_text.split())
-                duration_s = word_count / 2.0  # Estimate 2 words per second
-                words_per_second = 2.0
-                
-                print(f"   ✅ gTTS Audio created: {duration_s:.1f}s (estimated), {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
-                
-                return {
-                    'filename': output_filename,
-                    'duration': duration_s,
-                    'words': word_count,
-                    'wps': words_per_second,
-                    'size_kb': file_size_kb
-                }
-                
-        except ImportError:
-            print(f"   ❌ gTTS not available - install with: pip install gtts")
-            raise Exception("Both Edge TTS and gTTS failed - no audio generation available")
-        except Exception as gtts_error:
-            print(f"   ❌ Google TTS fallback failed: {gtts_error}")
-            raise Exception(f"Both Edge TTS and gTTS failed: {gtts_error}")
     
     async def generate_daily_ai_digest(self):
         """
