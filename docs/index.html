@@ -277,6 +277,7 @@
                 this.currentLanguage = 'en_GB';
                 this.languages = {};
                 this.contentCache = {};
+                this.supportedLanguages = ['en_GB', 'fr_FR', 'de_DE', 'es_ES', 'it_IT', 'nl_NL', 'en_GB_LON', 'en_GB_LIV'];
                 this.init();
             }
             
@@ -299,14 +300,14 @@
                     // Check URL parameter first
                     const urlParams = new URLSearchParams(window.location.search);
                     const langParam = urlParams.get('lang');
-                    if (langParam && ['en_GB', 'fr_FR', 'de_DE'].includes(langParam)) {
+                    if (langParam && this.supportedLanguages.includes(langParam)) {
                         this.currentLanguage = langParam;
                         return;
                     }
                     
                     // Check localStorage
                     const savedLang = localStorage.getItem('audioNewsLanguage');
-                    if (savedLang && ['en_GB', 'fr_FR', 'de_DE'].includes(savedLang)) {
+                    if (savedLang && this.supportedLanguages.includes(savedLang)) {
                         this.currentLanguage = savedLang;
                         return;
                     }
@@ -365,8 +366,7 @@
             }
             
             async loadLanguageConfigs() {
-                const languages = ['en_GB', 'fr_FR', 'de_DE'];
-                for (const lang of languages) {
+                for (const lang of this.supportedLanguages) {
                     try {
                         const response = await fetch(`config/languages/${lang}.json`);
                         this.languages[lang] = await response.json();
