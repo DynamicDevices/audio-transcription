@@ -104,6 +104,9 @@ def update_language_page(language='en_GB'):
         # Update download link
         html = re.sub(r'<a[^>]*download[^>]*href="audio/[^"]*"', f'<a download="{audio_filename}" href="{audio_filename}"', html)
         
+        # Update preload link in head
+        html = re.sub(r'<link rel="preload" href="audio/[^"]*" as="audio"', f'<link rel="preload" href="{audio_filename}" as="audio"', html)
+        
         # Update digest content in the page
         digest_pattern = r'(<div class="digest-content"[^>]*>)(.*?)(</div>)'
         if re.search(digest_pattern, html, re.DOTALL):

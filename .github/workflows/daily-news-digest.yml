@@ -508,11 +508,13 @@ jobs:
     - name: 📦 Pull LFS files
       run: |
         echo "🔍 Checking LFS files before pull..."
-        ls -la docs/audio/*.mp3 || echo "No audio files found"
+        echo "Checking language-specific audio directories..."
+        find docs -name "*.mp3" -type f -exec ls -lh {} \; | head -10 || echo "No audio files found"
         echo "🔄 Pulling LFS files..."
         git lfs pull
         echo "✅ LFS files after pull:"
-        ls -la docs/audio/*.mp3 || echo "No audio files found"
+        echo "Sample audio files (should be >500KB each):"
+        find docs -name "news_digest_ai_*.mp3" -type f -exec ls -lh {} \; | head -10
     
     - name: 🔧 Setup Pages
       uses: actions/configure-pages@v5
