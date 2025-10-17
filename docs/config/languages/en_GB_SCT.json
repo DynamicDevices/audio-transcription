@@ -1,0 +1,80 @@
+{
+  "language_code": "en",
+  "locale": "en_GB_SCT",
+  "region": "Scotland",
+  "direction": "ltr",
+  "page": {
+    "title": "AudioNews Scotland - Daily Scottish News Digest - {{DATE}}",
+    "description": "Daily AI-generated Scottish news digest for {{DATE}} presented by Dynamic Devices. Professional Scottish voice, optimized for screen readers.",
+    "keywords": "scottish news audio, scotland voice news, daily scottish news digest, accessible scottish news, news for blind scotland, scottish news disability, audio news scotland, scottish voice, screen reader scotland, whatsapp scotland news, AI scotland news, Dynamic Devices"
+  },
+  "site": {
+    "name": "AudioNews Scotland",
+    "service_name": "AudioNews Scotland",
+    "tagline": "Presented by Dynamic Devices",
+    "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+  },
+  "navigation": {
+    "skip_link": "Skip to main content"
+  },
+  "sections": {
+    "todays_digest": {
+      "title": "Today's Scottish Audio Digest",
+      "description": "Updated daily at 7:00 AM (Scottish time)",
+      "date_format": "{{DATE}} - Scottish News Summary"
+    },
+    "recent_digests": {
+      "title": "Recent Digests",
+      "description": "Catch up with previous days' Scottish news summaries"
+    },
+    "about": {
+      "title": "About This Service"
+    }
+  },
+  "audio": {
+    "description": "Today's Scottish news digest. Use your browser's audio controls or download for offline listening.",
+    "fallback": "Your browser doesn't support audio playback. <a href=\"{{AUDIO_FILE}}\" download>Download the audio file</a> instead.",
+    "download_button": "Download MP3",
+    "share_button": "Copy Auto-Play Link",
+    "download_help": "Download MP3 file to your device for WhatsApp sharing or offline listening",
+    "share_help": "Copy link that will auto-play when opened - perfect for WhatsApp sharing"
+  },
+  "about_content": {
+    "what_you_get": {
+      "title": "🎧 What You Get",
+      "items": [
+        "<strong>Daily Scottish digest:</strong> Fresh Scottish news summary every morning at 7:00 AM",
+        "<strong>Scottish voice:</strong> Ryan Neural Scottish voice for natural listening",
+        "<strong>WhatsApp ready:</strong> Perfect for sharing with family and friends across Scotland",
+        "<strong>Accessible design:</strong> Optimized for screen readers and keyboard navigation"
+      ]
+    },
+    "accessibility": {
+      "title": "♿ Accessibility Features",
+      "items": [
+        "<strong>Screen reader optimized:</strong> Full ARIA labels and semantic HTML",
+        "<strong>Keyboard navigation:</strong> Navigate easily through all controls with Tab",
+        "<strong>Mobile friendly:</strong> Works perfectly on phones and tablets",
+        "<strong>High quality audio:</strong> Premium Scottish neural voice technology"
+      ]
+    },
+    "contact": {
+      "title": "📧 Contact & Support",
+      "items": [
+        "<strong>General enquiries:</strong> <a href=\"mailto:contact@audionews.uk\">contact@audionews.uk</a>",
+        "<strong>Technical support:</strong> <a href=\"https://github.com/DynamicDevices/daily-voice-news/issues\">GitHub Issues</a>",
+        "<strong>Accessibility feedback:</strong> Help us improve the service for all Scottish users",
+        "<strong>Response time:</strong> We aim to respond within 24 hours"
+      ]
+    }
+  },
+  "footer": {
+    "copyright": "© 2025 Dynamic Devices • <a href=\"https://github.com/DynamicDevices/daily-voice-news\" class=\"footer-link\">Open Source on GitHub</a> • Made with ♿ accessibility in mind"
+  },
+  "javascript": {
+    "copy_success": "Link Copied!",
+    "copy_announcement": "Share link copied to clipboard",
+    "copy_error": "Failed to copy link. Please copy manually: ",
+    "copy_fallback": "Share link copied!"
+  }
+}
