@@ -136,6 +136,21 @@ def update_language_page(language='en_GB'):
         # Update meta description
         html = re.sub(r'<meta name="description" content=".*?"', f'<meta name="description" content="{new_description}"', html)
         
+        # Update date in structured data (JSON-LD)
+        today_iso = date.today().isoformat()
+        html = re.sub(
+            r'"name": "Daily [^"]*News Digest - [^"]*"',
+            f'"name": "Daily News Digest - {today_formatted}"',
+            html
+        )
+        
+        # Update the <time> element with today's date
+        html = re.sub(
+            r'<time datetime="[^"]*" class="digest-date">[^<]*</time>',
+            f'<time datetime="{today_iso}" class="digest-date">{today_formatted}</time>',
+            html
+        )
+        
         # Update audio source (relative path from language directory)
         audio_filename = f"audio/news_digest_ai_{today_str}.mp3"
         html = re.sub(r'<source src="audio/[^"]*"', f'<source src="{audio_filename}"', html)
