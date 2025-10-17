@@ -7,7 +7,7 @@
     <meta name="description" content="Tägliche KI-generierte Audio-Nachrichtenzusammenfassung für October 17, 2025 präsentiert von Dynamic Devices. Professionelle deutsche Stimme, für Screenreader optimiert.">
     
     <!-- SEO Meta Tags -->
-    <meta name="keywords" content="audio news, voice news, daily news digest, accessible news, news for blind, visually impaired news, Deutsch news audio">
+    <meta name="keywords" content="audio news, voice news, daily news digest, accessible news, news for blind, visually impaired news, UK news audio, Irish voice news, screen reader news, WhatsApp news sharing, AI news digest, Dynamic Devices">
     <meta name="author" content="Dynamic Devices">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="googlebot" content="index, follow">
@@ -16,143 +16,232 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://audionews.uk/de_DE/">
-    <meta property="og:title" content="AudioNews Deutschland - Tägliche Audio-Nachrichten">
-    <meta property="og:description" content="Professioneller täglicher Audio-Nachrichtendienst für sehbehinderte Nutzer. KI-Synthese deutscher Nachrichten mit Katja Neural Stimme.">
-    <meta property="og:image" content="https://audionews.uk/images/audionews-social-card-de_de.png">
-    <meta property="og:site_name" content="AudioNews Deutschland">
+    <meta property="og:title" content="AudioNews Deutschland - Täglicher Audio-Nachrichten-Digest für Sehbehinderte">
+    <meta property="og:description" content="Professionelle deutsche Stimme liefert täglichen Nachrichten-Digest. KI-verstärkt, zugängliches Design, WhatsApp-Sharing. Perfekt für blinde und sehbehinderte Nutzer.">
+    <meta property="og:image" content="https://audionews.uk/images/audionews-social-card.png">
+    <meta property="og:site_name" content="AudioNews.uk">
     <meta property="og:locale" content="de_DE">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://audionews.uk/de_DE/">
     <meta name="twitter:title" content="AudioNews Deutschland">
-    <meta name="twitter:description" content="Professioneller täglicher Audio-Nachrichtendienst für sehbehinderte Nutzer. KI-Synthese deutscher Nachrichten mit Katja Neural Stimme.">
-    <meta name="twitter:image" content="https://audionews.uk/images/audionews-social-card-de_de.png">
+    <meta name="twitter:description" content="Professional Irish voice delivers daily UK news digest. AI-enhanced, accessible design, WhatsApp sharing. Perfect for visually impaired users.">
+    <meta name="twitter:image" content="https://audionews.uk/images/audionews-social-card.png">
     <meta name="twitter:creator" content="@DynamicDevices">
     
     <!-- Additional Meta Tags -->
-    <meta name="application-name" content="AudioNews Deutschland">
+    <meta name="application-name" content="AudioNews.uk">
     <meta name="msapplication-TileColor" content="#1a365d">
+    <meta name="msapplication-config" content="browserconfig.xml">
     <meta name="format-detection" content="telephone=no">
     
-    <!-- Structured Data -->
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "AudioNews.uk",
+        "alternateName": "Dynamic Devices AudioNews",
+        "url": "https://audionews.uk",
+        "logo": "https://audionews.uk/images/logo.png",
+        "foundingDate": "2025",
+        "founder": {
+            "@type": "Organization",
+            "name": "Dynamic Devices"
+        },
+        "description": "Professional daily audio news digest service for visually impaired users, featuring AI-enhanced UK news synthesis with Irish neural voice technology.",
+        "sameAs": [
+            "https://github.com/DynamicDevices/daily-voice-news"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "contact@audionews.uk",
+            "url": "https://github.com/DynamicDevices/daily-voice-news/issues"
+        }
+    }
+    </script>
+    
+    <!-- Structured Data - Website -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "AudioNews Deutschland",
-        "url": "https://audionews.uk/de_DE/",
-        "description": "Professioneller täglicher Audio-Nachrichtendienst für sehbehinderte Nutzer. KI-Synthese deutscher Nachrichten mit Katja Neural Stimme.",
-        "inLanguage": "de_DE",
-        "accessibilityFeature": [
-            "audioDescription",
-            "screenReaderSupport",
-            "keyboardNavigation"
-        ],
+        "name": "AudioNews.uk",
+        "url": "https://audionews.uk",
+        "description": "Daily voice news digest service providing accessible audio news for visually impaired users across the UK",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Dynamic Devices"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://audionews.uk/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        },
         "audience": {
             "@type": "Audience",
-            "audienceType": "visually impaired users"
+            "audienceType": "Visually impaired users, accessibility advocates, news consumers"
         }
     }
     </script>
-
-    <!-- Critical CSS -->
-    <style>
-        /* Same critical CSS as other language pages */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    
+    <!-- Structured Data - Service -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "Daily Voice News Digest",
+        "provider": {
+            "@type": "Organization",
+            "name": "AudioNews.uk"
+        },
+        "description": "AI-enhanced daily news digest delivered in professional Irish voice, optimized for accessibility and WhatsApp sharing",
+        "serviceType": "Audio News Service",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Kingdom"
+        },
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "Visually impaired individuals"
+        },
+        "availableChannel": {
+            "@type": "ServiceChannel",
+            "serviceUrl": "https://audionews.uk",
+            "serviceSmsNumber": "WhatsApp compatible"
+        },
+        "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "00:00",
+            "closes": "23:59"
         }
-        
+    }
+    </script>
+    
+    <!-- Structured Data - Daily Audio Product -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AudioObject",
+        "name": "Daily UK News Digest - October 15, 2025",
+        "description": "Professional Irish voice delivers today's most significant UK news stories, synthesized from multiple sources for accessibility",
+        "contentUrl": "https://audionews.uk/audio/news_digest_ai_2025_10_15.mp3",
+        "encodingFormat": "audio/mpeg",
+        "duration": "PT2M47S",
+        "inLanguage": "en-GB",
+        "creator": {
+            "@type": "Organization",
+            "name": "AudioNews.uk"
+        },
+        "datePublished": "2025-10-15T06:00:00Z",
+        "accessibilityFeature": [
+            "audioDescription",
+            "screenReaderCompatible",
+            "keyboardNavigable"
+        ],
+        "accessibilityHazard": "none",
+        "accessibilityControl": [
+            "fullKeyboardControl",
+            "fullMouseControl",
+            "fullTouchControl"
+        ]
+    }
+    </script>
+    
+    <!-- Accessibility optimizations -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1a365d">
+    
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://audionews.uk">
+    <link rel="preload" href="audio/news_digest_ai_2025_10_17.mp3" as="audio" type="audio/mpeg">
+    
+    <!-- Critical CSS inlined for performance -->
+    <style>
+        /* Critical above-the-fold styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #2d3748;
-            background-color: #f7fafc;
-            font-size: 16px;
+            color: #1a202c;
+            background-color: #ffffff;
         }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #1a202c;
             color: white;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
-        }
-        
-        .header .tagline {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .digest-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        
-        .digest-header {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .audio-player-container {
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .audio-description {
-            font-size: 1.1rem;
-            color: #4a5568;
-            margin-bottom: 1.5rem;
-        }
-        
-        .digest-content {
-            padding: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: #718096;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 3rem;
-        }
-        
-        .footer a {
-            color: #4299e1;
+            padding: 8px;
             text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
         }
-        
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
+        .skip-link:focus {
+            top: 6px;
+            background: #2d3748;
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
+        }
+        .site-header {
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+        .site-title {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .site-tagline {
+            font-size: 1.125rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: none;
+            width: 100%;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.875rem;
+            color: #1a365d;
+        }
+        .section-description {
+            font-size: 1.125rem;
+            color: #2d3748;
+            max-width: 60ch;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .audio-player {
+            width: 100%;
+            margin: 1rem 0;
         }
     </style>
     
-    <!-- Load shared CSS -->
+    <!-- Load full CSS asynchronously -->
     <link rel="preload" href="../shared/css/newspaper.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="../shared/css/newspaper.css"></noscript>
     
@@ -160,74 +249,169 @@
     <link rel="manifest" href="manifest.json">
     
     <!-- Favicon -->
-    <link rel="icon" href="../shared/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📰%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>🇩🇪 AudioNews Deutschland</h1>
-            <p class="tagline">Professionelle Audio-Nachrichten für sehbehinderte Nutzer</p>
-        </header>
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header class="site-header" role="banner">
+        <div class="header-container" style="text-align: center;">
+            <h1 class="site-title">
+                <span class="site-icon" aria-hidden="true">📰</span>
+                AudioNews Deutschland
+            </h1>
+            <p class="site-tagline">Präsentiert von Dynamic Devices</p>
+            
+            <!-- Language Selector -->
+            <nav class="language-selector" aria-label="Language selection" style="margin-top: 1rem;">
+                <a href="/en_GB/" class="lang-link" title="English">🇬🇧 English</a>
+                <a href="/fr_FR/" class="lang-link" title="French">🇫🇷 Français</a>
+                <a href="/de_DE/" class="lang-link active" aria-current="page" title="German">🇩🇪 Deutsch</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main content area -->
+    <main id="main-content" class="main-content" role="main">
         
-        <main role="main">
-            <article class="digest-card">
+        <!-- Today's audio digest -->
+        <section id="todays-digest" class="featured-digest" aria-labelledby="todays-heading">
+            <header class="section-header">
+                <h2 id="todays-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">🎧</span>
+                    Heutiger Audio-Digest
+                </h2>
+                <p class="section-description">Täglich um 6:00 Uhr (UK-Zeit) aktualisiert</p>
+            </header>
+            
+            <article class="digest-card main-digest">
                 <header class="digest-header">
-                    <h2 class="digest-date">AudioNews Deutschland - Tägliche Audio-Nachrichten - October 16, 2025</h2>
+                    <h3 class="digest-title">
+                        <time datetime="2025-10-15" class="digest-date">October 15, 2025</time>
+                        - Nachrichtenzusammenfassung
+                    </h3>
                 </header>
                 
+                <!-- Accessible audio player -->
                 <div class="audio-player-container">
-                    <p class="audio-description">
+                    <audio 
+                        class="audio-player" 
+                        controls 
+                        preload="auto"
+                        crossorigin="anonymous"
+                        aria-describedby="audio-description"
+                    >
+                        <source src="audio/news_digest_ai_2025_10_17.mp3" type="audio/mpeg">
+                        <p>Your browser doesn't support audio playback. <a href="audio/news_digest_ai_2025_10_15.mp3" download>Download the audio file</a> instead.</p>
+                    </audio>
+                    <p id="audio-description" class="audio-description">
                         Heutige Nachrichtenzusammenfassung. Verwenden Sie die Audio-Steuerelemente Ihres Browsers oder laden Sie für Offline-Hören herunter.
                     </p>
-                    
-                    <audio controls preload="metadata">
-                        <source src="audio/news_digest_ai_2025_10_17.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                    
-                    <div style="margin-top: 1.5rem;">
-                        <a download="audio/news_digest_ai_2025_10_17.mp3" href="audio/news_digest_ai_2025_10_17.mp3" 
-                           style="display: inline-block; background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: 500;">
-                            📱 Für WhatsApp herunterladen
-                        </a>
-                    </div>
                 </div>
                 
-                <div class="digest-content">
-            <p>GITHUB AI-ENHANCED NEWS DIGEST
-========================================
-Generated: 2025-10-17 19:34:06
-AI Analysis: ENABLED
-Type: AI-synthesized content for accessibility
-========================================</p>
-            <p>Guten Morgen. Hier ist Ihre deutsche Nachrichtenzusammenfassung für October 17, 2025, präsentiert von Dynamic Devices.</p>
-            <p>In den international-Nachrichten heute: Das britische Königshaus erlebt eine bedeutende Veränderung. Prinz Andrew hat seinen Titel als Herzog von York niedergelegt. Dieser Schritt erfolgt vor dem Hintergrund anhaltender Kontroversen um den Bruder von König Charles. Die Entscheidung markiert einen weiteren Rückzug des Prinzen aus dem öffentlichen Leben der königlichen Familie. Der traditionsreiche Titel war Andrew seit seiner Hochzeit im Jahr neunzehnhundertsechsundachtzig verliehen worden.</p>
-            <p>In den politics-Nachrichten heute: Unionskanzlerkandidat Friedrich Merz sorgt mit mehreren Aussagen für Aufsehen. Er rückt vom traditionellen Begriff der Staatsräson im Verhältnis zu Israel ab und präsentiert gleichzeitig seine Verteidigungspläne – Deutschland solle die stärkste konventionelle Streitmacht Europas aufbauen. Zusätzlich steht Merz wegen Äußerungen zur Migration unter Kritik. Die Grünen fordern eine Entschuldigung, nachdem er sich zum Thema Migration im Stadtbild geäußert hatte. Die Kontroversen zeigen die Spannungen im laufenden Bundestagswahlkampf.</p>
-            <p>In den crime-Nachrichten heute...</p>
-            <p>In Aschaffenburg läuft ein Gerichtsverfahren zu einem schweren Gewaltverbrechen, das von der Staatsanwaltschaft als Massaker bezeichnet wird. Die dramatische Wortwahl unterstreicht die Schwere der Anklage.</p>
-            <p>Aus den USA kommt die Meldung, dass John Bolton, der ehemalige Sicherheitsberater und bekannte Kritiker Donald Trumps, sich vor Gericht wegen Veruntreuungsvorwürfen verantworten muss. Bolton hat auf nicht schuldig plädiert. Die Anklage wirft ihm vor, unrechtmäßig mit vertraulichen Informationen umgegangen zu sein.</p>
-            <p>In den climate-Nachrichten heute: In Hamburg sorgt ein Volksentscheid für Diskussionen über mögliche Verkehrsbeschränkungen. Die Bürger der Hansestadt haben über klimapolitische Maßnahmen abgestimmt, wobei nun die Frage im Raum steht, ob dies künftig zu Einschränkungen für den Autoverkehr führen könnte. Die genauen Auswirkungen der Abstimmung auf die städtische Verkehrspolitik werden derzeit analysiert. Es bleibt abzuwarten, welche konkreten Schritte die Stadt zur Umsetzung der Entscheidung einleiten wird.</p>
-            <p>In den technology-Nachrichten heute: Die Europäische Union verstärkt ihre Abwehrmaßnahmen gegen unbemannte Flugobjekte. Neue Technologien zur Drohnenabwehr werden entwickelt und implementiert, um kritische Infrastrukturen und öffentliche Bereiche besser zu schützen. Die Systeme sollen unerwünschte Drohnen erkennen, identifizieren und neutralisieren können. Dieser Schritt erfolgt als Reaktion auf zunehmende Sicherheitsbedenken, da Drohnen sowohl für zivile Störungen als auch potenzielle Bedrohungen genutzt werden können. Die EU investiert damit gezielt in moderne Verteidigungstechnologie.</p>
-            <p>In den economy-Nachrichten heute: Die Debatte um Vermögensverteilung in Deutschland nimmt Fahrt auf. Experten diskutieren, ob eine Steuer auf große Vermögen soziale Ungleichheit verringern könnte. In der Automobilbranche steht beim Porsche-Konzern ein bedeutender Führungswechsel bevor, der als längst notwendige Neuausrichtung gilt. Und im Wohnungsmarkt zeigt sich: Was ursprünglich als temporäre Maßnahme gedacht war, die Mietpreisbremse, hat sich zu einem festen Bestandteil der Wohnungspolitik entwickelt – ein Zeichen für anhaltende Spannungen auf dem deutschen Immobilienmarkt.</p>
-            <p>Diese Zusammenfassung bietet eine Synthese der wichtigsten Nachrichten von heute. Alle Inhalte sind ursprüngliche Analysen, die für die Barrierefreiheit entwickelt wurden. Für eine vollständige Berichterstattung besuchen Sie direkt die Nachrichten-Websites.</p>
-        </div>
+                <!-- Action buttons -->
+                <div class="digest-actions">
+                    <a href="audio/news_digest_ai_2025_10_15.mp3" 
+                       download 
+                       class="action-button download-button"
+                       aria-describedby="download-help">
+                        <span class="button-icon" aria-hidden="true">⬇️</span>
+                        MP3 Herunterladen
+                    </a>
+                    <button class="action-button share-button" 
+                            onclick="copyShareLink()" 
+                            aria-describedby="share-help">
+                        <span class="button-icon" aria-hidden="true">📱</span>
+                        Auto-Play-Link Kopieren
+                    </button>
+                </div>
+                
+                <!-- Help text for actions -->
+                <div class="action-help">
+                    <p id="download-help" class="help-text">Laden Sie die MP3-Datei auf Ihr Gerät zum WhatsApp-Teilen oder Offline-Hören herunter</p>
+                    <p id="share-help" class="help-text">Link kopieren, der automatisch abgespielt wird - perfekt zum WhatsApp-Teilen</p>
+                </div>
             </article>
-        </main>
-        
-        <footer class="footer">
-            <p>
-                <strong>AudioNews Deutschland</strong> - Service von 
-                <a href="https://dynamicdevices.co.uk">Dynamic Devices</a>
-            </p>
-            <p>Entwickelt mit ❤️ für Barrierefreiheit • <a href="../en_GB/">🇬🇧 English</a> • <a href="../fr_FR/">🇫🇷 Français</a> • <a href="../">🌍 Choose Language</a></p>
-        </footer>
-    </div>
+        </section>
 
-    <!-- JavaScript -->
+        <!-- Recent digests section -->
+        <!-- Recent Digests - Hidden until previous content exists -->
+        <section id="recent-digests" class="recent-digests-section" aria-labelledby="recent-heading" style="display: none;">
+            <header class="section-header">
+                <h2 id="recent-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">📅</span>
+                    Aktuelle Digests
+                </h2>
+                <p class="section-description">Holen Sie die Nachrichtenzusammenfassungen der letzten Tage nach</p>
+            </header>
+            
+            <div class="recent-digests-grid">
+                <!-- Previous digests will be populated by update_website.py when they exist -->
+            </div>
+        </section>
+
+        <!-- Simple about section -->
+        <section id="about" class="about-section" aria-labelledby="about-heading">
+            <header class="section-header">
+                <h2 id="about-heading" class="section-title">
+                    <span class="section-icon" aria-hidden="true">💡</span>
+                    Über diesen Service
+                </h2>
+            </header>
+            
+            <div class="instructions">
+                <div class="instruction-group">
+                    <h3 class="instruction-title">🎧 What You Get</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Daily digest:</strong> Fresh news summary every morning at 6 AM UK time</li>
+                        <li><strong>Professional voice:</strong> Irish Emily Neural voice for natural listening</li>
+                        <li><strong>WhatsApp ready:</strong> Perfect for sharing with family and friends</li>
+                        <li><strong>Accessible design:</strong> Optimized for screen readers and keyboard navigation</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">♿ Accessibility Features</h3>
+                    <ul class="instruction-list">
+                        <li><strong>Screen reader optimized:</strong> Full ARIA labels and semantic HTML</li>
+                        <li><strong>Keyboard navigation:</strong> Tab through all controls easily</li>
+                        <li><strong>Mobile friendly:</strong> Works perfectly on phones and tablets</li>
+                        <li><strong>High quality audio:</strong> Premium Irish neural voice technology</li>
+                    </ul>
+                </div>
+                
+                <div class="instruction-group">
+                    <h3 class="instruction-title">📧 Contact & Support</h3>
+                    <ul class="instruction-list">
+                        <li><strong>General inquiries:</strong> <a href="mailto:contact@audionews.uk">contact@audionews.uk</a></li>
+                        <li><strong>Technical support:</strong> <a href="https://github.com/DynamicDevices/daily-voice-news/issues">GitHub Issues</a></li>
+                        <li><strong>Accessibility feedback:</strong> Help us improve the service for all users</li>
+                        <li><strong>Response time:</strong> We aim to respond within 24 hours</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-container" style="text-align: center;">
+            <p class="copyright">
+                © 2025 Dynamic Devices • 
+                <a href="https://github.com/DynamicDevices/daily-voice-news" class="footer-link">Open Source on GitHub</a> • 
+                Made with ♿ accessibility in mind
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for enhanced functionality - deferred for performance -->
     <script src="../shared/js/accessibility.js" defer></script>
     
-    <!-- Service worker -->
+    <!-- Service worker for offline functionality -->
     <script>
+        // Load service worker after page load for better performance
         window.addEventListener('load', function() {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('../sw.js');
