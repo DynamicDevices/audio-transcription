@@ -819,10 +819,10 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         """
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
-        # Retry logic for Edge TTS authentication issues
+        # Retry logic for Edge TTS network and authentication issues
         # Balanced retries to avoid timeouts while maintaining voice quality
-        max_retries = 3
-        retry_delay = 10  # seconds - reasonable delay for service recovery
+        max_retries = 5  # Increased for network issues
+        retry_delay = 5  # Start with shorter delay for network issues
         
         for attempt in range(max_retries):
             try:
@@ -831,6 +831,17 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                     
                 # Ensure the directory exists
                 os.makedirs(os.path.dirname(output_filename), exist_ok=True)
+                
+                # Force IPv4 to avoid IPv6 connectivity issues in GitHub Actions
+                import socket
+                import aiohttp
+                
+                # Create connector that forces IPv4
+                connector = aiohttp.TCPConnector(
+                    family=socket.AF_INET,  # Force IPv4
+                    force_close=False,
+                    enable_cleanup_closed=True
+                )
                 
                 communicate = edge_tts.Communicate(digest_text, self.voice_name)
                 with open(output_filename, "wb") as file:
@@ -845,25 +856,34 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 error_msg = str(e)
                 print(f"   ⚠️ Edge TTS attempt {attempt + 1} failed: {error_msg}")
                 
-                # Check if it's an authentication error that might be temporary
-                if "401" in error_msg or "authentication" in error_msg.lower() or "handshake" in error_msg.lower():
-                    if attempt < max_retries - 1:  # Not the last attempt
-                        print(f"   ⏳ Authentication issue detected, waiting {retry_delay} seconds before retry...")
-                        await asyncio.sleep(retry_delay)
-                        retry_delay *= 2  # Exponential backoff
-                        continue
+                # Check error type for appropriate retry strategy
+                is_network_error = ("Network is unreachable" in error_msg or 
+                                  "Cannot connect" in error_msg or
+                                  "Connection refused" in error_msg or
+                                  "Temporary failure" in error_msg)
+                is_auth_error = ("401" in error_msg or 
+                               "authentication" in error_msg.lower() or 
+                               "handshake" in error_msg.lower())
+                
+                if (is_network_error or is_auth_error) and attempt < max_retries - 1:
+                    # Retryable error and not the last attempt
+                    print(f"   ⏳ {'Network' if is_network_error else 'Authentication'} issue detected, waiting {retry_delay} seconds before retry...")
+                    await asyncio.sleep(retry_delay)
+                    retry_delay = min(retry_delay * 1.5, 30)  # Exponential backoff, max 30s
+                    continue
+                elif attempt == max_retries - 1:
+                    # Last attempt failed
+                    print(f"   ❌ All {max_retries} retry attempts exhausted")
+                    # Try gTTS fallback in CI environment only
+                    if os.environ.get('GITHUB_ACTIONS') == 'true':
+                        print(f"   🔄 CI Environment detected - attempting gTTS fallback")
+                        return await self.generate_gtts_fallback(digest_text, output_filename)
                     else:
-                        print(f"   ❌ All retry attempts exhausted for authentication error")
-                        # Try gTTS fallback in CI environment only
-                        if os.environ.get('GITHUB_ACTIONS') == 'true':
-                            print(f"   🔄 CI Environment detected - attempting gTTS fallback for voice consistency")
-                            return await self.generate_gtts_fallback(digest_text, output_filename)
-                        else:
-                            print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
-                            print(f"   📋 See GitHub Issue #17 for voice quality concerns")
-                            raise Exception(f"Edge TTS authentication failed after {max_retries} attempts: {error_msg}")
+                        print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
+                        print(f"   📋 See GitHub Issue #17 for voice quality concerns")
+                        raise Exception(f"Edge TTS failed after {max_retries} attempts: {error_msg}")
                 else:
-                    # Non-authentication error, fail fast to maintain voice quality
+                    # Non-retryable error, fail fast
                     print(f"   ❌ Non-retryable Edge TTS error: {error_msg}")
                     print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
                     print(f"   📋 See GitHub Issue #17 for voice quality concerns")
