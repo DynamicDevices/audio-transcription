@@ -125,8 +125,10 @@ jobs:
         fi
         # Generate content for all supported languages with better error handling (including cities)
         LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")
+        CORE_LANGUAGES=("en_GB" "fr_FR" "de_DE")  # Original languages that must succeed
         FAILED_LANGUAGES=()
         SUCCESS_COUNT=0
+        CORE_SUCCESS_COUNT=0
         
         for LANG in "${LANGUAGES[@]}"; do
           echo "🌍 Generating content for ${LANG}..."
@@ -157,6 +159,10 @@ jobs:
             if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
               echo "✅ ${LANG} generation successful"
               SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+              # Track core language success separately
+              if [[ " ${CORE_LANGUAGES[@]} " =~ " ${LANG} " ]]; then
+                CORE_SUCCESS_COUNT=$((CORE_SUCCESS_COUNT + 1))
+              fi
             else
               echo "⚠️ ${LANG} generation completed but files missing"
               FAILED_LANGUAGES+=("${LANG} (no files)")
@@ -168,7 +174,8 @@ jobs:
         
         # Report results
         echo "📊 GENERATION SUMMARY:"
-        echo "✅ Successful: ${SUCCESS_COUNT}/3 languages"
+        echo "✅ Successful: ${SUCCESS_COUNT}/${#LANGUAGES[@]} languages"
+        echo "✅ Core languages: ${CORE_SUCCESS_COUNT}/${#CORE_LANGUAGES[@]} (en_GB, fr_FR, de_DE)"
         if [ ${#FAILED_LANGUAGES[@]} -gt 0 ]; then
           echo "❌ Failed languages:"
           for failed in "${FAILED_LANGUAGES[@]}"; do
@@ -176,12 +183,13 @@ jobs:
           done
         fi
         
-        # Require at least one successful generation
-        if [ $SUCCESS_COUNT -eq 0 ]; then
-          echo "❌ No languages generated successfully - failing CI"
-          exit 1
+        # Require all core languages to succeed (en_GB, fr_FR, de_DE)
+        if [ $CORE_SUCCESS_COUNT -eq ${#CORE_LANGUAGES[@]} ]; then
+          echo "✅ All core languages generated successfully - continuing"
         else
-          echo "✅ At least one language generated successfully - continuing"
+          echo "❌ Core language generation failed (${CORE_SUCCESS_COUNT}/${#CORE_LANGUAGES[@]}) - failing CI"
+          echo "💡 New languages (es_ES, it_IT, nl_NL, en_GB_LON, en_GB_LIV) are optional and won't fail CI"
+          exit 1
         fi
         echo "✅ Digest generation completed"
     
