@@ -124,19 +124,21 @@ jobs:
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
         # Generate content for all supported languages with better error handling (including cities)
-        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")
         CORE_LANGUAGES=("en_GB" "fr_FR" "de_DE")  # Original languages that must succeed
+        NEW_LANGUAGES=("es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")  # New languages (optional)
         FAILED_LANGUAGES=()
         SUCCESS_COUNT=0
         CORE_SUCCESS_COUNT=0
         
-        for LANG in "${LANGUAGES[@]}"; do
+        # Process core languages first (critical for service)
+        echo "🎯 PHASE 1: Generating CORE languages (required for service)"
+        for LANG in "${CORE_LANGUAGES[@]}"; do
           echo "🌍 Generating content for ${LANG}..."
           echo "⏰ Started at: $(date)"
           
           # Run with timeout and capture exit code
           set +e  # Don't exit on error
-          timeout 600 python github_ai_news_digest.py --language ${LANG}
+          timeout 300 python github_ai_news_digest.py --language ${LANG}
           EXIT_CODE=$?
           set -e  # Re-enable exit on error
           
@@ -145,7 +147,7 @@ jobs:
           
           # Check exit code
           if [ $EXIT_CODE -eq 124 ]; then
-            echo "⏰ ${LANG} generation timed out after 10 minutes"
+            echo "⏰ ${LANG} generation timed out after 5 minutes"
             FAILED_LANGUAGES+=("${LANG} (timeout)")
           elif [ $EXIT_CODE -ne 0 ]; then
             echo "❌ ${LANG} generation failed with exit code ${EXIT_CODE}"
@@ -159,10 +161,7 @@ jobs:
             if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
               echo "✅ ${LANG} generation successful"
               SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
-              # Track core language success separately
-              if [[ " ${CORE_LANGUAGES[@]} " =~ " ${LANG} " ]]; then
-                CORE_SUCCESS_COUNT=$((CORE_SUCCESS_COUNT + 1))
-              fi
+              CORE_SUCCESS_COUNT=$((CORE_SUCCESS_COUNT + 1))
             else
               echo "⚠️ ${LANG} generation completed but files missing"
               FAILED_LANGUAGES+=("${LANG} (no files)")
@@ -172,9 +171,59 @@ jobs:
           echo "---"
         done
         
+        # Check if core languages succeeded before proceeding
+        if [ $CORE_SUCCESS_COUNT -eq ${#CORE_LANGUAGES[@]} ]; then
+          echo "✅ All core languages successful - proceeding with new languages"
+          echo "🎯 PHASE 2: Generating NEW languages (optional)"
+          
+          for LANG in "${NEW_LANGUAGES[@]}"; do
+            echo "🌍 Generating content for ${LANG}..."
+            echo "⏰ Started at: $(date)"
+            
+            # Run with timeout and capture exit code
+            set +e  # Don't exit on error
+            timeout 300 python github_ai_news_digest.py --language ${LANG}
+            EXIT_CODE=$?
+            set -e  # Re-enable exit on error
+            
+            echo "⏰ Completed at: $(date)"
+            echo "🔍 Exit code: ${EXIT_CODE}"
+            
+            # Check exit code
+            if [ $EXIT_CODE -eq 124 ]; then
+              echo "⏰ ${LANG} generation timed out after 5 minutes"
+              FAILED_LANGUAGES+=("${LANG} (timeout)")
+            elif [ $EXIT_CODE -ne 0 ]; then
+              echo "❌ ${LANG} generation failed with exit code ${EXIT_CODE}"
+              FAILED_LANGUAGES+=("${LANG} (exit ${EXIT_CODE})")
+            else
+              # Check if files were actually created
+              TODAY=$(date +%Y_%m_%d)
+              AUDIO_FILE="docs/${LANG}/audio/news_digest_ai_${TODAY}.mp3"
+              TEXT_FILE="docs/${LANG}/news_digest_ai_${TODAY}.txt"
+              
+              if [[ -f "$AUDIO_FILE" && -f "$TEXT_FILE" ]]; then
+                echo "✅ ${LANG} generation successful"
+                SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+              else
+                echo "⚠️ ${LANG} generation completed but files missing"
+                FAILED_LANGUAGES+=("${LANG} (no files)")
+              fi
+            fi
+            
+            echo "---"
+          done
+        else
+          echo "❌ Core languages failed - skipping new languages to save time"
+          for LANG in "${NEW_LANGUAGES[@]}"; do
+            FAILED_LANGUAGES+=("${LANG} (skipped - core failed)")
+          done
+        fi
+        
         # Report results
+        TOTAL_LANGUAGES=$((${#CORE_LANGUAGES[@]} + ${#NEW_LANGUAGES[@]}))
         echo "📊 GENERATION SUMMARY:"
-        echo "✅ Successful: ${SUCCESS_COUNT}/${#LANGUAGES[@]} languages"
+        echo "✅ Successful: ${SUCCESS_COUNT}/${TOTAL_LANGUAGES} languages"
         echo "✅ Core languages: ${CORE_SUCCESS_COUNT}/${#CORE_LANGUAGES[@]} (en_GB, fr_FR, de_DE)"
         if [ ${#FAILED_LANGUAGES[@]} -gt 0 ]; then
           echo "❌ Failed languages:"
