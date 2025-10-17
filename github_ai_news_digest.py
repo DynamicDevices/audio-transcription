@@ -252,8 +252,73 @@ class GitHubAINewsDigest:
                 '.headline-title'
             ]
             return base_selectors + french_selectors
+        
+        elif self.language == 'de_DE':
+            # German news site specific selectors
+            german_selectors = [
+                '.article-title',           # Der Spiegel
+                '.zon-teaser__title',       # Die Zeit
+                '.entry-title',             # Süddeutsche Zeitung
+                '.js-headline',             # FAZ
+                '.headline',
+                '.titel',
+                '.schlagzeile'
+            ]
+            return base_selectors + german_selectors
+        
+        elif self.language == 'es_ES':
+            # Spanish news site specific selectors
+            spanish_selectors = [
+                '.c_h_t',                   # El País
+                '.ue-c-cover-content__headline',  # El Mundo
+                '.titular',                 # ABC
+                '.tit',                     # La Vanguardia
+                '.headline',
+                '.titulo',
+                '.cabecera'
+            ]
+            return base_selectors + spanish_selectors
+        
+        elif self.language == 'it_IT':
+            # Italian news site specific selectors
+            italian_selectors = [
+                '.title-art',               # Corriere della Sera
+                '.entry-title',             # La Repubblica
+                '.gazzetta-title',          # Gazzetta dello Sport
+                '.article-title',           # Il Sole 24 Ore
+                '.headline',
+                '.titolo',
+                '.intestazione'
+            ]
+            return base_selectors + italian_selectors
+        
+        elif self.language == 'nl_NL':
+            # Dutch news site specific selectors
+            dutch_selectors = [
+                '.sc-1x7olzq',              # NOS
+                '.ArticleTeaser__title',    # De Telegraaf
+                '.teaser__title',           # Volkskrant
+                '.article__title',          # NRC
+                '.headline',
+                '.titel',
+                '.kop'
+            ]
+            return base_selectors + dutch_selectors
+        
+        elif self.language in ['en_GB_LON', 'en_GB_LIV']:
+            # London/Liverpool specific selectors (extends UK selectors)
+            uk_selectors = [
+                '.fc-item__title',          # Guardian
+                '.story-headline',          # BBC
+                '.headline-text',           # Independent
+                '.standard-headline',       # Evening Standard
+                '.echo-headline',           # Liverpool Echo
+                '.article-headline'
+            ]
+            return base_selectors + uk_selectors
+        
         else:
-            # UK news site specific selectors
+            # Default UK news site specific selectors
             uk_selectors = [
                 '.fc-item__title',          # Guardian
                 '.story-headline',          # BBC
@@ -563,6 +628,80 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             - VERMEIDEN Sie wiederholende Inhalte - synthetisieren Sie zu EINER kohärenten Erzählung
             - Wenn mehrere Geschichten dasselbe Ereignis betreffen, kombinieren Sie sie zu einer Zusammenfassung
             - Beginnen Sie mit: "In den {theme}-Nachrichten heute..."
+            """
+        elif self.language == 'es_ES':
+            return f"""
+            Cree un resumen de noticias conciso e informativo sobre {theme} para oyentes con discapacidad visual.
+            
+            Temas clave basados en titulares actuales:
+            {headlines}
+            
+            Requisitos:
+            - Cree contenido original (NO copie los titulares)
+            - Escriba para consumo de audio (oraciones claras y fluidas)
+            - Manténgase bajo 80 palabras
+            - NO mencione fuentes de noticias específicas
+            - NO mencione cuántas fuentes cubren esto
+            - Concéntrese en lo que está pasando, no en quién lo informa
+            - EVITE contenido repetitivo - sintetice en UNA narrativa coherente
+            - Si múltiples historias se refieren al mismo evento, combínelas en un resumen
+            - Comience con: "En las noticias de {theme} hoy..."
+            """
+        elif self.language == 'it_IT':
+            return f"""
+            Crea un riassunto delle notizie conciso e informativo su {theme} per ascoltatori ipovedenti.
+            
+            Argomenti chiave basati sui titoli attuali:
+            {headlines}
+            
+            Requisiti:
+            - Crea contenuto originale (NON copiare i titoli)
+            - Scrivi per il consumo audio (frasi chiare e scorrevoli)
+            - Rimani sotto le 80 parole
+            - NON menzionare fonti di notizie specifiche
+            - NON menzionare quante fonti coprono questo
+            - Concentrati su cosa sta succedendo, non su chi lo riporta
+            - EVITA contenuti ripetitivi - sintetizza in UNA narrazione coerente
+            - Se più storie riguardano lo stesso evento, combinale in un riassunto
+            - Inizia con: "Nelle notizie di {theme} oggi..."
+            """
+        elif self.language == 'nl_NL':
+            return f"""
+            Maak een beknopte, informatieve nieuwssamenvatting over {theme} voor visueel gehandicapte luisteraars.
+            
+            Belangrijke onderwerpen gebaseerd op huidige koppen:
+            {headlines}
+            
+            Vereisten:
+            - Maak originele inhoud (kopieer NIET de koppen)
+            - Schrijf voor audioconsumptie (duidelijke, vloeiende zinnen)
+            - Blijf onder 80 woorden
+            - Vermeld GEEN specifieke nieuwsbronnen
+            - Vermeld NIET hoeveel bronnen dit dekken
+            - Focus op wat er gebeurt, niet op wie het rapporteert
+            - VERMIJD repetitieve inhoud - synthetiseer tot ÉÉN samenhangende verhaal
+            - Als meerdere verhalen over hetzelfde evenement gaan, combineer ze tot één samenvatting
+            - Begin met: "In het {theme} nieuws vandaag..."
+            """
+        elif self.language in ['en_GB_LON', 'en_GB_LIV']:
+            city = 'London' if self.language == 'en_GB_LON' else 'Liverpool'
+            return f"""
+            Create a concise, informative news summary about {theme} news for visually impaired listeners in {city}.
+            
+            Key topics to cover based on current headlines:
+            {headlines}
+            
+            Requirements:
+            - Create original content (do NOT copy headlines)
+            - Write for audio consumption (clear, flowing sentences)
+            - Keep under 80 words
+            - Focus on {city}-specific news and impacts
+            - DO NOT mention specific news sources
+            - DO NOT mention how many sources cover this
+            - Focus on what's happening, not who's reporting it
+            - AVOID repetitive content - synthesize into ONE coherent narrative
+            - If multiple stories relate to the same event, combine them into one summary
+            - Begin with: "In {city} {theme} news today..."
             """
         else:  # Default to English
             return f"""
