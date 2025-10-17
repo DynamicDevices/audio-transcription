@@ -441,55 +441,55 @@ class GitHubAINewsDigest:
             
             # Use Anthropic Claude for AI analysis
             response = self.anthropic_client.messages.create(
-                    model="claude-sonnet-4-5-20250929",
-                    max_tokens=1500,
-                    temperature=0.1,  # Lower temperature for more consistent JSON
-                    messages=[
-                        {"role": "user", "content": f"""You are an expert news analyst. CRITICAL: Eliminate duplicate stories about the same events. Focus on uniqueness and avoid redundancy. 
+                model="claude-sonnet-4-5-20250929",
+                max_tokens=1500,
+                temperature=0.1,  # Lower temperature for more consistent JSON
+                messages=[
+                    {"role": "user", "content": f"""You are an expert news analyst. CRITICAL: Eliminate duplicate stories about the same events. Focus on uniqueness and avoid redundancy. 
 
 {ai_prompt}
 
 CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no text before or after. Start your response with {{ and end with }}."""}
-                    ]
-                )
+                ]
+            )
+            
+            # Extract and clean the response text
+            response_text = response.content[0].text.strip()
+            print(f"   🔍 Raw AI response length: {len(response_text)} chars")
+            print(f"   🔍 Response starts with: {response_text[:50]}")
+            print(f"   🔍 Response ends with: {response_text[-50:]}")
+            
+            # Clean the response - remove any markdown formatting
+            cleaned_text = response_text
+            if cleaned_text.startswith('```json'):
+                cleaned_text = cleaned_text[7:]  # Remove ```json
+            if cleaned_text.startswith('```'):
+                cleaned_text = cleaned_text[3:]   # Remove ```
+            if cleaned_text.endswith('```'):
+                cleaned_text = cleaned_text[:-3]  # Remove trailing ```
+            
+            cleaned_text = cleaned_text.strip()
+            
+            # Try to extract JSON from the response
+            try:
+                ai_analysis = json.loads(cleaned_text)
+                print(f"   ✅ JSON parsed successfully: {len(ai_analysis)} themes")
+            except json.JSONDecodeError as json_error:
+                print(f"   ❌ JSON parsing failed: {json_error}")
+                print(f"   📝 Cleaned text: {cleaned_text[:500]}")
                 
-                # Extract and clean the response text
-                response_text = response.content[0].text.strip()
-                print(f"   🔍 Raw AI response length: {len(response_text)} chars")
-                print(f"   🔍 Response starts with: {response_text[:50]}")
-                print(f"   🔍 Response ends with: {response_text[-50:]}")
-                
-                # Clean the response - remove any markdown formatting
-                cleaned_text = response_text
-                if cleaned_text.startswith('```json'):
-                    cleaned_text = cleaned_text[7:]  # Remove ```json
-                if cleaned_text.startswith('```'):
-                    cleaned_text = cleaned_text[3:]   # Remove ```
-                if cleaned_text.endswith('```'):
-                    cleaned_text = cleaned_text[:-3]  # Remove trailing ```
-                
-                cleaned_text = cleaned_text.strip()
-                
-                # Try to extract JSON from the response
-                try:
-                    ai_analysis = json.loads(cleaned_text)
-                    print(f"   ✅ JSON parsed successfully: {len(ai_analysis)} themes")
-                except json.JSONDecodeError as json_error:
-                    print(f"   ❌ JSON parsing failed: {json_error}")
-                    print(f"   📝 Cleaned text: {cleaned_text[:500]}")
-                    
-                    # Try to extract JSON using regex as fallback
-                    import re
-                    json_match = re.search(r'\{.*\}', cleaned_text, re.DOTALL)
-                    if json_match:
-                        try:
-                            json_str = json_match.group()
-                            ai_analysis = json.loads(json_str)
-                            print(f"   ✅ JSON extracted with regex: {len(ai_analysis)} themes")
-                        except json.JSONDecodeError:
-                            raise Exception(f"Claude returned invalid JSON even after regex extraction: {json_error}. Full response: {response_text}")
-                    else:
-                        raise Exception(f"No JSON found in Claude response: {json_error}. Full response: {response_text}")
+                # Try to extract JSON using regex as fallback
+                import re
+                json_match = re.search(r'\{.*\}', cleaned_text, re.DOTALL)
+                if json_match:
+                    try:
+                        json_str = json_match.group()
+                        ai_analysis = json.loads(json_str)
+                        print(f"   ✅ JSON extracted with regex: {len(ai_analysis)} themes")
+                    except json.JSONDecodeError:
+                        raise Exception(f"Claude returned invalid JSON even after regex extraction: {json_error}. Full response: {response_text}")
+                else:
+                    raise Exception(f"No JSON found in Claude response: {json_error}. Full response: {response_text}")
             
             
             # Apply AI analysis to stories and add programmatic deduplication
