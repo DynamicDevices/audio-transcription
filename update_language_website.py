@@ -25,6 +25,11 @@ def update_language_page(language='en_GB'):
             'page_path': 'docs/fr_FR/index.html', 
             'audio_dir': 'docs/fr_FR/audio',
             'text_dir': 'docs/fr_FR'
+        },
+        'de_DE': {
+            'page_path': 'docs/de_DE/index.html',
+            'audio_dir': 'docs/de_DE/audio',
+            'text_dir': 'docs/de_DE'
         }
     }
     
@@ -74,9 +79,15 @@ def update_language_page(language='en_GB'):
     if language == 'en_GB':
         new_title = f"AudioNews.uk - Daily Voice News Digest - {today_formatted}"
         new_description = f"Daily AI-generated audio news digest for {today_formatted} brought to you by Dynamic Devices. Professional Irish voice, screen reader optimized."
-    else:  # fr_FR
+    elif language == 'fr_FR':
         new_title = f"AudioNews France - Digest Audio Quotidien - {today_formatted}"
         new_description = f"Résumé quotidien d'actualités audio généré par IA pour {today_formatted} présenté par Dynamic Devices. Voix française professionnelle, optimisé pour lecteurs d'écran."
+    elif language == 'de_DE':
+        new_title = f"AudioNews Deutschland - Tägliche Audio-Nachrichtenzusammenfassung - {today_formatted}"
+        new_description = f"Tägliche KI-generierte Audio-Nachrichtenzusammenfassung für {today_formatted} präsentiert von Dynamic Devices. Professionelle deutsche Stimme, für Screenreader optimiert."
+    else:
+        new_title = f"AudioNews - Daily Audio Digest - {today_formatted}"
+        new_description = f"Daily AI-generated audio news digest for {today_formatted}."
     
     # Update HTML content (only for actual content pages, not coming soon pages)
     if 'Bientôt Disponible' not in html and 'Coming Soon' not in html:
@@ -119,7 +130,7 @@ def main():
     """Main function with command line argument parsing"""
     parser = argparse.ArgumentParser(description='Update language-specific website pages')
     parser.add_argument('--language', '-l', 
-                       choices=['en_GB', 'fr_FR'], 
+                       choices=['en_GB', 'fr_FR', 'de_DE'], 
                        default='en_GB',
                        help='Language to update (default: en_GB)')
     
