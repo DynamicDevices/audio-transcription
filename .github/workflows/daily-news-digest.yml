@@ -276,15 +276,15 @@ jobs:
       run: |
         echo "🌐 Updating language-specific HTML pages with today's content"
         
-        # Update tier 1 languages (with full index.html pages)
-        TIER1_LANGUAGES=("en_GB" "fr_FR" "de_DE")
+        # Update ALL 8 languages (all now have full index.html pages with unified structure)
+        ALL_LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")
         
-        for LANG in "${TIER1_LANGUAGES[@]}"; do
+        for LANG in "${ALL_LANGUAGES[@]}"; do
           echo "📝 Updating ${LANG} page..."
           python3 update_language_website.py --language ${LANG} || echo "⚠️ ${LANG} page update skipped (may not exist yet)"
         done
         
-        echo "✅ Language pages updated"
+        echo "✅ All language pages updated"
     
     - name: 📱 Verify files in correct locations
       run: |

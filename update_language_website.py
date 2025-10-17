@@ -14,7 +14,7 @@ from pathlib import Path
 def update_language_page(language='en_GB'):
     """Update the language-specific page with new content"""
     
-    # Language configuration
+    # Language configuration - all 8 supported languages
     config = {
         'en_GB': {
             'page_path': 'docs/en_GB/index.html',
@@ -30,6 +30,31 @@ def update_language_page(language='en_GB'):
             'page_path': 'docs/de_DE/index.html',
             'audio_dir': 'docs/de_DE/audio',
             'text_dir': 'docs/de_DE'
+        },
+        'es_ES': {
+            'page_path': 'docs/es_ES/index.html',
+            'audio_dir': 'docs/es_ES/audio',
+            'text_dir': 'docs/es_ES'
+        },
+        'it_IT': {
+            'page_path': 'docs/it_IT/index.html',
+            'audio_dir': 'docs/it_IT/audio',
+            'text_dir': 'docs/it_IT'
+        },
+        'nl_NL': {
+            'page_path': 'docs/nl_NL/index.html',
+            'audio_dir': 'docs/nl_NL/audio',
+            'text_dir': 'docs/nl_NL'
+        },
+        'en_GB_LON': {
+            'page_path': 'docs/en_GB_LON/index.html',
+            'audio_dir': 'docs/en_GB_LON/audio',
+            'text_dir': 'docs/en_GB_LON'
+        },
+        'en_GB_LIV': {
+            'page_path': 'docs/en_GB_LIV/index.html',
+            'audio_dir': 'docs/en_GB_LIV/audio',
+            'text_dir': 'docs/en_GB_LIV'
         }
     }
     
@@ -76,15 +101,29 @@ def update_language_page(language='en_GB'):
     
     # Update title with today's date
     today_formatted = date.today().strftime("%B %d, %Y")
-    if language == 'en_GB':
-        new_title = f"AudioNews.uk - Daily Voice News Digest - {today_formatted}"
-        new_description = f"Daily AI-generated audio news digest for {today_formatted} brought to you by Dynamic Devices. Professional Irish voice, screen reader optimized."
-    elif language == 'fr_FR':
-        new_title = f"AudioNews France - Digest Audio Quotidien - {today_formatted}"
-        new_description = f"Résumé quotidien d'actualités audio généré par IA pour {today_formatted} présenté par Dynamic Devices. Voix française professionnelle, optimisé pour lecteurs d'écran."
-    elif language == 'de_DE':
-        new_title = f"AudioNews Deutschland - Tägliche Audio-Nachrichtenzusammenfassung - {today_formatted}"
-        new_description = f"Tägliche KI-generierte Audio-Nachrichtenzusammenfassung für {today_formatted} präsentiert von Dynamic Devices. Professionelle deutsche Stimme, für Screenreader optimiert."
+    
+    # Language-specific titles and descriptions
+    lang_titles = {
+        'en_GB': (f"AudioNews.uk - Daily Voice News Digest - {today_formatted}",
+                  f"Daily AI-generated audio news digest for {today_formatted} brought to you by Dynamic Devices. Professional Irish voice, screen reader optimized."),
+        'fr_FR': (f"AudioNews France - Digest Audio Quotidien - {today_formatted}",
+                  f"Résumé quotidien d'actualités audio généré par IA pour {today_formatted} présenté par Dynamic Devices. Voix française professionnelle, optimisé pour lecteurs d'écran."),
+        'de_DE': (f"AudioNews Deutschland - Tägliche Audio-Nachrichtenzusammenfassung - {today_formatted}",
+                  f"Tägliche KI-generierte Audio-Nachrichtenzusammenfassung für {today_formatted} präsentiert von Dynamic Devices. Professionelle deutsche Stimme, für Screenreader optimiert."),
+        'es_ES': (f"AudioNews España - Resumen Diario de Noticias en Audio - {today_formatted}",
+                  f"Resumen diario de noticias en audio generado por IA para {today_formatted} presentado por Dynamic Devices. Voz española profesional, optimizado para lectores de pantalla."),
+        'it_IT': (f"AudioNews Italia - Notiziario Audio Quotidiano - {today_formatted}",
+                  f"Notiziario audio quotidiano generato dall'IA per {today_formatted} presentato da Dynamic Devices. Voce italiana professionale, ottimizzato per lettori di schermo."),
+        'nl_NL': (f"AudioNews Nederland - Dagelijks Audio Nieuwsoverzicht - {today_formatted}",
+                  f"Dagelijks AI-gegenereerd audio nieuwsoverzicht voor {today_formatted} aangeboden door Dynamic Devices. Professionele Nederlandse stem, geoptimaliseerd voor schermlezers."),
+        'en_GB_LON': (f"AudioNews London - Daily Voice News Digest - {today_formatted}",
+                      f"Daily AI-generated audio news digest for {today_formatted} brought to you by Dynamic Devices. Professional London voice, screen reader optimized."),
+        'en_GB_LIV': (f"AudioNews Liverpool - Daily Voice News Digest - {today_formatted}",
+                      f"Daily AI-generated audio news digest for {today_formatted} brought to you by Dynamic Devices. Professional Liverpool voice, screen reader optimized.")
+    }
+    
+    if language in lang_titles:
+        new_title, new_description = lang_titles[language]
     else:
         new_title = f"AudioNews - Daily Audio Digest - {today_formatted}"
         new_description = f"Daily AI-generated audio news digest for {today_formatted}."
@@ -133,7 +172,7 @@ def main():
     """Main function with command line argument parsing"""
     parser = argparse.ArgumentParser(description='Update language-specific website pages')
     parser.add_argument('--language', '-l', 
-                       choices=['en_GB', 'fr_FR', 'de_DE'], 
+                       choices=['en_GB', 'fr_FR', 'de_DE', 'es_ES', 'it_IT', 'nl_NL', 'en_GB_LON', 'en_GB_LIV'], 
                        default='en_GB',
                        help='Language to update (default: en_GB)')
     
