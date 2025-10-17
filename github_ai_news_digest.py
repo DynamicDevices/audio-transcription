@@ -227,6 +227,15 @@ class GitHubAINewsDigest:
             print("💡 This service CANNOT run without AI analysis")
             print("🔧 Please configure valid API keys and retry")
             
+            # Enhanced debugging for CI environment
+            print(f"🔍 Environment variables present:")
+            print(f"   - OPENAI_API_KEY: {'✅ Present' if openai_key else '❌ Missing'}")
+            print(f"   - ANTHROPIC_API_KEY: {'✅ Present' if anthropic_key else '❌ Missing'}")
+            print(f"   - OPENAI_AVAILABLE: {OPENAI_AVAILABLE}")
+            print(f"   - ANTHROPIC_AVAILABLE: {ANTHROPIC_AVAILABLE}")
+            print(f"   - Current working directory: {os.getcwd()}")
+            print(f"   - Language: {self.language}")
+            
             # FAIL FAST - don't produce garbage content
             raise Exception("AI Analysis is required for professional news service. Cannot continue without valid API keys.")
     
