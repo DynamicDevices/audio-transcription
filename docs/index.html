@@ -392,6 +392,12 @@
                     const urlParams = new URLSearchParams(window.location.search);
                     const langParam = urlParams.get('lang');
                     if (langParam && this.supportedLanguages.includes(langParam)) {
+                        // For tier 1 languages with dedicated pages, redirect there
+                        const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
+                        if (tier1Languages.includes(langParam)) {
+                            window.location.href = `/${langParam}/`;
+                            return;
+                        }
                         this.currentLanguage = langParam;
                         return;
                     }
@@ -399,6 +405,11 @@
                     // Check localStorage
                     const savedLang = localStorage.getItem('audioNewsLanguage');
                     if (savedLang && this.supportedLanguages.includes(savedLang)) {
+                        const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
+                        if (tier1Languages.includes(savedLang)) {
+                            window.location.href = `/${savedLang}/`;
+                            return;
+                        }
                         this.currentLanguage = savedLang;
                         return;
                     }
@@ -445,6 +456,11 @@
                         }
                         
                         if (detectedLanguage) {
+                            const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
+                            if (tier1Languages.includes(detectedLanguage)) {
+                                window.location.href = `/${detectedLanguage}/`;
+                                return;
+                            }
                             this.currentLanguage = detectedLanguage;
                         }
                         // Default to en_GB for other countries
@@ -485,6 +501,13 @@
             
             async switchLanguage(language) {
                 if (language === this.currentLanguage) return;
+                
+                // For tier 1 languages with dedicated pages, redirect there
+                const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
+                if (tier1Languages.includes(language)) {
+                    window.location.href = `/${language}/`;
+                    return;
+                }
                 
                 this.currentLanguage = language;
                 
