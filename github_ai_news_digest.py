@@ -17,18 +17,13 @@ import time
 import argparse
 from dataclasses import dataclass
 
-# Optional AI imports - will be imported only if needed
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-except ImportError:
-    OPENAI_AVAILABLE = False
-
+# AI provider - Anthropic Claude
 try:
     import anthropic
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
+    print("❌ ERROR: Anthropic library not installed. Run: pip install anthropic")
 
 # Multi-language configuration
 LANGUAGE_CONFIGS = {
@@ -196,48 +191,51 @@ class GitHubAINewsDigest:
     
     def setup_github_ai(self):
         """
-        Setup AI integration with multiple providers - MUST WORK for professional service
+        Setup AI integration with Anthropic (primary provider)
         """
-        # Try OpenAI first (most common)
-        openai_key = os.getenv('OPENAI_API_KEY')
         anthropic_key = os.getenv('ANTHROPIC_API_KEY')
         
-        if openai_key and OPENAI_AVAILABLE:
-            from openai import OpenAI
-            self.openai_client = OpenAI(api_key=openai_key)
-            self.ai_provider = 'openai'
-            self.ai_enabled = True
-            print("🤖 AI Analysis: OPENAI ENABLED")
-        elif anthropic_key and ANTHROPIC_AVAILABLE:
-            self.anthropic_client = anthropic.Anthropic(api_key=anthropic_key)
-            self.ai_provider = 'anthropic'
-            self.ai_enabled = True
-            print("🤖 AI Analysis: ANTHROPIC ENABLED")
+        # Enhanced debugging
+        print(f"🔍 Debug - Checking AI setup:")
+        print(f"   - ANTHROPIC_AVAILABLE (library): {ANTHROPIC_AVAILABLE}")
+        print(f"   - ANTHROPIC_API_KEY (env): {'✅ Present (length: ' + str(len(anthropic_key)) + ')' if anthropic_key else '❌ Missing'}")
+        print(f"   - Language: {self.language}")
+        
+        if anthropic_key and ANTHROPIC_AVAILABLE:
+            try:
+                self.anthropic_client = anthropic.Anthropic(api_key=anthropic_key)
+                self.ai_provider = 'anthropic'
+                self.ai_enabled = True
+                print("🤖 AI Analysis: ANTHROPIC ENABLED")
+                print(f"   ✅ Successfully initialized Anthropic client")
+            except Exception as init_error:
+                error_msg = f"🚨 CRITICAL ERROR: Failed to initialize Anthropic client: {init_error}"
+                print(error_msg)
+                print(f"   🔍 API key starts with: {anthropic_key[:20]}..." if anthropic_key and len(anthropic_key) > 20 else "   🔍 API key too short or invalid")
+                raise Exception(f"Anthropic initialization failed: {init_error}")
         else:
             # CRITICAL: For professional news service, AI MUST work
             error_msg = "🚨 CRITICAL ERROR: AI Analysis is REQUIRED for professional news service"
-            if not OPENAI_AVAILABLE and not ANTHROPIC_AVAILABLE:
-                error_msg += "\n❌ No AI libraries installed (openai, anthropic)"
-            elif not openai_key and not anthropic_key:
-                error_msg += "\n❌ No API keys found (OPENAI_API_KEY, ANTHROPIC_API_KEY)"
+            if not ANTHROPIC_AVAILABLE:
+                error_msg += "\n❌ Anthropic library not installed"
+            elif not anthropic_key:
+                error_msg += "\n❌ ANTHROPIC_API_KEY environment variable not found"
             else:
-                error_msg += "\n❌ API keys present but libraries missing"
+                error_msg += "\n❌ Unknown issue with Anthropic setup"
             
             print(error_msg)
-            print("💡 This service CANNOT run without AI analysis")
-            print("🔧 Please configure valid API keys and retry")
+            print("💡 This service requires Anthropic API access")
+            print("🔧 Please configure ANTHROPIC_API_KEY and retry")
             
             # Enhanced debugging for CI environment
             print(f"🔍 Environment variables present:")
-            print(f"   - OPENAI_API_KEY: {'✅ Present' if openai_key else '❌ Missing'}")
             print(f"   - ANTHROPIC_API_KEY: {'✅ Present' if anthropic_key else '❌ Missing'}")
-            print(f"   - OPENAI_AVAILABLE: {OPENAI_AVAILABLE}")
             print(f"   - ANTHROPIC_AVAILABLE: {ANTHROPIC_AVAILABLE}")
             print(f"   - Current working directory: {os.getcwd()}")
             print(f"   - Language: {self.language}")
             
             # FAIL FAST - don't produce garbage content
-            raise Exception("AI Analysis is required for professional news service. Cannot continue without valid API keys.")
+            raise Exception("AI Analysis requires valid ANTHROPIC_API_KEY. Cannot continue without it.")
     
     def get_selectors_for_language(self) -> List[str]:
         """Get language and source-specific CSS selectors"""
@@ -441,20 +439,8 @@ class GitHubAINewsDigest:
             10. CRITICAL: Your response must be valid JSON that can be parsed by json.loads()
             """
             
-            if self.ai_provider == 'openai':
-                response = self.openai_client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": "You are an expert news analyst categorizing UK headlines for accessibility services. CRITICAL: Eliminate duplicate stories about the same events. Focus on accuracy, significance, and uniqueness. Never include multiple stories about the same event or topic."},
-                        {"role": "user", "content": ai_prompt}
-                    ],
-                    temperature=0.3,
-                    max_tokens=1500
-                )
-                ai_analysis = json.loads(response.choices[0].message.content)
-            
-            elif self.ai_provider == 'anthropic':
-                response = self.anthropic_client.messages.create(
+            # Use Anthropic Claude for AI analysis
+            response = self.anthropic_client.messages.create(
                     model="claude-sonnet-4-5-20250929",
                     max_tokens=1500,
                     temperature=0.1,  # Lower temperature for more consistent JSON
@@ -763,29 +749,17 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             
             ai_prompt = self.get_synthesis_prompt(theme, stories)
             
-            if self.ai_provider == 'openai':
-                response = self.openai_client.chat.completions.create(
-                    model="gpt-4",
-                    messages=[
-                        {"role": "system", "content": self.get_system_message()},
-                        {"role": "user", "content": ai_prompt}
-                    ],
-                    temperature=0.4,
-                    max_tokens=300
-                )
-                return response.choices[0].message.content.strip()
-            
-            elif self.ai_provider == 'anthropic':
-                system_msg = self.get_system_message()
-                response = self.anthropic_client.messages.create(
-                    model="claude-sonnet-4-5-20250929",
-                    max_tokens=300,
-                    temperature=0.4,
-                    messages=[
-                        {"role": "user", "content": f"{system_msg} {ai_prompt}"}
-                    ]
-                )
-                return response.content[0].text.strip()
+            # Use Anthropic Claude for content synthesis
+            system_msg = self.get_system_message()
+            response = self.anthropic_client.messages.create(
+                model="claude-sonnet-4-5-20250929",
+                max_tokens=300,
+                temperature=0.4,
+                messages=[
+                    {"role": "user", "content": f"{system_msg} {ai_prompt}"}
+                ]
+            )
+            return response.content[0].text.strip()
             
         except Exception as e:
             print(f"   ⚠️ AI synthesis failed for {theme}: {e}")

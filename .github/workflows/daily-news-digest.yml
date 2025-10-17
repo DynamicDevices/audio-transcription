@@ -62,7 +62,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install openai anthropic  # Multiple AI providers
+        pip install anthropic  # AI provider for news analysis
     
     - name: 🔍 Check if today's content exists
       id: check_content
@@ -109,7 +109,6 @@ jobs:
       if: steps.check_content.outputs.content_exists == 'false' || inputs.force_ai_regeneration == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         DEBUG_MODE: ${{ github.event.inputs.debug_mode }}
       run: |
