@@ -824,6 +824,17 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         max_retries = 5  # Increased for network issues
         retry_delay = 5  # Start with shorter delay for network issues
         
+        # Force IPv4 by monkey-patching socket.getaddrinfo to filter out IPv6 addresses
+        # This is necessary because GitHub Actions runners have broken IPv6 connectivity
+        import socket
+        original_getaddrinfo = socket.getaddrinfo
+        
+        def getaddrinfo_ipv4_only(*args, **kwargs):
+            """Wrapper that filters out IPv6 addresses"""
+            results = original_getaddrinfo(*args, **kwargs)
+            # Filter to only IPv4 (AF_INET)
+            return [res for res in results if res[0] == socket.AF_INET]
+        
         for attempt in range(max_retries):
             try:
                 if attempt > 0:
@@ -832,22 +843,18 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 # Ensure the directory exists
                 os.makedirs(os.path.dirname(output_filename), exist_ok=True)
                 
-                # Force IPv4 to avoid IPv6 connectivity issues in GitHub Actions
-                import socket
-                import aiohttp
+                # Apply IPv4-only patch for edge-tts connection
+                socket.getaddrinfo = getaddrinfo_ipv4_only
                 
-                # Create connector that forces IPv4
-                connector = aiohttp.TCPConnector(
-                    family=socket.AF_INET,  # Force IPv4
-                    force_close=False,
-                    enable_cleanup_closed=True
-                )
-                
-                communicate = edge_tts.Communicate(digest_text, self.voice_name)
-                with open(output_filename, "wb") as file:
-                    async for chunk in communicate.stream():
-                        if chunk["type"] == "audio":
-                            file.write(chunk["data"])
+                try:
+                    communicate = edge_tts.Communicate(digest_text, self.voice_name)
+                    with open(output_filename, "wb") as file:
+                        async for chunk in communicate.stream():
+                            if chunk["type"] == "audio":
+                                file.write(chunk["data"])
+                finally:
+                    # Restore original getaddrinfo
+                    socket.getaddrinfo = original_getaddrinfo
                 
                 print(f"   ✅ Edge TTS audio generated successfully")
                 break  # Success, exit retry loop
