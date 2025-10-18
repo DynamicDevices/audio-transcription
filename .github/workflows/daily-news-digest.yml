@@ -9,7 +9,8 @@ on:
     branches: [ main ]  # Trigger on main branch pushes for development
     paths:
       - 'docs/**'
-      - '*.py'
+      - 'scripts/**'
+      - 'config/**'
       - 'requirements.txt'
       - '.github/workflows/**'
   workflow_dispatch: # Allow manual triggering
@@ -142,7 +143,7 @@ jobs:
           
           # Run with timeout and capture exit code
           set +e  # Don't exit on error
-          timeout 300 python github_ai_news_digest.py --language ${LANG}
+          timeout 300 python scripts/github_ai_news_digest.py --language ${LANG}
           EXIT_CODE=$?
           set -e  # Re-enable exit on error
           
@@ -186,7 +187,7 @@ jobs:
             
             # Run with timeout and capture exit code
             set +e  # Don't exit on error
-            timeout 300 python github_ai_news_digest.py --language ${LANG}
+            timeout 300 python scripts/github_ai_news_digest.py --language ${LANG}
             EXIT_CODE=$?
             set -e  # Re-enable exit on error
             
@@ -281,7 +282,7 @@ jobs:
         
         for LANG in "${ALL_LANGUAGES[@]}"; do
           echo "📝 Updating ${LANG} page..."
-          python3 update_language_website.py --language ${LANG} || echo "⚠️ ${LANG} page update skipped (may not exist yet)"
+          python3 scripts/update_language_website.py --language ${LANG} || echo "⚠️ ${LANG} page update skipped (may not exist yet)"
         done
         
         echo "✅ All language pages updated"

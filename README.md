@@ -1,211 +1,114 @@
-# Daily Voice News - Professional Audio News for Visually Impaired Users
+# AudioNews - AI-Powered News Digests for Accessibility
 
-[![CI/CD Pipeline](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml/badge.svg)](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml)
-[![GitHub Release](https://img.shields.io/github/v/release/DynamicDevices/daily-voice-news?style=flat-square&logo=github&color=blue)](https://github.com/DynamicDevices/daily-voice-news/releases/latest)
-[![Languages Supported](https://img.shields.io/badge/Languages-6-brightgreen?style=flat-square&logo=googletranslate)](https://audionews.uk)
-[![Live Service](https://img.shields.io/badge/Live%20Service-AudioNews.uk-success?style=flat-square&logo=firefox)](https://audionews.uk)
-[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA%20Compliant-blue?style=flat-square&logo=accessibility)](https://audionews.uk)
-[![License](https://img.shields.io/github/license/DynamicDevices/daily-voice-news?style=flat-square&color=blue)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/DynamicDevices/daily-voice-news?style=flat-square&logo=github)](https://github.com/DynamicDevices/daily-voice-news/stargazers)
-[![Last Commit](https://img.shields.io/github/last-commit/DynamicDevices/daily-voice-news?style=flat-square&logo=git)](https://github.com/DynamicDevices/daily-voice-news/commits/main)
+[![CI/CD](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml/badge.svg)](https://github.com/DynamicDevices/daily-voice-news/actions/workflows/daily-news-digest.yml)
+[![Release](https://img.shields.io/github/v/release/DynamicDevices/daily-voice-news)](https://github.com/DynamicDevices/daily-voice-news/releases/latest)
+[![Live](https://img.shields.io/badge/Live-AudioNews.uk-success)](https://audionews.uk)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blue)](https://audionews.uk)
 
-**Brought to you by Dynamic Devices**
+**Professional audio news service for visually impaired users • 8 languages • Daily updates • Zero cost**
 
-## 🎯 Mission
-Create natural, human-quality audio news digests specifically designed for visually impaired users. This project synthesizes information from multiple UK news sources to create original, accessible audio content that respects copyright while providing valuable accessibility services.
+🌐 **[audionews.uk](https://audionews.uk)** • Updated daily at 6 AM UK time
 
-## 🚀 Recent Improvements (v2.4.0)
+---
 
-### 🌍 Multi-Language Support
-- **6 Languages Supported** - English, French, German, Spanish, Italian, Dutch
-- **Intelligent geolocation** - Automatic language detection via IP location
-- **Premium TTS voices** - Native Edge TTS voices for each language
-- **Language-specific news sources** - Curated sources for each region
-- **Single-page application** - Dynamic content loading with language switching
+## 🎯 What It Does
 
-### 🎤 Robust Audio Generation
-- **Google TTS fallback** - Automatic fallback when Edge TTS fails in CI
-- **Content validation** - File size checks prevent empty audio files
-- **Resilient CI pipeline** - Handles individual language failures gracefully
-- **Voice consistency** - Maintains premium quality across all languages
+Converts news headlines into natural-sounding audio digests using AI analysis and Microsoft Edge TTS. Designed specifically for visually impaired users who need accessible news content.
 
-### 🎯 User Experience Enhancements
-- **Professional help formatting** - Better visual hierarchy and styling
-- **Consistent layout** - 3-column design across all languages
-- **Enhanced accessibility** - Semantic HTML structure and ARIA labels
-- **Mobile-optimized interface** - Responsive design for all devices
+### Key Features
 
-### 🔧 Technical Improvements  
-- **Modular architecture** - Scalable language configuration system
-- **Comprehensive error handling** - Detailed logging and graceful failures
-- **Cost optimization** - AI generation only when content missing
-- **Git LFS integration** - Reliable audio file deployment
-
-## 🎧 **Live Service**
-
-📱 **Website**: [https://audionews.uk](https://audionews.uk)
-
-- 🕕 **Updated daily** at 6:00 AM UK time (BST/GMT)
-- 🎵 **Auto-play sharing** via `?autoplay=true` URLs  
-- 📱 **WhatsApp optimized** for easy family sharing
-- ♿ **Accessibility first** - screen reader friendly, WCAG 2.1 AA compliant
-- 🎤 **Irish Emily Neural voice** - premium quality Edge TTS
-- 🤖 **AI-enhanced synthesis** - copyright compliant (Claude 4.5 Sonnet)
-- 📱 **Progressive Web App** - installable on mobile devices
-- ⚡ **Performance optimized** - critical CSS inlined, deferred JS loading
-- 🎯 **Clean UX** - streamlined interface, no visual clutter
-
-## ⚖️ CRITICAL: Copyright Compliance & Ethics
-**This project NEVER reproduces copyrighted material.** Instead, it operates under strict ethical guidelines:
-
-- ✅ **Synthesizes information** from multiple sources into original content
-- ✅ **Creates transformative summaries** through analysis and comparison  
-- ✅ **Provides fair use** accessibility service for disabled users
-- ✅ **Attributes sources** transparently and completely
-- ✅ **Generates new narratives** based on factual synthesis
-- ❌ **Never copies** full articles or substantial portions
-- ❌ **Never bypasses** paywalls or access restrictions
-
-**📋 See `COPYRIGHT_AND_ETHICS.md` for complete legal and ethical framework.**
+- **8 Languages**: English (UK/London/Liverpool), French, German, Spanish, Italian, Dutch
+- **AI-Enhanced**: Claude 4.5 Sonnet analyzes and synthesizes content from multiple sources
+- **Premium Voices**: Natural neural voices via Microsoft Edge TTS
+- **Accessible**: WCAG 2.1 AA compliant, screen reader optimized
+- **Automated**: GitHub Actions generates and deploys daily
+- **Copyright Compliant**: Synthesizes original summaries, never copies articles
 
 ## 📁 Project Structure
 
 ```
-daily-voice-news/
-├── 📄 github_ai_news_digest.py    # Main AI digest generator
-├── 📄 create_premium_edge_audio.py # Single article processor
-├── 📄 update_website.py            # Dynamic website updates
-├── 🌐 docs/                        # GitHub Pages website
-│   ├── index.html                  # Accessible newspaper layout
-│   ├── css/newspaper.css           # Mobile-first styling
-│   ├── js/accessibility.js         # Screen reader enhancements
-│   └── audio/                      # Generated MP3 files
-├── 🤖 .github/workflows/           # Automated CI/CD
-│   └── daily-news-digest.yml       # Daily generation workflow
-├── 📋 requirements.txt             # Python dependencies
-└── 📚 docs/                        # Documentation
-    ├── COPYRIGHT_AND_ETHICS.md     # Legal framework
-    └── GITHUB_ACTIONS_SETUP.md     # CI/CD instructions
+audio-transcription/
+├── scripts/              # Python scripts
+│   ├── github_ai_news_digest.py      # Main generator
+│   ├── update_website.py             # Website updater
+│   ├── update_language_website.py    # Language page updater
+│   ├── create_all_language_pages.py  # Page generator
+│   └── add_language.py               # Add new language
+├── config/               # Configuration
+│   ├── ai_prompts.json               # AI prompts & model settings
+│   ├── voice_config.json             # Voice & TTS settings
+│   └── README.md                     # Config documentation
+├── docs/                 # GitHub Pages website
+│   ├── en_GB/, fr_FR/, de_DE/, ...  # Language pages
+│   ├── shared/                       # Shared assets
+│   └── index.html                    # Main entry
+├── templates/            # HTML templates
+├── archive/              # Old/unused files
+└── .github/workflows/    # CI/CD automation
 ```
 
-## 🚀 **Key Features**
+## 🚀 Quick Start
 
-### **🎤 Premium Audio Quality**
-- **Microsoft Edge TTS** with Irish Emily Neural voice
-- **2.43 words per second** - natural speaking pace
-- **MP3 format** optimized for WhatsApp sharing
-- **Professional narration** quality
+### Local Development
 
-### **🤖 AI-Enhanced Intelligence** 
-- **Multi-source aggregation** from major UK outlets
-- **Thematic analysis** and significance ranking
-- **Original content synthesis** (no copying)
-- **Claude/GPT integration** for intelligent processing
-
-### **♿ Accessibility Excellence**
-- **Screen reader optimized** with full ARIA labels
-- **Keyboard navigation** support throughout
-- **Mobile-first design** for phone/tablet use
-- **Auto-play sharing** for effortless listening
-
-### **📱 WhatsApp Integration**
-- **One-click sharing** with auto-play links
-- **Family-friendly** audio format
-- **Offline capable** after download
-- **Cross-platform** compatibility
-
-## 🛠️ **Technical Implementation**
-
-### **AI News Processing**
-```python
-# Multi-source headline aggregation
-sources = ['BBC News', 'Guardian', 'Independent', 'Sky News', 'Telegraph']
-
-# AI analysis and synthesis
-themes = await ai_analyze_stories(all_stories)
-digest_content = await ai_synthesize_content(themes)
-
-# Premium audio generation
-await generate_edge_audio(digest_content, "en-IE-EmilyNeural")
-```
-
-### **GitHub Actions Automation**
-- **Daily execution** at 6:00 AM UK time
-- **AI API integration** (OpenAI/Anthropic)
-- **Website deployment** to GitHub Pages
-- **Audio file management** and archival
-
-### **Accessibility Architecture**
-- **Semantic HTML5** structure
-- **Progressive enhancement** JavaScript
-- **WCAG 2.1 AA compliance**
-- **Service Worker** for offline functionality
-
-## 🔧 **Setup & Development**
-
-### **Local Development**
 ```bash
-# Clone repository
-git clone https://github.com/DynamicDevices/daily-voice-news.git
-cd daily-voice-news
-
 # Install dependencies
 pip install -r requirements.txt
 
-# Generate today's digest
-python github_ai_news_digest.py
+# Generate digest for English
+python scripts/github_ai_news_digest.py --language en_GB
 
 # Update website
-python update_website.py
+python scripts/update_website.py
 ```
 
-### **GitHub Actions Setup**
-1. **Enable GitHub Pages** in repository settings
-2. **Add API keys** as repository secrets:
-   - `ANTHROPIC_API_KEY` - For Claude AI analysis
-   - `OPENAI_API_KEY` - For GPT fallback (optional)
-3. **Workflow runs automatically** daily at 6 AM UTC
+### GitHub Actions Setup
 
-## 📊 **Performance Metrics**
+1. Enable GitHub Pages (source: `main` branch, `/docs` folder)
+2. Add secret: `ANTHROPIC_API_KEY`
+3. Workflow runs automatically daily at 5:00 UTC (6:00 AM UK)
 
-### **Audio Quality Breakthrough**
-- **gTTS Problems**: 13-14% pause time, 1.90 WPS, basic synthesis
-- **Edge TTS Solution**: <2% pause time, 2.43 WPS, neural quality
-- **18% speed improvement** with professional voice quality
+## 🔧 Configuration
 
-### **Accessibility Impact**
-- **Screen reader optimized** for blind/partially sighted users
-- **WhatsApp sharing** enables family support networks  
-- **Daily consistency** builds reliable news routine at 6 AM UK time
-- **Zero cost** accessibility service
+AI prompts and voice settings are externalized to JSON files for easy updates:
 
-## 🏆 **Engineering Achievements**
+- **`config/ai_prompts.json`**: System messages, analysis/synthesis prompts, model settings
+- **`config/voice_config.json`**: Voice configurations, TTS settings, retry logic
 
-1. **Solved gTTS Delay Problem**: Identified systematic 13-14% pause issue in Google TTS and migrated to Microsoft Edge TTS for natural flow
+See [`config/README.md`](config/README.md) for detailed documentation.
 
-2. **Copyright-Compliant AI**: Developed ethical framework for news synthesis that respects intellectual property while serving accessibility needs
+## ⚖️ Copyright & Ethics
 
-3. **Auto-Play Sharing**: Implemented `?autoplay=true` URL parameters for seamless WhatsApp sharing experience
+This service synthesizes original content from multiple news sources:
 
-4. **Accessibility Excellence**: Full WCAG 2.1 AA compliance with screen reader optimization and keyboard navigation
+✅ Creates transformative summaries through AI analysis  
+✅ Provides accessibility service for disabled users (fair use)  
+✅ Never copies substantial portions of articles  
+✅ Respects paywalls and access restrictions  
 
-5. **CI/CD Automation**: Complete GitHub Actions pipeline for daily generation, AI processing, and website deployment
+See [`docs/COPYRIGHT_AND_ETHICS.md`](docs/COPYRIGHT_AND_ETHICS.md) for complete legal framework.
 
-## 🎯 **For Visually Impaired Users**
+## 🌍 Adding New Languages
 
-This service is specifically designed for people who cannot access traditional visual news media:
+1. Add voice configuration to `config/voice_config.json`
+2. Add AI prompts to `config/ai_prompts.json`
+3. Add language config to `scripts/github_ai_news_digest.py`
+4. Run `python scripts/create_all_language_pages.py`
 
-- **🎧 Immediate listening** - no navigation required
-- **📱 Easy sharing** - family can send via WhatsApp  
-- **♿ Screen reader friendly** - works with JAWS, NVDA, VoiceOver
-- **⌨️ Keyboard accessible** - no mouse required
-- **🔄 Consistent schedule** - reliable daily updates at 6 AM UK time
+## 📊 Tech Stack
 
-## 📞 **Support & Contact**
+- **AI**: Anthropic Claude 4.5 Sonnet
+- **TTS**: Microsoft Edge TTS (neural voices)
+- **CI/CD**: GitHub Actions
+- **Hosting**: GitHub Pages
+- **Storage**: Git LFS for audio files
+- **PWA**: Service Worker + manifest
 
-- **🌐 Live Service**: [https://audionews.uk](https://audionews.uk)
-- **📧 Issues**: [GitHub Issues](https://github.com/DynamicDevices/daily-voice-news/issues)
-- **🏢 Dynamic Devices**: Professional accessibility solutions
+## 📞 Support
+
+- **Live Service**: [audionews.uk](https://audionews.uk)
+- **Issues**: [GitHub Issues](https://github.com/DynamicDevices/daily-voice-news/issues)
+- **Organization**: [Dynamic Devices](https://github.com/DynamicDevices)
 
 ---
 

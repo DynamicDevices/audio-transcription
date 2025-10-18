@@ -28,8 +28,9 @@ except ImportError:
 
 # Load AI prompts and voice configuration
 def load_config_file(filename: str) -> dict:
-    """Load configuration from JSON file"""
-    config_path = Path(__file__).parent / 'config' / filename
+    """Load configuration from JSON file (in project root config/)"""
+    # Config is in project root, not in scripts/
+    config_path = Path(__file__).parent.parent / 'config' / filename
     try:
         with open(config_path, 'r', encoding='utf-8') as f:
             return json.load(f)
