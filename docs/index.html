@@ -427,14 +427,26 @@
                             // London detection via city name or postal codes
                             if (data.city && data.city.toLowerCase().includes('london')) {
                                 detectedLanguage = 'en_GB_LON';
+                                // Redirect to London page if it exists
+                                window.location.href = '/en_GB_LON/';
+                                return;
                             } else if (data.postal && this.isLondonPostalCode(data.postal)) {
                                 detectedLanguage = 'en_GB_LON';
+                                // Redirect to London page if it exists
+                                window.location.href = '/en_GB_LON/';
+                                return;
                             }
                             // Liverpool detection via city name or postal codes  
                             else if (data.city && data.city.toLowerCase().includes('liverpool')) {
                                 detectedLanguage = 'en_GB_LIV';
+                                // Redirect to Liverpool page if it exists
+                                window.location.href = '/en_GB_LIV/';
+                                return;
                             } else if (data.postal && this.isLiverpoolPostalCode(data.postal)) {
                                 detectedLanguage = 'en_GB_LIV';
+                                // Redirect to Liverpool page if it exists
+                                window.location.href = '/en_GB_LIV/';
+                                return;
                             }
                             // Default to general UK
                             else {
