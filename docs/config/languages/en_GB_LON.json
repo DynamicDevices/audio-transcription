@@ -32,11 +32,11 @@
     }
   },
   "audio": {
-    "description": "Today's London news digest covering transport, housing, local politics and culture. Use your browser's audio controls or download for offline listening.",
+    "description": "Today's London news digest covering transport, housing, local politics and culture. Use your browser's audio controls or download for offline&nbsp;listening.",
     "fallback": "Your browser doesn't support audio playback. <a href=\"{{AUDIO_FILE}}\" download>Download the audio file</a> instead.",
     "download_button": "Download MP3",
     "share_button": "Copy Auto-Play Link",
-    "download_help": "Download MP3 file to your device for WhatsApp sharing or offline listening",
+    "download_help": "Download MP3 file to your device for WhatsApp sharing or offline&nbsp;listening",
     "share_help": "Copy link that will auto-play when opened - perfect for WhatsApp sharing"
   },
   "about_content": {
