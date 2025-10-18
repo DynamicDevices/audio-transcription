@@ -77,6 +77,103 @@ AI prompts and voice settings are externalized to JSON files for easy updates:
 
 See [`config/README.md`](config/README.md) for detailed documentation.
 
+## 🍴 Forking & Customization
+
+Want to create your own customized news service? Here's how:
+
+### 1. Fork the Repository
+
+Click the **Fork** button at the top of this page to create your own copy.
+
+### 2. Set Up Secrets
+
+In your fork, go to **Settings → Secrets and variables → Actions** and add:
+
+```
+ANTHROPIC_API_KEY = your_anthropic_api_key_here
+```
+
+Get your API key from [Anthropic Console](https://console.anthropic.com/).
+
+### 3. Customize AI Prompts
+
+Edit `config/ai_prompts.json` to change:
+- System messages (tone, style, instructions)
+- Analysis prompts (how stories are categorized)
+- Synthesis prompts (how summaries are generated)
+- AI model settings (temperature, max tokens)
+
+### 4. Customize Voices
+
+Edit `config/voice_config.json` to:
+- Change voices (browse [Microsoft Edge TTS voices](https://speech.microsoft.com/portal/voicegallery))
+- Adjust retry logic
+- Configure TTS settings
+
+### 5. Customize News Sources
+
+Edit `scripts/github_ai_news_digest.py`:
+- Modify `LANGUAGE_CONFIGS` to add/change news sources
+- Change greetings, themes, or output directories
+
+### 6. Enable GitHub Pages
+
+1. Go to **Settings → Pages**
+2. Set **Source** to `main` branch, `/docs` folder
+3. Set custom domain (optional)
+
+### 7. Test Your Changes
+
+```bash
+# Test locally first
+python scripts/github_ai_news_digest.py --language en_GB
+
+# Check the generated files
+ls docs/en_GB/audio/
+```
+
+### 8. Deploy
+
+Push to `main` branch - GitHub Actions will automatically:
+- Generate daily digests at 5:00 UTC
+- Deploy to GitHub Pages
+- Store audio files in Git LFS
+
+## 🤝 Contributing
+
+**Pull requests are gratefully appreciated!** Help improve this project:
+
+### Areas for Contribution
+
+- 🌍 **New languages** - Add support for more regions
+- 🎤 **Voice improvements** - Better voice selection or quality
+- 🤖 **AI enhancements** - Improved prompts or analysis
+- ♿ **Accessibility** - Better screen reader support
+- 🎨 **UI/UX** - Design improvements
+- 📚 **Documentation** - Clearer guides
+- 🐛 **Bug fixes** - Report or fix issues
+
+### How to Contribute
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Test thoroughly
+5. Commit with clear messages (`git commit -m '✨ Add amazing feature'`)
+6. Push to your fork (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Contribution Guidelines
+
+- Keep accessibility as the top priority
+- Maintain copyright compliance
+- Test changes locally before submitting
+- Document new features in README or config files
+- Follow existing code style
+- Add comments for complex logic
+
+**All contributions, big or small, are valued and appreciated!** 🙏
+
 ## ⚖️ Copyright & Ethics
 
 This service synthesizes original content from multiple news sources:
