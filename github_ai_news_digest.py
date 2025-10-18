@@ -16,6 +16,7 @@ from typing import List, Dict, Optional
 import time
 import argparse
 from dataclasses import dataclass
+from pathlib import Path
 
 # AI provider - Anthropic Claude
 try:
@@ -24,6 +25,24 @@ try:
 except ImportError:
     ANTHROPIC_AVAILABLE = False
     print("❌ ERROR: Anthropic library not installed. Run: pip install anthropic")
+
+# Load AI prompts and voice configuration
+def load_config_file(filename: str) -> dict:
+    """Load configuration from JSON file"""
+    config_path = Path(__file__).parent / 'config' / filename
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"❌ Configuration file not found: {config_path}")
+        raise
+    except json.JSONDecodeError as e:
+        print(f"❌ Invalid JSON in {config_path}: {e}")
+        raise
+
+# Load configurations at module level
+AI_PROMPTS_CONFIG = load_config_file('ai_prompts.json')
+VOICE_CONFIG = load_config_file('voice_config.json')
 
 # Multi-language configuration
 LANGUAGE_CONFIGS = {
@@ -37,7 +56,7 @@ LANGUAGE_CONFIGS = {
             'Sky News': 'https://news.sky.com',
             'Telegraph': 'https://www.telegraph.co.uk'
         },
-        'voice': 'en-IE-EmilyNeural',
+        'voice': VOICE_CONFIG['voices']['en_GB']['name'],
         'greeting': 'Good morning',
         'themes': ['politics', 'economy', 'health', 'international', 'climate', 'technology', 'crime'],
         'output_dir': 'docs/en_GB',
@@ -53,7 +72,7 @@ LANGUAGE_CONFIGS = {
             'Libération': 'https://www.liberation.fr/',
             'France 24': 'https://www.france24.com/fr/'
         },
-        'voice': 'fr-FR-DeniseNeural',
+        'voice': VOICE_CONFIG['voices']['fr_FR']['name'],
         'greeting': 'Bonjour',
         'themes': ['politique', 'économie', 'santé', 'international', 'climat', 'technologie', 'société'],
         'output_dir': 'docs/fr_FR',
@@ -69,7 +88,7 @@ LANGUAGE_CONFIGS = {
             'Süddeutsche Zeitung': 'https://www.sueddeutsche.de/',
             'Frankfurter Allgemeine': 'https://www.faz.net/'
         },
-        'voice': 'de-DE-KatjaNeural',
+        'voice': VOICE_CONFIG['voices']['de_DE']['name'],
         'greeting': 'Guten Morgen',
         'themes': ['politik', 'wirtschaft', 'gesundheit', 'international', 'klima', 'technologie', 'gesellschaft'],
         'output_dir': 'docs/de_DE',
@@ -85,7 +104,7 @@ LANGUAGE_CONFIGS = {
             'ABC': 'https://www.abc.es/',
             'La Vanguardia': 'https://www.lavanguardia.com/'
         },
-        'voice': 'es-ES-ElviraNeural',
+        'voice': VOICE_CONFIG['voices']['es_ES']['name'],
         'greeting': 'Buenos días',
         'themes': ['política', 'economía', 'salud', 'internacional', 'clima', 'tecnología', 'crimen'],
         'output_dir': 'docs/es_ES',
@@ -101,7 +120,7 @@ LANGUAGE_CONFIGS = {
             'La Gazzetta dello Sport': 'https://www.gazzetta.it/',
             'Il Sole 24 Ore': 'https://www.ilsole24ore.com/'
         },
-        'voice': 'it-IT-ElsaNeural',
+        'voice': VOICE_CONFIG['voices']['it_IT']['name'],
         'greeting': 'Buongiorno',
         'themes': ['politica', 'economia', 'salute', 'internazionale', 'clima', 'tecnologia', 'crimine'],
         'output_dir': 'docs/it_IT',
@@ -117,7 +136,7 @@ LANGUAGE_CONFIGS = {
             'Volkskrant': 'https://www.volkskrant.nl/',
             'NRC': 'https://www.nrc.nl/'
         },
-        'voice': 'nl-NL-ColetteNeural',
+        'voice': VOICE_CONFIG['voices']['nl_NL']['name'],
         'greeting': 'Goedemorgen',
         'themes': ['politiek', 'economie', 'gezondheid', 'internationaal', 'klimaat', 'technologie', 'misdaad'],
         'output_dir': 'docs/nl_NL',
@@ -134,7 +153,7 @@ LANGUAGE_CONFIGS = {
             'BBC London': 'https://www.bbc.co.uk/news/england/london',
             'ITV London': 'https://www.itv.com/news/london'
         },
-        'voice': 'en-IE-EmilyNeural',
+        'voice': VOICE_CONFIG['voices']['en_GB_LON']['name'],
         'greeting': 'Good morning London',
         'themes': ['transport', 'housing', 'westminster', 'culture', 'crime', 'business', 'tfl'],
         'output_dir': 'docs/en_GB_LON',
@@ -151,7 +170,7 @@ LANGUAGE_CONFIGS = {
             'Radio City': 'https://www.radiocity.co.uk/news/liverpool-news/',
             'The Guide Liverpool': 'https://www.theguideliverpool.com/news/'
         },
-        'voice': 'en-IE-EmilyNeural',
+        'voice': VOICE_CONFIG['voices']['en_GB_LIV']['name'],
         'greeting': 'Good morning Liverpool',
         'themes': ['football', 'merseyside', 'culture', 'waterfront', 'music', 'business', 'transport'],
         'output_dir': 'docs/en_GB_LIV',
@@ -408,48 +427,31 @@ class GitHubAINewsDigest:
             story_titles = [f"{i+1}. {story.title} (Source: {story.source})" 
                           for i, story in enumerate(all_stories)]
             
-            ai_prompt = f"""
-            Analyze these UK news headlines and categorize them into themes. 
-            CRITICALLY IMPORTANT: Identify duplicate or similar stories about the same event and select only the BEST/MOST COMPREHENSIVE version of each story.
+            # Get region name from config
+            region_name = AI_PROMPTS_CONFIG['analysis_prompt']['region_names'].get(
+                self.language, 
+                AI_PROMPTS_CONFIG['analysis_prompt']['region_names']['en_GB']
+            )
             
-            Headlines:
-            {chr(10).join(story_titles)}
+            # Format the analysis prompt template
+            ai_prompt = AI_PROMPTS_CONFIG['analysis_prompt']['template'].format(
+                region=region_name,
+                headlines=chr(10).join(story_titles)
+            )
             
-            RESPONSE FORMAT: Return ONLY a valid JSON object. No explanations, no markdown, no text outside the JSON.
+            # Format the system instruction
+            system_instruction = AI_PROMPTS_CONFIG['analysis_prompt']['system_instruction'].format(
+                prompt=ai_prompt
+            )
             
-            JSON Format:
-            {{
-                "politics": [{{"index": 1, "significance": 8, "reasoning": "Government policy coverage"}}],
-                "international": [{{"index": 2, "significance": 7, "reasoning": "Global affairs"}}],
-                "technology": [{{"index": 3, "significance": 6, "reasoning": "Tech developments"}}]
-            }}
-            
-            DEDUPLICATION RULES (CRITICAL):
-            1. If multiple headlines cover the SAME story/event (e.g., multiple China stories, same political announcement), select ONLY the most comprehensive one
-            2. Look for similar keywords, names, locations, events - these indicate duplicate coverage
-            3. For example: If you see "China economy" and "China trade" and "China GDP" - these might be the same story, pick the best one
-            4. Prioritize headlines with more specific details over generic ones
-            5. Each theme should have UNIQUE, DISTINCT stories - no duplicates allowed
-            
-            OTHER RULES:
-            6. Return ONLY the JSON object, absolutely no other text
-            7. Use only these themes: politics, economy, health, international, climate, technology, crime
-            8. Rate significance 1-10 based on coverage breadth and uniqueness
-            9. Focus on stories with cross-source coverage but avoid duplicates
-            10. CRITICAL: Your response must be valid JSON that can be parsed by json.loads()
-            """
-            
-            # Use Anthropic Claude for AI analysis
+            # Use Anthropic Claude for AI analysis with config settings
+            ai_model_config = AI_PROMPTS_CONFIG['ai_model']
             response = self.anthropic_client.messages.create(
-                model="claude-sonnet-4-5-20250929",
-                max_tokens=1500,
-                temperature=0.1,  # Lower temperature for more consistent JSON
+                model=ai_model_config['name'],
+                max_tokens=ai_model_config['analysis_max_tokens'],
+                temperature=ai_model_config['analysis_temperature'],
                 messages=[
-                    {"role": "user", "content": f"""You are an expert news analyst. CRITICAL: Eliminate duplicate stories about the same events. Focus on uniqueness and avoid redundancy. 
-
-{ai_prompt}
-
-CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no text before or after. Start your response with {{ and end with }}."""}
+                    {"role": "user", "content": system_instruction}
                 ]
             )
             
@@ -585,146 +587,24 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         return themes
     
     def get_synthesis_prompt(self, theme: str, stories: List[NewsStory]) -> str:
-        """Generate language-specific synthesis prompt"""
+        """Generate language-specific synthesis prompt from config"""
         headlines = chr(10).join([f"- {story.title}" for story in stories[:3]])
         
-        if self.language == 'fr_FR':
-            return f"""
-            Créez un résumé d'actualités concis et informatif sur {theme} pour les auditeurs malvoyants.
-            
-            Sujets clés basés sur les titres actuels:
-            {headlines}
-            
-            Exigences:
-            - Créez du contenu original (NE copiez PAS les titres)
-            - Écrivez pour la consommation audio (phrases claires et fluides)
-            - Gardez sous 80 mots
-            - NE mentionnez PAS les sources d'information spécifiques
-            - NE mentionnez PAS combien de sources couvrent ceci
-            - Concentrez-vous sur ce qui se passe, pas sur qui le rapporte
-            - ÉVITEZ le contenu répétitif - synthétisez en UN récit cohérent
-            - Si plusieurs histoires concernent le même événement, combinez-les en un résumé
-            - Commencez par: "Dans l'actualité {theme} aujourd'hui..."
-            """
-        elif self.language == 'de_DE':
-            return f"""
-            Erstellen Sie eine prägnante, informative Nachrichtenzusammenfassung über {theme} für sehbehinderte Zuhörer.
-            
-            Wichtige Themen basierend auf aktuellen Schlagzeilen:
-            {headlines}
-            
-            Anforderungen:
-            - Erstellen Sie originelle Inhalte (kopieren Sie NICHT die Schlagzeilen)
-            - Schreiben Sie für den Audio-Konsum (klare, fließende Sätze)
-            - Bleiben Sie unter 80 Wörtern
-            - Erwähnen Sie KEINE spezifischen Nachrichtenquellen
-            - Erwähnen Sie NICHT, wie viele Quellen dies abdecken
-            - Konzentrieren Sie sich darauf, was passiert, nicht wer darüber berichtet
-            - VERMEIDEN Sie wiederholende Inhalte - synthetisieren Sie zu EINER kohärenten Erzählung
-            - Wenn mehrere Geschichten dasselbe Ereignis betreffen, kombinieren Sie sie zu einer Zusammenfassung
-            - Beginnen Sie mit: "In den {theme}-Nachrichten heute..."
-            """
-        elif self.language == 'es_ES':
-            return f"""
-            Cree un resumen de noticias conciso e informativo sobre {theme} para oyentes con discapacidad visual.
-            
-            Temas clave basados en titulares actuales:
-            {headlines}
-            
-            Requisitos:
-            - Cree contenido original (NO copie los titulares)
-            - Escriba para consumo de audio (oraciones claras y fluidas)
-            - Manténgase bajo 80 palabras
-            - NO mencione fuentes de noticias específicas
-            - NO mencione cuántas fuentes cubren esto
-            - Concéntrese en lo que está pasando, no en quién lo informa
-            - EVITE contenido repetitivo - sintetice en UNA narrativa coherente
-            - Si múltiples historias se refieren al mismo evento, combínelas en un resumen
-            - Comience con: "En las noticias de {theme} hoy..."
-            """
-        elif self.language == 'it_IT':
-            return f"""
-            Crea un riassunto delle notizie conciso e informativo su {theme} per ascoltatori ipovedenti.
-            
-            Argomenti chiave basati sui titoli attuali:
-            {headlines}
-            
-            Requisiti:
-            - Crea contenuto originale (NON copiare i titoli)
-            - Scrivi per il consumo audio (frasi chiare e scorrevoli)
-            - Rimani sotto le 80 parole
-            - NON menzionare fonti di notizie specifiche
-            - NON menzionare quante fonti coprono questo
-            - Concentrati su cosa sta succedendo, non su chi lo riporta
-            - EVITA contenuti ripetitivi - sintetizza in UNA narrazione coerente
-            - Se più storie riguardano lo stesso evento, combinale in un riassunto
-            - Inizia con: "Nelle notizie di {theme} oggi..."
-            """
-        elif self.language == 'nl_NL':
-            return f"""
-            Maak een beknopte, informatieve nieuwssamenvatting over {theme} voor visueel gehandicapte luisteraars.
-            
-            Belangrijke onderwerpen gebaseerd op huidige koppen:
-            {headlines}
-            
-            Vereisten:
-            - Maak originele inhoud (kopieer NIET de koppen)
-            - Schrijf voor audioconsumptie (duidelijke, vloeiende zinnen)
-            - Blijf onder 80 woorden
-            - Vermeld GEEN specifieke nieuwsbronnen
-            - Vermeld NIET hoeveel bronnen dit dekken
-            - Focus op wat er gebeurt, niet op wie het rapporteert
-            - VERMIJD repetitieve inhoud - synthetiseer tot ÉÉN samenhangende verhaal
-            - Als meerdere verhalen over hetzelfde evenement gaan, combineer ze tot één samenvatting
-            - Begin met: "In het {theme} nieuws vandaag..."
-            """
-        elif self.language in ['en_GB_LON', 'en_GB_LIV']:
-            city = 'London' if self.language == 'en_GB_LON' else 'Liverpool'
-            return f"""
-            Create a concise, informative news summary about {theme} news for visually impaired listeners in {city}.
-            
-            Key topics to cover based on current headlines:
-            {headlines}
-            
-            Requirements:
-            - Create original content (do NOT copy headlines)
-            - Write for audio consumption (clear, flowing sentences)
-            - Keep under 80 words
-            - Focus on {city}-specific news and impacts
-            - DO NOT mention specific news sources
-            - DO NOT mention how many sources cover this
-            - Focus on what's happening, not who's reporting it
-            - AVOID repetitive content - synthesize into ONE coherent narrative
-            - If multiple stories relate to the same event, combine them into one summary
-            - Begin with: "In {city} {theme} news today..."
-            """
-        else:  # Default to English
-            return f"""
-            Create a concise, informative news summary about {theme} news for visually impaired listeners.
-            
-            Key topics to cover based on current headlines:
-            {headlines}
-            
-            Requirements:
-            - Create original content (do NOT copy headlines)
-            - Write for audio consumption (clear, flowing sentences)  
-            - Keep under 80 words
-            - Do NOT mention specific news sources or outlets
-            - Do NOT mention how many sources are covering this
-            - Focus on what's happening, not who's reporting it
-            - AVOID repetitive content - synthesize into ONE coherent narrative
-            - If multiple stories are about the same event, combine them into one summary
-            - Start with: "In {theme} news today..."
-            """
+        # Get the template for this language, fallback to en_GB
+        prompt_config = AI_PROMPTS_CONFIG['synthesis_prompts'].get(
+            self.language, 
+            AI_PROMPTS_CONFIG['synthesis_prompts']['en_GB']
+        )
+        
+        # Format the template with theme and headlines
+        return prompt_config['template'].format(theme=theme, headlines=headlines)
     
     def get_system_message(self) -> str:
         """Generate language-specific system message for AI"""
-        if self.language == 'fr_FR':
-            return "Vous créez du contenu d'actualités accessible pour les utilisateurs malvoyants. Écrivez clairement et de manière conversationnelle pour la consommation audio. Ne copiez jamais le texte original - synthétisez toujours. Évitez le contenu répétitif - combinez des histoires similaires en un récit cohérent."
-        elif self.language == 'de_DE':
-            return "Sie erstellen barrierefreie Nachrichteninhalte für sehbehinderte Nutzer. Schreiben Sie klar und gesprächig für den Audio-Konsum. Kopieren Sie niemals den ursprünglichen Text - synthetisieren Sie immer. Vermeiden Sie wiederholende Inhalte - kombinieren Sie ähnliche Geschichten zu einer kohärenten Erzählung."
-        else:  # Default to English
-            return "You are creating accessible news content for visually impaired users. Write clearly and conversationally for audio consumption. Never copy original text - always synthesize. Avoid repetitive content - combine similar stories into one coherent narrative."
+        return AI_PROMPTS_CONFIG['system_messages'].get(
+            self.language, 
+            AI_PROMPTS_CONFIG['system_messages']['en_GB']
+        )
 
     async def ai_synthesize_content(self, theme: str, stories: List[NewsStory]) -> str:
         """
@@ -749,12 +629,13 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             
             ai_prompt = self.get_synthesis_prompt(theme, stories)
             
-            # Use Anthropic Claude for content synthesis
+            # Use Anthropic Claude for content synthesis with config settings
+            ai_model_config = AI_PROMPTS_CONFIG['ai_model']
             system_msg = self.get_system_message()
             response = self.anthropic_client.messages.create(
-                model="claude-sonnet-4-5-20250929",
-                max_tokens=300,
-                temperature=0.4,
+                model=ai_model_config['name'],
+                max_tokens=ai_model_config['synthesis_max_tokens'],
+                temperature=ai_model_config['synthesis_temperature'],
                 messages=[
                     {"role": "user", "content": f"{system_msg} {ai_prompt}"}
                 ]
@@ -819,10 +700,12 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
         """
         print(f"\n🎤 Generating AI-enhanced audio: {output_filename}")
         
-        # Retry logic for Edge TTS network and authentication issues
-        # Balanced retries to avoid timeouts while maintaining voice quality
-        max_retries = 5  # Increased for network issues
-        retry_delay = 5  # Start with shorter delay for network issues
+        # Get TTS settings from config
+        tts_settings = VOICE_CONFIG['tts_settings']['edge_tts']
+        max_retries = tts_settings['max_retries']
+        retry_delay = tts_settings['initial_retry_delay']
+        retry_backoff = tts_settings['retry_backoff_multiplier']
+        force_ipv4 = tts_settings['force_ipv4']
         
         # Force IPv4 by monkey-patching socket.getaddrinfo to filter out IPv6 addresses
         # This is necessary because GitHub Actions runners have broken IPv6 connectivity
@@ -835,6 +718,7 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
             # Filter to only IPv4 (AF_INET)
             return [res for res in results if res[0] == socket.AF_INET]
         
+        current_retry_delay = retry_delay
         for attempt in range(max_retries):
             try:
                 if attempt > 0:
@@ -843,8 +727,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 # Ensure the directory exists
                 os.makedirs(os.path.dirname(output_filename), exist_ok=True)
                 
-                # Apply IPv4-only patch for edge-tts connection
-                socket.getaddrinfo = getaddrinfo_ipv4_only
+                # Apply IPv4-only patch if configured
+                if force_ipv4:
+                    socket.getaddrinfo = getaddrinfo_ipv4_only
                 
                 try:
                     communicate = edge_tts.Communicate(digest_text, self.voice_name)
@@ -854,7 +739,8 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                                 file.write(chunk["data"])
                 finally:
                     # Restore original getaddrinfo
-                    socket.getaddrinfo = original_getaddrinfo
+                    if force_ipv4:
+                        socket.getaddrinfo = original_getaddrinfo
                 
                 print(f"   ✅ Edge TTS audio generated successfully")
                 break  # Success, exit retry loop
@@ -874,9 +760,9 @@ CRITICAL: Respond with ONLY the JSON object. No explanations, no markdown, no te
                 
                 if (is_network_error or is_auth_error) and attempt < max_retries - 1:
                     # Retryable error and not the last attempt
-                    print(f"   ⏳ {'Network' if is_network_error else 'Authentication'} issue detected, waiting {retry_delay} seconds before retry...")
-                    await asyncio.sleep(retry_delay)
-                    retry_delay = min(retry_delay * 1.5, 30)  # Exponential backoff, max 30s
+                    print(f"   ⏳ {'Network' if is_network_error else 'Authentication'} issue detected, waiting {current_retry_delay} seconds before retry...")
+                    await asyncio.sleep(current_retry_delay)
+                    current_retry_delay = min(current_retry_delay * retry_backoff, 30)  # Exponential backoff, max 30s
                     continue
                 elif attempt == max_retries - 1:
                     # Last attempt failed

@@ -1,0 +1,80 @@
+{
+  "voices": {
+    "en_GB": {
+      "name": "en-IE-EmilyNeural",
+      "display_name": "Irish Emily Neural",
+      "language": "English (Ireland)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "en_GB_LON": {
+      "name": "en-GB-SoniaNeural",
+      "display_name": "Sonia Neural",
+      "language": "English (London)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "en_GB_LIV": {
+      "name": "en-GB-RyanNeural",
+      "display_name": "Ryan Neural",
+      "language": "English (Liverpool)",
+      "gender": "Male",
+      "provider": "Edge TTS"
+    },
+    "fr_FR": {
+      "name": "fr-FR-DeniseNeural",
+      "display_name": "Denise Neural",
+      "language": "French (France)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "de_DE": {
+      "name": "de-DE-KatjaNeural",
+      "display_name": "Katja Neural",
+      "language": "German (Germany)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "es_ES": {
+      "name": "es-ES-ElviraNeural",
+      "display_name": "Elvira Neural",
+      "language": "Spanish (Spain)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "it_IT": {
+      "name": "it-IT-ElsaNeural",
+      "display_name": "Elsa Neural",
+      "language": "Italian (Italy)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    },
+    "nl_NL": {
+      "name": "nl-NL-ColetteNeural",
+      "display_name": "Colette Neural",
+      "language": "Dutch (Netherlands)",
+      "gender": "Female",
+      "provider": "Edge TTS"
+    }
+  },
+  "tts_settings": {
+    "edge_tts": {
+      "max_retries": 5,
+      "initial_retry_delay": 5,
+      "retry_backoff_multiplier": 1.5,
+      "force_ipv4": true,
+      "ssl_verify": true
+    },
+    "fallback": {
+      "enabled": false,
+      "provider": "google_tts"
+    }
+  },
+  "audio_settings": {
+    "format": "mp3",
+    "quality": "high",
+    "estimated_words_per_second": 2.0,
+    "min_file_size_kb": 100
+  }
+}
+
