@@ -501,6 +501,10 @@ class GitHubAINewsDigest:
                 theme_stories = []
                 seen_keywords = set()  # Track keywords to prevent similar stories
                 
+                # Flatten if the AI double-nested the list (Claude sometimes does this)
+                if story_analyses and isinstance(story_analyses[0], list):
+                    story_analyses = [item for sublist in story_analyses for item in sublist]
+                
                 for analysis in story_analyses:
                     story_idx = analysis['index'] - 1  # Convert to 0-based
                     if 0 <= story_idx < len(all_stories):
