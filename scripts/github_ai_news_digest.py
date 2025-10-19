@@ -59,6 +59,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['en_GB']['name'],
         'greeting': 'Good morning',
+        'region_name': 'UK',
         'themes': ['politics', 'economy', 'health', 'international', 'climate', 'technology', 'crime'],
         'output_dir': 'docs/en_GB',
         'audio_dir': 'docs/en_GB/audio',
@@ -75,6 +76,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['fr_FR']['name'],
         'greeting': 'Bonjour',
+        'region_name': 'françaises',
         'themes': ['politique', 'économie', 'santé', 'international', 'climat', 'technologie', 'société'],
         'output_dir': 'docs/fr_FR',
         'audio_dir': 'docs/fr_FR/audio',
@@ -91,6 +93,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['de_DE']['name'],
         'greeting': 'Guten Morgen',
+        'region_name': 'deutsche',
         'themes': ['politik', 'wirtschaft', 'gesundheit', 'international', 'klima', 'technologie', 'gesellschaft'],
         'output_dir': 'docs/de_DE',
         'audio_dir': 'docs/de_DE/audio',
@@ -107,6 +110,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['es_ES']['name'],
         'greeting': 'Buenos días',
+        'region_name': 'españolas',
         'themes': ['política', 'economía', 'salud', 'internacional', 'clima', 'tecnología', 'crimen'],
         'output_dir': 'docs/es_ES',
         'audio_dir': 'docs/es_ES/audio',
@@ -123,6 +127,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['it_IT']['name'],
         'greeting': 'Buongiorno',
+        'region_name': 'italiane',
         'themes': ['politica', 'economia', 'salute', 'internazionale', 'clima', 'tecnologia', 'crimine'],
         'output_dir': 'docs/it_IT',
         'audio_dir': 'docs/it_IT/audio',
@@ -139,6 +144,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['nl_NL']['name'],
         'greeting': 'Goedemorgen',
+        'region_name': 'Nederlandse',
         'themes': ['politiek', 'economie', 'gezondheid', 'internationaal', 'klimaat', 'technologie', 'misdaad'],
         'output_dir': 'docs/nl_NL',
         'audio_dir': 'docs/nl_NL/audio',
@@ -156,6 +162,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['en_GB_LON']['name'],
         'greeting': 'Good morning London',
+        'region_name': 'London',
         'themes': ['transport', 'housing', 'westminster', 'culture', 'crime', 'business', 'tfl'],
         'output_dir': 'docs/en_GB_LON',
         'audio_dir': 'docs/en_GB_LON/audio',
@@ -173,6 +180,7 @@ LANGUAGE_CONFIGS = {
         },
         'voice': VOICE_CONFIG['voices']['en_GB_LIV']['name'],
         'greeting': 'Good morning Liverpool',
+        'region_name': 'Liverpool',
         'themes': ['football', 'merseyside', 'culture', 'waterfront', 'music', 'business', 'transport'],
         'output_dir': 'docs/en_GB_LIV',
         'audio_dir': 'docs/en_GB_LIV/audio',
@@ -668,13 +676,21 @@ class GitHubAINewsDigest:
         # Create language-specific introduction
         greeting = self.config['greeting']
         service_name = self.config['service_name']
+        region_name = self.config.get('region_name', 'UK')  # Default to UK if not specified
         
+        # Language-specific openings with proper region naming
         if self.language == 'fr_FR':
-            digest = f"{greeting}. Voici votre résumé d'actualités françaises pour {today}, présenté par Dynamic Devices. "
+            digest = f"{greeting}. Voici votre résumé d'actualités {region_name} pour {today}, présenté par Dynamic Devices. "
         elif self.language == 'de_DE':
-            digest = f"{greeting}. Hier ist Ihre deutsche Nachrichtenzusammenfassung für {today}, präsentiert von Dynamic Devices. "
-        else:
-            digest = f"{greeting}. Here's your UK news digest for {today}, brought to you by Dynamic Devices. "
+            digest = f"{greeting}. Hier ist Ihre {region_name} Nachrichtenzusammenfassung für {today}, präsentiert von Dynamic Devices. "
+        elif self.language == 'es_ES':
+            digest = f"{greeting}. Aquí está su resumen de noticias {region_name} para {today}, presentado por Dynamic Devices. "
+        elif self.language == 'it_IT':
+            digest = f"{greeting}. Ecco il vostro riepilogo delle notizie {region_name} per {today}, presentato da Dynamic Devices. "
+        elif self.language == 'nl_NL':
+            digest = f"{greeting}. Hier is uw {region_name} nieuwsoverzicht voor {today}, gepresenteerd door Dynamic Devices. "
+        else:  # English variants (en_GB, en_GB_LON, en_GB_LIV)
+            digest = f"{greeting}. Here's your {region_name} news digest for {today}, brought to you by Dynamic Devices. "
         
         # Add AI-synthesized content for each theme
         for theme, stories in themes.items():
@@ -692,7 +708,19 @@ class GitHubAINewsDigest:
             digest += "\n\nDiese Zusammenfassung bietet eine Synthese der wichtigsten Nachrichten von heute. "
             digest += "Alle Inhalte sind ursprüngliche Analysen, die für die Barrierefreiheit entwickelt wurden. "
             digest += "Für eine vollständige Berichterstattung besuchen Sie direkt die Nachrichten-Websites."
-        else:
+        elif self.language == 'es_ES':
+            digest += "\n\nEste resumen proporciona una síntesis de las noticias más importantes de hoy. "
+            digest += "Todo el contenido es un análisis original diseñado para la accesibilidad. "
+            digest += "Para una cobertura completa, visite directamente los sitios web de noticias."
+        elif self.language == 'it_IT':
+            digest += "\n\nQuesto riepilogo fornisce una sintesi delle notizie più importanti di oggi. "
+            digest += "Tutti i contenuti sono analisi originali progettate per l'accessibilità. "
+            digest += "Per una copertura completa, visitate direttamente i siti web di notizie."
+        elif self.language == 'nl_NL':
+            digest += "\n\nDeze samenvatting biedt een synthese van het belangrijkste nieuws van vandaag. "
+            digest += "Alle inhoud is originele analyse ontworpen voor toegankelijkheid. "
+            digest += "Voor volledige dekking, bezoek direct de nieuwswebsites."
+        else:  # English variants
             digest += "\n\nThis digest provides a synthesis of today's most significant news stories. "
             digest += "All content is original analysis designed for accessibility. "
             digest += "For complete coverage, visit news websites directly."
