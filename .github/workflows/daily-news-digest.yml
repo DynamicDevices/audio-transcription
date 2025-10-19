@@ -74,8 +74,8 @@ jobs:
       id: check_content
       run: |
         TODAY=$(date +%Y_%m_%d)
-        # Check for content in all supported languages (including cities)
-        LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")
+        # TEMPORARY: Only check for en_GB content (other languages disabled)
+        LANGUAGES=("en_GB")
         ALL_EXIST=true
         
         for LANG in "${LANGUAGES[@]}"; do
@@ -129,14 +129,15 @@ jobs:
           echo "💰 This step uses API credits - content_exists: ${{ steps.check_content.outputs.content_exists }}"
         fi
         # Generate content for all supported languages with better error handling (including cities)
-        CORE_LANGUAGES=("en_GB" "fr_FR" "de_DE")  # Original languages that must succeed
-        NEW_LANGUAGES=("es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")  # New languages (optional)
+        # TEMPORARY: Only generate en_GB content
+        CORE_LANGUAGES=("en_GB")  # Only GB for now
+        NEW_LANGUAGES=()  # All other languages disabled
         FAILED_LANGUAGES=()
         SUCCESS_COUNT=0
         CORE_SUCCESS_COUNT=0
         
         # Process core languages first (critical for service)
-        echo "🎯 PHASE 1: Generating CORE languages (required for service)"
+        echo "🎯 PHASE 1: Generating CORE languages (en_GB only - others temporarily disabled)"
         for LANG in "${CORE_LANGUAGES[@]}"; do
           echo "🌍 Generating content for ${LANG}..."
           echo "⏰ Started at: $(date)"
@@ -277,8 +278,8 @@ jobs:
       run: |
         echo "🌐 Updating language-specific HTML pages with today's content"
         
-        # Update ALL 8 languages (all now have full index.html pages with unified structure)
-        ALL_LANGUAGES=("en_GB" "fr_FR" "de_DE" "es_ES" "it_IT" "nl_NL" "en_GB_LON" "en_GB_LIV")
+        # TEMPORARY: Only update en_GB (other languages disabled)
+        ALL_LANGUAGES=("en_GB")
         
         for LANG in "${ALL_LANGUAGES[@]}"; do
           echo "📝 Updating ${LANG} page..."

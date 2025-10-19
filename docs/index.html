@@ -292,6 +292,18 @@
         .content-section.active {
             display: block;
         }
+    
+        .lang-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+        
+        .lang-link.disabled:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
     
     <!-- Load full CSS asynchronously -->

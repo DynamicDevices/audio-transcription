@@ -239,6 +239,18 @@
             width: 100%;
             margin: 1rem 0;
         }
+    
+        .lang-link.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+        
+        .lang-link.disabled:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
     
     <!-- Load full CSS asynchronously -->
@@ -267,13 +279,13 @@
             <!-- Language Selector -->
             <nav class="language-selector" aria-label="Language selection" style="margin-top: 1rem;">
                 <a href="/en_GB/" class="lang-link" title="English">🇬🇧 English</a>
-                <a href="/fr_FR/" class="lang-link" title="Français">🇫🇷 Français</a>
+                <a href="/fr_FR/" class="lang-link disabled" title="Français (Coming Soon)">🇫🇷 Français <small>(Coming Soon)</small></a>
                 <a href="/de_DE/" class="lang-link active" aria-current="page" title="Deutsch">🇩🇪 Deutsch</a>
-                <a href="/es_ES/" class="lang-link" title="Español">🇪🇸 Español</a>
-                <a href="/it_IT/" class="lang-link" title="Italiano">🇮🇹 Italiano</a>
-                <a href="/nl_NL/" class="lang-link" title="Nederlands">🇳🇱 Nederlands</a>
-                <a href="/en_GB_LON/" class="lang-link" title="London">🏴󠁧󠁢󠁥󠁮󠁧󠁿 London</a>
-                <a href="/en_GB_LIV/" class="lang-link" title="Liverpool">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Liverpool</a>
+                <a href="/es_ES/" class="lang-link disabled" title="Español (Coming Soon)">🇪🇸 Español <small>(Coming Soon)</small></a>
+                <a href="/it_IT/" class="lang-link disabled" title="Italiano (Coming Soon)">🇮🇹 Italiano <small>(Coming Soon)</small></a>
+                <a href="/nl_NL/" class="lang-link disabled" title="Nederlands (Coming Soon)">🇳🇱 Nederlands <small>(Coming Soon)</small></a>
+                <a href="/en_GB_LON/" class="lang-link disabled" title="London (Coming Soon)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 London <small>(Coming Soon)</small></a>
+                <a href="/en_GB_LIV/" class="lang-link disabled" title="Liverpool (Coming Soon)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Liverpool <small>(Coming Soon)</small></a>
             </nav>
         </div>
     </header>
