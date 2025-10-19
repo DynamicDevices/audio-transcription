@@ -127,6 +127,18 @@
             font-weight: 600;
         }
         
+        .lang-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+        }
+        
+        .lang-btn.disabled:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         /* Loading state */
         .loading {
             text-align: center;
@@ -328,20 +340,20 @@
                         <button class="lang-btn active" data-lang="en_GB" aria-label="English (UK)">
                             🇬🇧 English
                         </button>
-                        <button class="lang-btn" data-lang="fr_FR" aria-label="Français (France)">
-                            🇫🇷 Français
+                        <button class="lang-btn disabled" data-lang="fr_FR" aria-label="Français (France) - Coming Soon">
+                            🇫🇷 Français <small>(Coming Soon)</small>
                         </button>
-                        <button class="lang-btn" data-lang="de_DE" aria-label="Deutsch (Deutschland)">
-                            🇩🇪 Deutsch
+                        <button class="lang-btn disabled" data-lang="de_DE" aria-label="Deutsch (Deutschland) - Coming Soon">
+                            🇩🇪 Deutsch <small>(Coming Soon)</small>
                         </button>
-                        <button class="lang-btn" data-lang="es_ES" aria-label="Español (España)">
-                            🇪🇸 Español
+                        <button class="lang-btn disabled" data-lang="es_ES" aria-label="Español (España) - Coming Soon">
+                            🇪🇸 Español <small>(Coming Soon)</small>
                         </button>
-                        <button class="lang-btn" data-lang="it_IT" aria-label="Italiano (Italia)">
-                            🇮🇹 Italiano
+                        <button class="lang-btn disabled" data-lang="it_IT" aria-label="Italiano (Italia) - Coming Soon">
+                            🇮🇹 Italiano <small>(Coming Soon)</small>
                         </button>
-                        <button class="lang-btn" data-lang="nl_NL" aria-label="Nederlands (Nederland)">
-                            🇳🇱 Nederlands
+                        <button class="lang-btn disabled" data-lang="nl_NL" aria-label="Nederlands (Nederland) - Coming Soon">
+                            🇳🇱 Nederlands <small>(Coming Soon)</small>
                         </button>
                     </div>
         </div>
@@ -400,62 +412,10 @@
             
             async detectLanguage() {
                 try {
-                    // Check URL parameter first
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const langParam = urlParams.get('lang');
-                    if (langParam && this.supportedLanguages.includes(langParam)) {
-                        // For tier 1 languages with dedicated pages, redirect there
-                        const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
-                        if (tier1Languages.includes(langParam)) {
-                            window.location.href = `/${langParam}/`;
-                            return;
-                        }
-                        this.currentLanguage = langParam;
-                        return;
-                    }
-                    
-                    // Check localStorage
-                    const savedLang = localStorage.getItem('audioNewsLanguage');
-                    if (savedLang && this.supportedLanguages.includes(savedLang)) {
-                        const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
-                        if (tier1Languages.includes(savedLang)) {
-                            window.location.href = `/${savedLang}/`;
-                            return;
-                        }
-                        this.currentLanguage = savedLang;
-                        return;
-                    }
-                    
-                    // Auto-detect based on location (optional)
-                    try {
-                        const response = await fetch('https://ipapi.co/json/');
-                        const data = await response.json();
-                        
-                        // Only redirect to tier 1 languages with dedicated pages
-                        const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
-                        
-                        // Country-level mapping - ONLY for tier 1
-                        const countryLanguageMap = {
-                            'GB': 'en_GB',
-                            'FR': 'fr_FR', 
-                            'DE': 'de_DE'
-                        };
-                        
-                        const detectedLanguage = countryLanguageMap[data.country_code];
-                        
-                        if (detectedLanguage && tier1Languages.includes(detectedLanguage)) {
-                            window.location.href = `/${detectedLanguage}/`;
-                            return;
-                        }
-                        
-                        // For all other countries, default to en_GB
-                        window.location.href = '/en_GB/';
-                        return;
-                    } catch (e) {
-                        console.log('Location detection failed, defaulting to en_GB');
-                        window.location.href = '/en_GB/';
-                        return;
-                    }
+                    // TEMPORARY: Force all users to en_GB (other languages disabled)
+                    console.log('Redirecting to en_GB - other languages temporarily disabled');
+                    window.location.href = '/en_GB/';
+                    return;
                 } catch (e) {
                     console.log('Language detection failed, using default');
                 }
@@ -491,26 +451,15 @@
             async switchLanguage(language) {
                 if (language === this.currentLanguage) return;
                 
-                // For tier 1 languages with dedicated pages, redirect there
-                const tier1Languages = ['en_GB', 'fr_FR', 'de_DE'];
-                if (tier1Languages.includes(language)) {
-                    window.location.href = `/${language}/`;
+                // TEMPORARY: Only allow switching to en_GB
+                if (language !== 'en_GB') {
+                    console.log(`Language ${language} is temporarily disabled`);
                     return;
                 }
                 
-                this.currentLanguage = language;
-                
-                // Save preference
-                localStorage.setItem('audioNewsLanguage', language);
-                
-                // Update URL without reload
-                const url = new URL(window.location);
-                url.searchParams.set('lang', language);
-                window.history.replaceState({}, '', url);
-                
-                // Update UI
-                this.updateLanguageSelector();
-                await this.loadContent(language);
+                // Redirect to en_GB page
+                window.location.href = '/en_GB/';
+                return;
             }
             
             updateLanguageSelector() {
