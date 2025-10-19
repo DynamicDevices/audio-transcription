@@ -67,7 +67,8 @@
     },
     "fallback": {
       "enabled": false,
-      "provider": "google_tts"
+      "provider": "NONE - Voice quality is critical. Fail rather than degrade.",
+      "note": "We NEVER fall back to inferior voices. Edge TTS quality is non-negotiable."
     }
   },
   "audio_settings": {

@@ -798,16 +798,12 @@ class GitHubAINewsDigest:
                     current_retry_delay = min(current_retry_delay * retry_backoff, 30)  # Exponential backoff, max 30s
                     continue
                 elif attempt == max_retries - 1:
-                    # Last attempt failed
+                    # Last attempt failed - NEVER fall back to gTTS
                     print(f"   ❌ All {max_retries} retry attempts exhausted")
-                    # Try gTTS fallback in CI environment only
-                    if os.environ.get('GITHUB_ACTIONS') == 'true':
-                        print(f"   🔄 CI Environment detected - attempting gTTS fallback")
-                        return await self.generate_gtts_fallback(digest_text, output_filename)
-                    else:
-                        print(f"   🎤 VOICE CONSISTENCY: Failing rather than degrading to robotic voice")
-                        print(f"   📋 See GitHub Issue #17 for voice quality concerns")
-                        raise Exception(f"Edge TTS failed after {max_retries} attempts: {error_msg}")
+                    print(f"   🎤 CRITICAL: VOICE QUALITY PROTECTED - No fallback to robotic voice")
+                    print(f"   🚫 Refusing to generate content with inferior voice quality")
+                    print(f"   💡 This failure will trigger a re-run with proper Edge TTS")
+                    raise Exception(f"Edge TTS failed after {max_retries} attempts: {error_msg}")
                 else:
                     # Non-retryable error, fail fast
                     print(f"   ❌ Non-retryable Edge TTS error: {error_msg}")
@@ -843,57 +839,6 @@ class GitHubAINewsDigest:
             'wps': words_per_second,
             'size_kb': file_size_kb
         }
-    
-    async def generate_gtts_fallback(self, digest_text: str, output_filename: str):
-        """
-        Fallback to Google TTS when Edge TTS fails in CI environment
-        """
-        print(f"   🔄 Attempting Google TTS fallback...")
-        
-        try:
-            from gtts import gTTS
-            import tempfile
-            
-            # Map our language codes to gTTS language codes
-            lang_map = {
-                'en-IE-EmilyNeural': 'en',
-                'fr-FR-DeniseNeural': 'fr', 
-                'de-DE-KatjaNeural': 'de',
-                'es-ES-ElviraNeural': 'es',
-                'it-IT-ElsaNeural': 'it',
-                'nl-NL-ColetteNeural': 'nl'
-            }
-            
-            gtts_lang = lang_map.get(self.voice_name, 'en')
-            print(f"   🎤 Using Google TTS with language: {gtts_lang}")
-            
-            # Ensure the directory exists
-            os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-            
-            # Generate audio with gTTS
-            tts = gTTS(text=digest_text, lang=gtts_lang, slow=False)
-            tts.save(output_filename)
-            
-            # Analyze the generated audio
-            file_size_kb = os.path.getsize(output_filename) / 1024
-            word_count = len(digest_text.split())
-            duration_s = word_count / 2.0  # Estimate 2 words per second for gTTS
-            words_per_second = 2.0
-            
-            print(f"   ✅ Google TTS fallback successful: {duration_s:.1f}s (estimated), {word_count} words, {words_per_second:.2f} WPS, {file_size_kb:.0f}KB")
-            print(f"   ⚠️ Note: Voice quality may differ from Edge TTS")
-            
-            return {
-                'filename': output_filename,
-                'duration': duration_s,
-                'words': word_count,
-                'wps': words_per_second,
-                'size_kb': file_size_kb
-            }
-            
-        except Exception as fallback_error:
-            print(f"   ❌ Google TTS fallback also failed: {fallback_error}")
-            raise Exception(f"Both Edge TTS and Google TTS failed: {fallback_error}")
     
     async def generate_daily_ai_digest(self):
         """
