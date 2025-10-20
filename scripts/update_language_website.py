@@ -129,7 +129,9 @@ def update_language_page(language='en_GB'):
         new_description = f"Daily AI-generated audio news digest for {today_formatted}."
     
     # Update HTML content (only for actual content pages, not coming soon pages)
-    if 'Bientôt Disponible' not in html and 'Coming Soon' not in html:
+    # Check if this is a real content page (has audio player), not a "coming soon" placeholder
+    has_content = '<audio' in html and 'digest-card' in html
+    if has_content:
         # Update title
         html = re.sub(r'<title>.*?</title>', f'<title>{new_title}</title>', html)
         
